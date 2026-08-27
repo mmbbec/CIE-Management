@@ -1,1625 +1,5071 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Exam Management System</title>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <style>
-        /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --primary-light: #818cf8;
-            --primary-bg: #eef2ff;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-400: #9ca3af;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-            --radius: 12px;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.12);
-            --transition: 0.25s ease;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--gray-50);
-            color: var(--gray-800);
-            min-height: 100vh;
-        }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        button {
-            cursor: pointer;
-            font-family: inherit;
-            border: none;
-            background: none;
-        }
-        input,
-        select,
-        textarea {
-            font-family: inherit;
-            font-size: 0.95rem;
-            outline: none;
-        }
+  <base target="_top">
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--gray-100);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gray-300);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gray-400);
-        }
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
 
-        /* ===== LOGIN PAGE ===== */
-        .login-page {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #eef2ff 0%, #c7d2fe 100%);
-            padding: 20px;
-        }
-        .login-card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            padding: 48px 40px;
-            width: 100%;
-            max-width: 440px;
-            text-align: center;
-        }
-        .login-card .logo {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-        }
-        .login-card .logo span {
-            color: var(--gray-700);
-        }
-        .login-card .subtitle {
-            color: var(--gray-500);
-            font-size: 0.95rem;
-            margin-top: 6px;
-            margin-bottom: 32px;
-        }
-        .login-card label {
-            display: block;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--gray-700);
-            margin-bottom: 4px;
-        }
-        .login-card select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--gray-200);
-            border-radius: 8px;
-            background: #fff;
-            transition: var(--transition);
-            font-size: 1rem;
-        }
-        .login-card select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
-        }
-        .login-card .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: #fff;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            margin-top: 20px;
-        }
-        .login-card .btn-login:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
-        }
-        .login-card .role-hint {
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: var(--gray-400);
-        }
-        .login-card .role-hint strong {
-            color: var(--gray-600);
-        }
+  <title>CIE Examination Management System</title>
 
-        /* ===== APP LAYOUT ===== */
-        .app {
-            display: none;
-            min-height: 100vh;
-        }
-        .app.active {
-            display: flex;
-            flex-direction: column;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        /* ===== TOP BAR ===== */
-        .topbar {
-            background: #fff;
-            border-bottom: 1px solid var(--gray-200);
-            padding: 14px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .topbar .brand {
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .topbar .brand i {
-            font-size: 1.5rem;
-        }
-        .topbar .right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .topbar .role-badge {
-            background: var(--primary-bg);
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 100px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .topbar .btn-logout {
-            color: var(--gray-500);
-            font-weight: 500;
-            font-size: 0.9rem;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: var(--transition);
-        }
-        .topbar .btn-logout:hover {
-            background: var(--gray-100);
-            color: var(--danger);
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-        /* ===== MAIN LAYOUT ===== */
-        .main-layout {
-            display: flex;
-            flex: 1;
-        }
+  <style>
 
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 260px;
-            background: #fff;
-            border-right: 1px solid var(--gray-200);
-            padding: 20px 0;
-            flex-shrink: 0;
-            height: calc(100vh - 72px);
-            overflow-y: auto;
-            position: sticky;
-            top: 72px;
-        }
-        .sidebar .nav-section {
-            padding: 0 16px;
-            margin-bottom: 8px;
-        }
-        .sidebar .nav-section .section-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--gray-400);
-            font-weight: 700;
-            padding: 12px 12px 6px;
-        }
-        .sidebar .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            color: var(--gray-600);
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            cursor: pointer;
-            margin: 2px 0;
-            position: relative;
-        }
-        .sidebar .nav-item:hover {
-            background: var(--gray-100);
-            color: var(--gray-800);
-        }
-        .sidebar .nav-item.active {
-            background: var(--primary-bg);
-            color: var(--primary);
-            font-weight: 600;
-        }
-        .sidebar .nav-item .icon {
-            width: 28px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        .sidebar .nav-item .badge {
-            margin-left: auto;
-            font-size: 0.7rem;
-            padding: 2px 10px;
-            border-radius: 100px;
-            background: var(--gray-200);
-            color: var(--gray-600);
-        }
-        .sidebar .nav-item .badge.view {
-            background: #dbeafe;
-            color: #2563eb;
-        }
-        .sidebar .nav-item .badge.edit {
-            background: #d1fae5;
-            color: #059669;
-        }
-        .sidebar .nav-item .badge.none {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-        .sidebar .nav-item .badge.own {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        .sidebar .nav-item.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .sidebar .nav-item .perm-icon {
-            font-size: 0.7rem;
-            margin-left: 4px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        /* ===== CONTENT ===== */
-        .content {
-            flex: 1;
-            padding: 32px;
-            background: var(--gray-50);
-            overflow-y: auto;
-            min-height: calc(100vh - 72px);
-        }
-        .content .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .content .page-header h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-        .content .page-header p {
-            color: var(--gray-500);
-            margin-top: 4px;
-            font-size: 0.95rem;
-        }
-        .content .page-header .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #dbeafe;
 
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 10px 22px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 2px solid transparent;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
-        }
-        .btn-success {
-            background: var(--success);
-            color: #fff;
-        }
-        .btn-success:hover {
-            background: #16a34a;
-        }
-        .btn-danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-        .btn-warning {
-            background: var(--warning);
-            color: #fff;
-        }
-        .btn-warning:hover {
-            background: #d97706;
-        }
-        .btn-outline {
-            background: transparent;
-            border-color: var(--gray-300);
-            color: var(--gray-600);
-        }
-        .btn-outline:hover {
-            background: var(--gray-100);
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.8rem;
-        }
-        .btn-xs {
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            border-radius: 6px;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
+      --success: #16a34a;
+      --success-light: #dcfce7;
 
-        /* ===== CARDS ===== */
-        .card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 24px;
-            margin-bottom: 24px;
-            border: 1px solid var(--gray-100);
-        }
-        .card .card-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 16px;
-            color: var(--gray-800);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .card .card-title i {
-            color: var(--primary);
-        }
+      --warning: #d97706;
+      --warning-light: #fef3c7;
 
-        /* ===== TABLE ===== */
-        .table-wrap {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-        table th {
-            background: var(--gray-50);
-            text-align: left;
-            padding: 12px 16px;
-            font-weight: 600;
-            color: var(--gray-600);
-            border-bottom: 2px solid var(--gray-200);
-            white-space: nowrap;
-        }
-        table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--gray-100);
-            vertical-align: middle;
-        }
-        table tr:hover td {
-            background: var(--gray-50);
-        }
-        table .actions-cell {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
 
-        /* ===== PERMISSION TABLE (the matrix) ===== */
-        .perm-matrix {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        .perm-matrix th {
-            background: var(--gray-800);
-            color: #fff;
-            padding: 10px 14px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .perm-matrix th:first-child {
-            text-align: left;
-            border-radius: 8px 0 0 0;
-        }
-        .perm-matrix th:last-child {
-            border-radius: 0 8px 0 0;
-        }
-        .perm-matrix td {
-            padding: 10px 14px;
-            text-align: center;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        .perm-matrix td:first-child {
-            text-align: left;
-            font-weight: 500;
-            color: var(--gray-700);
-        }
-        .perm-matrix tr:hover td {
-            background: var(--gray-50);
-        }
-        .perm-matrix .badge-perm {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 100px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .badge-perm.full {
-            background: #d1fae5;
-            color: #059669;
-        }
-        .badge-perm.view {
-            background: #dbeafe;
-            color: #2563eb;
-        }
-        .badge-perm.none {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-        .badge-perm.own {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        .badge-perm.dept {
-            background: #ede9fe;
-            color: #7c3aed;
-        }
-        .badge-perm.alloc {
-            background: #fce7f3;
-            color: #db2777;
-        }
-        .badge-perm.print {
-            background: #e0e7ff;
-            color: #4f46e5;
-        }
+      --purple: #7c3aed;
+      --purple-light: #ede9fe;
 
-        /* ===== STATS / METRICS ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .stat-card {
-            background: #fff;
-            border-radius: var(--radius);
-            padding: 20px 20px 16px;
-            border: 1px solid var(--gray-200);
-            box-shadow: var(--shadow);
-        }
-        .stat-card .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--gray-900);
-        }
-        .stat-card .stat-label {
-            font-size: 0.85rem;
-            color: var(--gray-500);
-            margin-top: 2px;
-        }
-        .stat-card .stat-icon {
-            float: right;
-            font-size: 1.8rem;
-            color: var(--primary-light);
-            opacity: 0.6;
-        }
+      --bg: #f5f7fb;
+      --white: #ffffff;
 
-        /* ===== FORM ===== */
-        .form-group {
-            margin-bottom: 18px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--gray-700);
-            margin-bottom: 4px;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--gray-200);
-            border-radius: 8px;
-            transition: var(--transition);
-            background: #fff;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
 
-        /* ===== MODAL ===== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            animation: fadeIn 0.2s ease;
-        }
-        .modal-overlay.open {
-            display: flex;
-        }
-        .modal {
-            background: #fff;
-            border-radius: var(--radius);
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px;
-            box-shadow: var(--shadow-lg);
-            animation: slideUp 0.25s ease;
-        }
-        .modal .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .modal .modal-header h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        .modal .modal-close {
-            font-size: 1.5rem;
-            color: var(--gray-400);
-            transition: var(--transition);
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        .modal .modal-close:hover {
-            background: var(--gray-100);
-            color: var(--gray-700);
-        }
-        .modal .modal-footer {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-200);
-        }
+      --shadow:
+        0 4px 18px rgba(15, 23, 42, 0.07);
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+      --radius: 14px;
+    }
 
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            padding: 14px 24px;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: 500;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-lg);
-            animation: slideUp 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 280px;
-            max-width: 460px;
-        }
-        .toast-success {
-            background: #059669;
-        }
-        .toast-error {
-            background: #dc2626;
-        }
-        .toast-warning {
-            background: #d97706;
-        }
-        .toast-info {
-            background: #2563eb;
-        }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 72px;
-                padding: 12px 0;
-            }
-            .sidebar .nav-item span:not(.icon) {
-                display: none;
-            }
-            .sidebar .nav-item .badge {
-                display: none;
-            }
-            .sidebar .nav-item {
-                justify-content: center;
-                padding: 12px;
-            }
-            .sidebar .nav-item .icon {
-                font-size: 1.3rem;
-            }
-            .sidebar .nav-section .section-title {
-                display: none;
-            }
-            .content {
-                padding: 20px;
-            }
-        }
-        @media (max-width: 640px) {
-            .topbar {
-                padding: 12px 16px;
-            }
-            .topbar .brand {
-                font-size: 1rem;
-            }
-            .content {
-                padding: 16px;
-            }
-            .login-card {
-                padding: 32px 20px;
-            }
-            .modal {
-                padding: 20px;
-                margin: 10px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .perm-matrix {
-                font-size: 0.7rem;
-            }
-            .perm-matrix th,
-            .perm-matrix td {
-                padding: 6px 8px;
-            }
-            .perm-matrix .badge-perm {
-                font-size: 0.6rem;
-                padding: 1px 8px;
-            }
-        }
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
 
-        /* ===== EMPTY STATE ===== */
-        .empty-state {
-            text-align: center;
-            padding: 48px 20px;
-            color: var(--gray-400);
-        }
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-        .empty-state h4 {
-            color: var(--gray-600);
-            margin-bottom: 4px;
-        }
+    button {
+      cursor: pointer;
+    }
 
-        /* ===== LOADING ===== */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--gray-200);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+    /* =====================================================
+       LOGIN
+       ===================================================== */
 
-        /* ===== MISC ===== */
-        .text-muted {
-            color: var(--gray-500);
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .flex {
-            display: flex;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .items-center {
-            align-items: center;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        linear-gradient(135deg, #eff6ff, #f8fafc);
+    }
 
-        .tab-bar {
-            display: flex;
-            gap: 4px;
-            background: var(--gray-100);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .tab-bar .tab {
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.85rem;
-            color: var(--gray-500);
-            transition: var(--transition);
-        }
-        .tab-bar .tab.active {
-            background: #fff;
-            color: var(--gray-800);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-        .tab-bar .tab:hover:not(.active) {
-            color: var(--gray-700);
-        }
-    </style>
+    .login-card {
+      width: 100%;
+      max-width: 460px;
+      background: white;
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: 0 20px 60px rgba(15,23,42,.12);
+      border: 1px solid var(--border);
+    }
+
+    .brand-login {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 30px;
+    }
+
+    .brand-login h1 {
+      margin: 15px 0 5px;
+      font-size: 25px;
+    }
+
+    .brand-login p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #374151;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      padding: 11px 12px;
+      background: white;
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 9px;
+      padding: 11px 16px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-outline {
+      background: white;
+      border: 1px solid var(--border);
+      color: #374151;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .login-message {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .link-button {
+      border: none;
+      background: none;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =====================================================
+       APPLICATION
+       ===================================================== */
+
+    #app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    #app.active {
+      display: block;
+    }
+
+    .topbar {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .user-role {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .logout {
+      background: var(--danger-light);
+      color: var(--danger);
+      border: none;
+      padding: 8px 13px;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      width: 255px;
+      background: white;
+      border-right: 1px solid var(--border);
+      padding: 20px 14px;
+      flex-shrink: 0;
+    }
+
+    .nav-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 15px 10px 8px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      padding: 11px 12px;
+      border-radius: 9px;
+      margin-bottom: 3px;
+      color: #4b5563;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .main {
+      flex: 1;
+      padding: 28px;
+      min-width: 0;
+    }
+
+    /* =====================================================
+       PAGE HEADER
+       ===================================================== */
+
+    .page-header {
+      margin-bottom: 22px;
+    }
+
+    .page-header h2 {
+      margin: 0 0 5px;
+      font-size: 25px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       CARDS
+       ===================================================== */
+
+    .cards {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-title {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 17px;
+    }
+
+    /* =====================================================
+       ACTION GRID
+       ===================================================== */
+
+    .action-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .action-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      background: white;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .action-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .action-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .action-card h3 {
+      font-size: 14px;
+      margin: 0 0 5px;
+    }
+
+    .action-card p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* =====================================================
+       TABLE
+       ===================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 800;
+      text-align: left;
+      padding: 11px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 50px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .badge-active {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-pending {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    /* =====================================================
+       FORMS
+       ===================================================== */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .section-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    /* =====================================================
+       MODAL
+       ===================================================== */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 500;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.20);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+    .close {
+      border: none;
+      background: #f3f4f6;
+      border-radius: 8px;
+      font-size: 20px;
+      width: 34px;
+      height: 34px;
+    }
+
+    /* =====================================================
+       TOAST
+       ===================================================== */
+
+    #toastContainer {
+      position: fixed;
+      top: 85px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .toast {
+      background: #111827;
+      color: white;
+      padding: 12px 17px;
+      border-radius: 9px;
+      margin-bottom: 8px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 600;
+      animation: slideIn .2s ease;
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    .toast.error {
+      background: var(--danger);
+    }
+
+    .toast.warning {
+      background: var(--warning);
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* =====================================================
+       PRINT
+       ===================================================== */
+
+    .print-area {
+      background: white;
+    }
+
+    @media print {
+
+      body * {
+        visibility: hidden;
+      }
+
+      .print-area,
+      .print-area * {
+        visibility: visible;
+      }
+
+      .print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+
+    /* =====================================================
+       MOBILE
+       ===================================================== */
+
+    @media(max-width: 800px) {
+
+      .sidebar {
+        width: 210px;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .user-info {
+        display: none;
+      }
+    }
+
+    @media(max-width: 600px) {
+
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        overflow-x: auto;
+        padding: 8px;
+      }
+
+      .nav-title {
+        display: none;
+      }
+
+      .nav-btn {
+        min-width: max-content;
+        margin: 0 3px;
+      }
+
+      .main {
+        padding: 14px;
+      }
+
+      .login-card {
+        padding: 24px;
+      }
+    }
+
+  </style>
 </head>
+
 <body>
 
-    <!-- ===== TOAST CONTAINER ===== -->
-    <div class="toast-container" id="toastContainer"></div>
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
 
-    <!-- ===== LOGIN PAGE ===== -->
-    <div class="login-page" id="loginPage">
-        <div class="login-card">
-            <div class="logo">📋 <span>Exam</span>Flow</div>
-            <p class="subtitle">Exam Management System · Role-based Access</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="roleSelect">Select Your Role</label>
-                    <select id="roleSelect" required>
-                        <option value="">— Choose Role —</option>
-                        <option value="Admin">👑 Admin</option>
-                        <option value="HOD">📚 HOD</option>
-                        <option value="Faculty">🧑‍🏫 Faculty</option>
-                        <option value="Office 1">📁 Office 1</option>
-                        <option value="Office 2">📄 Office 2</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-login">
-                    <i class="fas fa-arrow-right-to-bracket"></i> &nbsp; Enter Dashboard
-                </button>
-            </form>
-            <div class="role-hint">
-                <strong>💡 Hint:</strong> Each role sees only what they're permitted to.
-            </div>
-        </div>
+<div id="toastContainer"></div>
+
+
+<!-- =========================================================
+     LOGIN PAGE
+     ========================================================= -->
+
+<div class="login-page" id="loginPage">
+
+  <div class="login-card">
+
+    <div class="brand-login">
+
+      <div class="brand-icon">
+        📋
+      </div>
+
+      <h1>CIE Examination Management</h1>
+
+      <p>
+        Continuous Internal Evaluation System
+      </p>
+
     </div>
 
-    <!-- ===== APP ===== -->
-    <div class="app" id="app">
 
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <div class="brand">
-                <i class="fas fa-clipboard-list"></i> ExamFlow
-            </div>
-            <div class="right">
-                <span class="role-badge" id="roleBadge">
-                    <i class="fas fa-user-circle"></i> <span id="roleDisplay">Admin</span>
+    <!-- LOGIN FORM -->
+
+    <div id="loginSection">
+
+      <div class="form-group">
+
+        <label>Official Email</label>
+
+        <input
+          type="email"
+          id="loginEmail"
+          placeholder="Enter official email">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Password</label>
+
+        <input
+          type="password"
+          id="loginPassword"
+          placeholder="Enter password">
+
+      </div>
+
+
+      <button
+        class="btn btn-primary btn-block"
+        onclick="loginUserFromPage()">
+
+        LOGIN
+
+      </button>
+
+
+      <div
+        class="login-message"
+        id="loginMessage">
+      </div>
+
+
+      <div class="login-footer">
+
+        New user?
+
+        <button
+          class="link-button"
+          onclick="showSignup()">
+
+          Create Account
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- SIGNUP FORM -->
+
+    <div
+      id="signupSection"
+      class="hidden">
+
+      <h3 style="margin-top:0;">
+        Create Account
+      </h3>
+
+      <p
+        style="color:#6b7280;font-size:13px;margin-bottom:20px;">
+
+        Registration requires Admin approval.
+
+      </p>
+
+
+      <div class="form-group">
+
+        <label>Full Name *</label>
+
+        <input
+          id="signupName"
+          type="text"
+          placeholder="Full name">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Official Email *</label>
+
+        <input
+          id="signupEmail"
+          type="email"
+          placeholder="College email">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Mobile Number</label>
+
+        <input
+          id="signupMobile"
+          type="text"
+          placeholder="Mobile number">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Designation *</label>
+
+        <select id="signupDesignation">
+
+          <option value="">
+            Select Designation
+          </option>
+
+          <option>Professor</option>
+
+          <option>Associate Professor</option>
+
+          <option>Assistant Professor</option>
+
+          <option>HOD</option>
+
+          <option>Office Staff</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Department / Branch *</label>
+
+        <select id="signupDepartment">
+
+          <option value="">
+            Select Department
+          </option>
+
+          <option>CSE</option>
+          <option>ISE</option>
+          <option>ECE</option>
+          <option>EEE</option>
+          <option>ME</option>
+          <option>CIVIL</option>
+          <option>AIML</option>
+          <option>DS</option>
+          <option>CHEMICAL</option>
+          <option>AERONAUTICAL</option>
+          <option>BIOTECH</option>
+          <option>MATHEMATICS</option>
+          <option>OTHER</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Requested Role *</label>
+
+        <select id="signupRole">
+
+          <option value="FACULTY">
+            Faculty
+          </option>
+
+          <option value="HOD">
+            HOD
+          </option>
+
+          <option value="OFFICE_STAFF_1">
+            Office Staff 1
+          </option>
+
+          <option value="OFFICE_STAFF_2">
+            Office Staff 2
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Employee ID</label>
+
+        <input
+          id="signupEmployeeId"
+          type="text"
+          placeholder="Employee ID">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Password *</label>
+
+        <input
+          id="signupPassword"
+          type="password"
+          placeholder="Minimum 6 characters">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Confirm Password *</label>
+
+        <input
+          id="signupConfirmPassword"
+          type="password"
+          placeholder="Confirm password">
+
+      </div>
+
+
+      <button
+        class="btn btn-primary btn-block"
+        onclick="signupUserFromPage()">
+
+        CREATE ACCOUNT
+
+      </button>
+
+
+      <div
+        class="login-message"
+        id="signupMessage">
+      </div>
+
+
+      <div class="login-footer">
+
+        Already registered?
+
+        <button
+          class="link-button"
+          onclick="showLogin()">
+
+          Login
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     APPLICATION
+     ========================================================= -->
+
+<div id="app">
+
+  <header class="topbar">
+
+    <div class="brand">
+
+      📋 CIE Examination Management
+
+    </div>
+
+
+    <div class="user-area">
+
+      <div class="user-info">
+
+        <div
+          class="user-name"
+          id="userName">
+          User
+        </div>
+
+        <div
+          class="user-role"
+          id="userRole">
+          Role
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout"
+        onclick="logout()">
+
+        Logout
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <div class="layout">
+
+    <aside
+      class="sidebar"
+      id="sidebar">
+    </aside>
+
+
+    <main
+      class="main"
+      id="mainContent">
+    </main>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL
+     ========================================================= -->
+
+<div
+  class="modal"
+  id="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <h3 id="modalTitle">
+        Form
+      </h3>
+
+      <button
+        class="close"
+        onclick="closeModal()">
+
+        ×
+
+      </button>
+
+    </div>
+
+    <div id="modalBody"></div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   GLOBAL STATE
+   ============================================================ */
+
+let currentUser = null;
+let currentPage = "dashboard";
+
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+function toast(message, type = "info") {
+
+  const container =
+    document.getElementById("toastContainer");
+
+  const div =
+    document.createElement("div");
+
+  div.className =
+    "toast " + type;
+
+  div.textContent = message;
+
+  container.appendChild(div);
+
+  setTimeout(() => {
+
+    div.remove();
+
+  }, 3500);
+}
+
+
+/* ============================================================
+   LOGIN / SIGNUP SCREEN
+   ============================================================ */
+
+function showSignup() {
+
+  document
+    .getElementById("loginSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("signupSection")
+    .classList.remove("hidden");
+
+}
+
+
+function showLogin() {
+
+  document
+    .getElementById("signupSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("loginSection")
+    .classList.remove("hidden");
+
+}
+
+
+function loginUserFromPage() {
+
+  const email =
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("loginPassword")
+      .value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Please enter email and password.";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Checking login...";
+
+
+  google.script.run
+
+    .withSuccessHandler(function(user) {
+
+      if (!user || !user.success) {
+
+        message.textContent =
+          "Login failed.";
+
+        return;
+
+      }
+
+
+      currentUser = user;
+
+      message.textContent = "";
+
+      openApplication();
+
+    })
+
+    .withFailureHandler(function(error) {
+
+      message.textContent =
+        error.message ||
+        "Invalid login.";
+
+    })
+
+    .loginUser(
+      email,
+      password
+    );
+
+}
+
+
+/* ============================================================
+   SIGNUP
+   ============================================================ */
+
+function signupUserFromPage() {
+
+  const name =
+    document
+      .getElementById("signupName")
+      .value
+      .trim();
+
+  const email =
+    document
+      .getElementById("signupEmail")
+      .value
+      .trim();
+
+  const mobile =
+    document
+      .getElementById("signupMobile")
+      .value
+      .trim();
+
+  const designation =
+    document
+      .getElementById("signupDesignation")
+      .value;
+
+  const department =
+    document
+      .getElementById("signupDepartment")
+      .value;
+
+  const role =
+    document
+      .getElementById("signupRole")
+      .value;
+
+  const employeeId =
+    document
+      .getElementById("signupEmployeeId")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("signupPassword")
+      .value;
+
+  const confirmPassword =
+    document
+      .getElementById("signupConfirmPassword")
+      .value;
+
+  const message =
+    document.getElementById("signupMessage");
+
+
+  if (
+    !name ||
+    !email ||
+    !designation ||
+    !department ||
+    !password
+  ) {
+
+    message.textContent =
+      "Please fill all required fields.";
+
+    return;
+
+  }
+
+
+  if (password.length < 6) {
+
+    message.textContent =
+      "Password must contain at least 6 characters.";
+
+    return;
+
+  }
+
+
+  if (password !== confirmPassword) {
+
+    message.textContent =
+      "Passwords do not match.";
+
+    return;
+
+  }
+
+
+  const data = {
+
+    name: name,
+
+    email: email,
+
+    mobile: mobile,
+
+    designation: designation,
+
+    department: department,
+
+    role: role,
+
+    employeeId: employeeId,
+
+    password: password
+
+  };
+
+
+  message.textContent =
+    "Creating account...";
+
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      message.textContent =
+        result.message ||
+        "Registration successful.";
+
+      if (result.success) {
+
+        setTimeout(function() {
+
+          showLogin();
+
+        }, 1500);
+
+      }
+
+    })
+
+    .withFailureHandler(function(error) {
+
+      message.textContent =
+        error.message ||
+        "Registration failed.";
+
+    })
+
+    .signupUser(data);
+
+}
+
+
+/* ============================================================
+   OPEN APPLICATION
+   ============================================================ */
+
+function openApplication() {
+
+  document
+    .getElementById("loginPage")
+    .style.display = "none";
+
+  document
+    .getElementById("app")
+    .classList.add("active");
+
+
+  document
+    .getElementById("userName")
+    .textContent =
+      currentUser.name || currentUser.email;
+
+
+  document
+    .getElementById("userRole")
+    .textContent =
+      formatRole(currentUser.role);
+
+
+  buildSidebar();
+
+  showDashboard();
+
+}
+
+
+function formatRole(role) {
+
+  const map = {
+
+    "ADMIN":
+      "Administrator",
+
+    "HOD":
+      "Head of Department",
+
+    "FACULTY":
+      "Faculty",
+
+    "OFFICE_STAFF_1":
+      "Office Staff 1 — Allocation",
+
+    "OFFICE_STAFF_2":
+      "Office Staff 2 — Printing"
+
+  };
+
+  return map[role] || role;
+
+}
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+function logout() {
+
+  currentUser = null;
+
+  document
+    .getElementById("app")
+    .classList.remove("active");
+
+  document
+    .getElementById("loginPage")
+    .style.display = "flex";
+
+  document
+    .getElementById("loginEmail")
+    .value = "";
+
+  document
+    .getElementById("loginPassword")
+    .value = "";
+
+  showLogin();
+
+  toast(
+    "You have been logged out.",
+    "success"
+  );
+
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+function buildSidebar() {
+
+  const sidebar =
+    document.getElementById("sidebar");
+
+  let html = "";
+
+
+  const role =
+    currentUser.role;
+
+
+  if (role === "ADMIN") {
+
+    html += navTitle("ADMINISTRATION");
+
+    html += nav(
+      "dashboard",
+      "🏠",
+      "Dashboard"
+    );
+
+    html += nav(
+      "academic",
+      "📅",
+      "Academic Setup"
+    );
+
+    html += nav(
+      "cie",
+      "📝",
+      "CIE Setup"
+    );
+
+    html += nav(
+      "users",
+      "👥",
+      "User Approval"
+    );
+
+    html += nav(
+      "monitor",
+      "📊",
+      "CIE Monitoring"
+    );
+
+    html += nav(
+      "reports",
+      "🖨",
+      "Reports & Printing"
+    );
+
+    html += nav(
+      "lock",
+      "🔒",
+      "Final Lock"
+    );
+
+  }
+
+
+  if (role === "HOD") {
+
+    html += navTitle("HOD");
+
+    html += nav(
+      "dashboard",
+      "🏠",
+      "Dashboard"
+    );
+
+    html += nav(
+      "faculty",
+      "👨‍🏫",
+      "Faculty Details"
+    );
+
+    html += nav(
+      "timetable",
+      "📅",
+      "CIE Timetable"
+    );
+
+    html += nav(
+      "subjects",
+      "📚",
+      "Department Subjects"
+    );
+
+    html += nav(
+      "papers",
+      "📄",
+      "Question Paper Status"
+    );
+
+    html += nav(
+      "reports",
+      "🖨",
+      "Department Reports"
+    );
+
+  }
+
+
+  if (role === "FACULTY") {
+
+    html += navTitle("FACULTY");
+
+    html += nav(
+      "dashboard",
+      "🏠",
+      "Dashboard"
+    );
+
+    html += nav(
+      "subjects",
+      "📚",
+      "My Subjects"
+    );
+
+    html += nav(
+      "papers",
+      "📄",
+      "Question Papers"
+    );
+
+    html += nav(
+      "duties",
+      "👨‍🏫",
+      "My CIE Duties"
+    );
+
+    html += nav(
+      "timetable",
+      "📅",
+      "CIE Timetable"
+    );
+
+  }
+
+
+  if (role === "OFFICE_STAFF_1") {
+
+    html += navTitle("EXAMINATION ALLOCATION");
+
+    html += nav(
+      "dashboard",
+      "🏠",
+      "Dashboard"
+    );
+
+    html += nav(
+      "subjects",
+      "📚",
+      "Subject & Strength"
+    );
+
+    html += nav(
+      "rooms",
+      "🏫",
+      "Room Allocation"
+    );
+
+    html += nav(
+      "duties",
+      "👨‍🏫",
+      "Duty Allocation"
+    );
+
+    html += nav(
+      "supervisor",
+      "👔",
+      "Senior Supervisor"
+    );
+
+    html += nav(
+      "squad",
+      "👥",
+      "Squad"
+    );
+
+    html += nav(
+      "conflicts",
+      "⚠️",
+      "Conflict Check"
+    );
+
+  }
+
+
+  if (role === "OFFICE_STAFF_2") {
+
+    html += navTitle("PRINT & VERIFICATION");
+
+    html += nav(
+      "dashboard",
+      "🏠",
+      "Dashboard"
+    );
+
+    html += nav(
+      "timetable",
+      "📅",
+      "Timetable Printing"
+    );
+
+    html += nav(
+      "pockets",
+      "📦",
+      "Pocket Verification"
+    );
+
+    html += nav(
+      "duties",
+      "👨‍🏫",
+      "Duty Lists"
+    );
+
+    html += nav(
+      "reports",
+      "🖨",
+      "All Reports"
+    );
+
+  }
+
+
+  sidebar.innerHTML = html;
+
+
+  sidebar
+    .querySelectorAll(".nav-btn")
+    .forEach(function(button) {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          const page =
+            button.dataset.page;
+
+          showPage(page);
+
+        }
+      );
+
+    });
+
+}
+
+
+function navTitle(text) {
+
+  return `
+    <div class="nav-title">
+      ${text}
+    </div>
+  `;
+
+}
+
+
+function nav(page, icon, text) {
+
+  return `
+    <button
+      class="nav-btn"
+      data-page="${page}">
+
+      ${icon} &nbsp; ${text}
+
+    </button>
+  `;
+
+}
+
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+function showDashboard() {
+
+  showPage("dashboard");
+
+}
+
+
+function showPage(page) {
+
+  currentPage = page;
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(function(button) {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === page
+      );
+
+    });
+
+
+  const main =
+    document.getElementById("mainContent");
+
+
+  const role =
+    currentUser.role;
+
+
+  if (page === "dashboard") {
+
+    renderDashboard(main, role);
+
+    return;
+
+  }
+
+
+  if (role === "ADMIN") {
+
+    renderAdminPage(main, page);
+
+    return;
+
+  }
+
+
+  if (role === "HOD") {
+
+    renderHODPage(main, page);
+
+    return;
+
+  }
+
+
+  if (role === "FACULTY") {
+
+    renderFacultyPage(main, page);
+
+    return;
+
+  }
+
+
+  if (role === "OFFICE_STAFF_1") {
+
+    renderOffice1Page(main, page);
+
+    return;
+
+  }
+
+
+  if (role === "OFFICE_STAFF_2") {
+
+    renderOffice2Page(main, page);
+
+    return;
+
+  }
+
+}
+
+
+/* ============================================================
+   COMMON DASHBOARD
+   ============================================================ */
+
+function renderDashboard(main, role) {
+
+  let title =
+    formatRole(role);
+
+  let description =
+    "CIE Examination Management Dashboard";
+
+
+  main.innerHTML = `
+
+    <div class="page-header">
+
+      <h2>
+        Welcome, ${escapeHTML(currentUser.name || "")}
+      </h2>
+
+      <p>
+        ${title} · ${description}
+      </p>
+
+    </div>
+
+
+    <div class="cards">
+
+      <div class="stat-card">
+
+        <div class="stat-title">
+          Academic Year
+        </div>
+
+        <div class="stat-value">
+          2026-27
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-title">
+          Semester
+        </div>
+
+        <div class="stat-value">
+          ODD
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-title">
+          Current CIE
+        </div>
+
+        <div class="stat-value">
+          CIE-1
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <div class="stat-title">
+          Department
+        </div>
+
+        <div class="stat-value"
+             style="font-size:20px;">
+
+          ${escapeHTML(
+            currentUser.department || "ALL"
+          )}
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    ${dashboardActions(role)}
+
+  `;
+
+}
+
+
+function dashboardActions(role) {
+
+  if (role === "ADMIN") {
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+          Administration
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "📅",
+            "Academic Setup",
+            "Create academic year, ODD/EVEN and semesters.",
+            "academic"
+          )}
+
+          ${actionCard(
+            "📝",
+            "CIE Setup",
+            "Create CIE-1, CIE-2 and CIE-3.",
+            "cie"
+          )}
+
+          ${actionCard(
+            "👥",
+            "User Approval",
+            "Approve faculty, HOD and office registrations.",
+            "users"
+          )}
+
+          ${actionCard(
+            "📊",
+            "CIE Monitoring",
+            "Monitor timetable, papers, duties and conflicts.",
+            "monitor"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (role === "HOD") {
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+          Department Work
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "👨‍🏫",
+            "Faculty Details",
+            "Add and edit faculty name, designation and experience.",
+            "faculty"
+          )}
+
+          ${actionCard(
+            "📅",
+            "CIE Timetable",
+            "Prepare semester-wise timetable.",
+            "timetable"
+          )}
+
+          ${actionCard(
+            "📚",
+            "Department Subjects",
+            "View subjects and registered strength.",
+            "subjects"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (role === "FACULTY") {
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+          Faculty Work
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "📚",
+            "My Subjects",
+            "Add subject name, code, class/section and strength.",
+            "subjects"
+          )}
+
+          ${actionCard(
+            "📄",
+            "Question Papers",
+            "Submit and track CIE question papers.",
+            "papers"
+          )}
+
+          ${actionCard(
+            "👨‍🏫",
+            "My Duties",
+            "View your examination duties.",
+            "duties"
+          )}
+
+          ${actionCard(
+            "📅",
+            "CIE Timetable",
+            "View examination timetable.",
+            "timetable"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (role === "OFFICE_STAFF_1") {
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+          Examination Allocation
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "📚",
+            "Subject & Strength",
+            "View day/time-wise subject strength.",
+            "subjects"
+          )}
+
+          ${actionCard(
+            "🏫",
+            "Room Allocation",
+            "Allocate students to examination rooms.",
+            "rooms"
+          )}
+
+          ${actionCard(
+            "👨‍🏫",
+            "Duty Allocation",
+            "Assign invigilators day and slot wise.",
+            "duties"
+          )}
+
+          ${actionCard(
+            "⚠️",
+            "Conflict Check",
+            "Find duplicate or conflicting duties.",
+            "conflicts"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (role === "OFFICE_STAFF_2") {
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+          Printing & Verification
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "📅",
+            "Timetable Printing",
+            "Print master, semester and department timetables.",
+            "timetable"
+          )}
+
+          ${actionCard(
+            "📦",
+            "Pocket Verification",
+            "Print day/time-wise question paper verification.",
+            "pockets"
+          )}
+
+          ${actionCard(
+            "👨‍🏫",
+            "Duty Lists",
+            "Print day-wise, room-wise and staff-wise duties.",
+            "duties"
+          )}
+
+          ${actionCard(
+            "🖨",
+            "All Reports",
+            "Print final examination reports.",
+            "reports"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return "";
+
+}
+
+
+function actionCard(icon, title, description, page) {
+
+  return `
+
+    <div
+      class="action-card"
+      onclick="showPage('${page}')">
+
+      <div class="action-icon">
+        ${icon}
+      </div>
+
+      <h3>
+        ${title}
+      </h3>
+
+      <p>
+        ${description}
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+
+function renderAdminPage(main, page) {
+
+  if (page === "academic") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📅 Academic Setup</h2>
+
+        <p>
+          Admin controls academic year, semester type and semesters.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Create Academic Structure
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Academic Year</label>
+
+            <input
+              id="academicYear"
+              placeholder="2026-27">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Semester Type</label>
+
+            <select id="semesterType">
+
+              <option value="ODD">
+                ODD
+              </option>
+
+              <option value="EVEN">
+                EVEN
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Semesters</label>
+
+            <input
+              id="semesterList"
+              placeholder="1,3,5,7">
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('adminCreateAcademicYear')">
+
+          SAVE ACADEMIC SETUP
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Structure
+        </div>
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Academic Year</th>
+              <th>Type</th>
+              <th>Semesters</th>
+              <th>Status</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td>2026-27</td>
+              <td>ODD</td>
+              <td>1, 3, 5, 7</td>
+
+              <td>
+                <span class="badge badge-active">
+                  Active
                 </span>
-                <button class="btn-logout" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </header>
+              </td>
 
-        <div class="main-layout">
+            </tr>
 
-            <!-- SIDEBAR -->
-            <nav class="sidebar" id="sidebar"></nav>
+          </tbody>
 
-            <!-- CONTENT -->
-            <main class="content" id="content">
-                <!-- Dynamic content rendered here -->
-            </main>
+        </table>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "cie") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📝 CIE Setup</h2>
+
+        <p>
+          Create and control CIE examinations.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Academic Year</label>
+
+            <input
+              value="2026-27"
+              id="cieAcademicYear">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Semester Type</label>
+
+            <select id="cieType">
+
+              <option>ODD</option>
+              <option>EVEN</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>CIE</label>
+
+            <select id="cieNumber">
+
+              <option>CIE-1</option>
+              <option>CIE-2</option>
+              <option>CIE-3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Start Date</label>
+
+            <input
+              type="date"
+              id="cieStartDate">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Number of Days</label>
+
+            <input
+              type="number"
+              value="3"
+              id="cieDays">
+
+          </div>
 
         </div>
-    </div>
 
-    <!-- ===== MODAL ===== -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent">
-            <div class="modal-header">
-                <h3 id="modalTitle">Modal</h3>
-                <button class="modal-close" id="modalClose">&times;</button>
-            </div>
-            <div id="modalBody"></div>
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('adminCreateCIE')">
+
+          CREATE CIE
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Standard CIE Slots
         </div>
+
+        ${slotTable()}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "users") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>👥 User Approval</h2>
+
+        <p>
+          Approve or reject new registrations.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="section-toolbar">
+
+          <div class="card-title"
+               style="margin:0;">
+
+            Pending Registrations
+
+          </div>
+
+          <button
+            class="btn btn-outline"
+            onclick="loadPendingUsers()">
+
+            Refresh
+
+          </button>
+
+        </div>
+
+
+        <div id="pendingUsersArea">
+
+          <p style="color:#6b7280;">
+            Click Refresh to load pending registrations.
+          </p>
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "monitor") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📊 CIE Monitoring</h2>
+
+        <p>
+          Overall status of CIE preparation.
+        </p>
+
+      </div>
+
+
+      <div class="cards">
+
+        ${monitorCard(
+          "Academic Setup",
+          "Ready"
+        )}
+
+        ${monitorCard(
+          "Timetable",
+          "Pending"
+        )}
+
+        ${monitorCard(
+          "Question Papers",
+          "Pending"
+        )}
+
+        ${monitorCard(
+          "Duty Allocation",
+          "Pending"
+        )}
+
+        ${monitorCard(
+          "Conflicts",
+          "Check Required"
+        )}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "reports") {
+
+    renderPrintReports(main);
+
+    return;
+
+  }
+
+
+  if (page === "lock") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>🔒 Final Lock</h2>
+
+        <p>
+          Lock the CIE only after all preparation is complete.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h3>
+          Final CIE Confirmation
+        </h3>
+
+        <p style="color:#6b7280;">
+
+          Once locked, examination data should not be
+          changed without Admin authorization.
+
+        </p>
+
+
+        <button
+          class="btn btn-danger"
+          onclick="confirmFinalLock()">
+
+          LOCK CIE
+
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+function monitorCard(title, status) {
+
+  return `
+
+    <div class="stat-card">
+
+      <div class="stat-title">
+        ${title}
+      </div>
+
+      <div
+        class="stat-value"
+        style="font-size:18px;">
+
+        ${status}
+
+      </div>
+
     </div>
 
-    <script>
-        // ================================================================
-        // 1. PERMISSION MATRIX — exactly as given
-        // ================================================================
-        const PERMISSION_MATRIX = {
-            'Academic Year': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'none', 'Office 2': 'view' },
-            'ODD/EVEN': { Admin: 'full', HOD: 'view', Faculty: 'view', 'Office 1': 'view', 'Office 2': 'view' },
-            'CIE-1/2/3': { Admin: 'full', HOD: 'view', Faculty: 'view', 'Office 1': 'view', 'Office 2': 'view' },
-            'Faculty Details': { Admin: 'full', HOD: 'full', Faculty: 'own', 'Office 1': 'view', 'Office 2': 'view' },
-            'Subject': { Admin: 'full', HOD: 'view', Faculty: 'full', 'Office 1': 'view', 'Office 2': 'view' },
-            'Strength': { Admin: 'full', HOD: 'view', Faculty: 'full', 'Office 1': 'view', 'Office 2': 'view' },
-            'Timetable': { Admin: 'full', HOD: 'full', Faculty: 'view', 'Office 1': 'view', 'Office 2': 'print' },
-            'Rooms': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'view' },
-            'Invigilation': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'view' },
-            'Senior Supervisor': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'view' },
-            'Squad': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'view' },
-            'Question Paper': { Admin: 'view', HOD: 'view', Faculty: 'full', 'Office 1': 'view', 'Office 2': 'print' },
-            'Pocket Verification': { Admin: 'view', HOD: 'view', Faculty: 'none', 'Office 1': 'view', 'Office 2': 'full' },
-            'Conflict Check': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'view' },
-            'Duty Editing': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'full', 'Office 2': 'none' },
-            'Print Reports': { Admin: 'full', HOD: 'dept', Faculty: 'own', 'Office 1': 'alloc', 'Office 2': 'full' },
-            'Final Lock': { Admin: 'full', HOD: 'none', Faculty: 'none', 'Office 1': 'none', 'Office 2': 'none' }
-        };
+  `;
 
-        const FUNCTIONS = Object.keys(PERMISSION_MATRIX);
+}
 
-        // Human-readable labels for permission levels
-        const PERM_LABELS = {
-            full: '✅ Full',
-            view: '👁 View',
-            none: '❌ None',
-            own: 'Own',
-            dept: 'Department',
-            alloc: 'Allocation',
-            print: '🖨 Print'
-        };
 
-        const PERM_CLASSES = {
-            full: 'full',
-            view: 'view',
-            none: 'none',
-            own: 'own',
-            dept: 'dept',
-            alloc: 'alloc',
-            print: 'print'
-        };
+/* ============================================================
+   HOD
+   ============================================================ */
 
-        // Icons for each function
-        const FUNCTION_ICONS = {
-            'Academic Year': 'fa-calendar',
-            'ODD/EVEN': 'fa-toggle-on',
-            'CIE-1/2/3': 'fa-pen-to-square',
-            'Faculty Details': 'fa-users',
-            'Subject': 'fa-book',
-            'Strength': 'fa-people-group',
-            'Timetable': 'fa-clock',
-            'Rooms': 'fa-door-open',
-            'Invigilation': 'fa-user-shield',
-            'Senior Supervisor': 'fa-user-tie',
-            'Squad': 'fa-people-arrows',
-            'Question Paper': 'fa-file-pdf',
-            'Pocket Verification': 'fa-magnifying-glass',
-            'Conflict Check': 'fa-circle-exclamation',
-            'Duty Editing': 'fa-pen',
-            'Print Reports': 'fa-print',
-            'Final Lock': 'fa-lock'
-        };
+function renderHODPage(main, page) {
 
-        // ================================================================
-        // 2. GOOGLE SHEETS CONFIG (replace with your own)
-        // ================================================================
-        // Deploy your Apps Script as a web app and paste the URL below.
-        // The script should expose doGet() / doPost() that handle:
-        //   - read: GET ?action=read&sheet=SheetName
-        //   - write: POST with { action, sheet, data }
-        // ================================================================
-        const SHEETS_API_URL = ''; // <-- PASTE YOUR APPS SCRIPT WEB APP URL HERE
+  if (page === "faculty") {
 
-        // If you don't have the backend ready, the app will use localStorage.
-        // Set USE_LOCAL_STORAGE = true to skip API calls.
-        const USE_LOCAL_STORAGE = true; // set to false when API is ready
+    main.innerHTML = `
 
-        // ================================================================
-        // 3. STATE
-        // ================================================================
-        let currentRole = 'Admin';
-        let currentTab = 'Academic Year';
-        let allData = {}; // cached data by sheet name
+      <div class="page-header">
 
-        // ================================================================
-        // 4. UTILITY FUNCTIONS
-        // ================================================================
-        function getPerm(functionName, role) {
-            const row = PERMISSION_MATRIX[functionName];
-            if (!row) return 'none';
-            return row[role] || 'none';
+        <h2>👨‍🏫 Faculty Details</h2>
+
+        <p>
+          Add faculty information used for CIE duty allocation.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Add Faculty
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Faculty Name</label>
+
+            <input
+              id="facultyName"
+              placeholder="Full name">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Designation</label>
+
+            <select id="facultyDesignation">
+
+              <option>Professor</option>
+              <option>Associate Professor</option>
+              <option>Assistant Professor</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Experience</label>
+
+            <input
+              id="facultyExperience"
+              placeholder="e.g. 12 Years">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Employee ID</label>
+
+            <input
+              id="facultyEmployeeId">
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('hodAddFaculty')">
+
+          SAVE FACULTY
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Faculty List
+        </div>
+
+        <p style="color:#6b7280;">
+
+          Faculty data will be loaded from the backend
+          after the HOD faculty function is connected.
+
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "timetable") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📅 CIE Timetable</h2>
+
+        <p>
+          Prepare department-wise semester timetable.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Academic Year</label>
+
+            <input value="2026-27"
+                   id="ttYear">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Semester</label>
+
+            <select id="ttSemester">
+
+              <option>1</option>
+              <option>3</option>
+              <option>5</option>
+              <option>7</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>CIE</label>
+
+            <select id="ttCIE">
+
+              <option>CIE-1</option>
+              <option>CIE-2</option>
+              <option>CIE-3</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="addTimetableRow()">
+
+          + ADD TIMETABLE ENTRY
+
+        </button>
+
+      </div>
+
+
+      <div
+        class="card"
+        id="hodTimetableTable">
+
+        ${hodTimetableTable()}
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "subjects") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📚 Department Subjects</h2>
+
+        <p>
+          View subjects and registered strength.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <p style="color:#6b7280;">
+
+          Subject strength is entered by the concerned
+          faculty and will be displayed here.
+
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "papers") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📄 Question Paper Status</h2>
+
+        <p>
+          Monitor department question paper submission.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Subject</th>
+              <th>Faculty</th>
+              <th>CIE</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+
+              <td>MAT101</td>
+              <td>Faculty Test</td>
+              <td>CIE-1</td>
+
+              <td>
+                <span class="badge badge-pending">
+                  Pending
+                </span>
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "reports") {
+
+    renderPrintReports(main);
+
+  }
+
+}
+
+
+/* ============================================================
+   FACULTY
+   ============================================================ */
+
+function renderFacultyPage(main, page) {
+
+  if (page === "subjects") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📚 My Subjects</h2>
+
+        <p>
+          Add the subjects handled by you.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Add Subject
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Academic Year</label>
+
+            <input
+              id="facultySubjectYear"
+              value="2026-27">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Semester</label>
+
+            <select id="facultySubjectSemester">
+
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>CIE</label>
+
+            <select id="facultySubjectCIE">
+
+              <option>CIE-1</option>
+              <option>CIE-2</option>
+              <option>CIE-3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Subject Name *</label>
+
+            <input
+              id="facultySubjectName"
+              placeholder="Engineering Mathematics-I">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Subject Code *</label>
+
+            <input
+              id="facultySubjectCode"
+              placeholder="MAT101">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Class / Section *</label>
+
+            <input
+              id="facultySubjectSection"
+              placeholder="CSE-A">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Strength *</label>
+
+            <input
+              type="number"
+              id="facultySubjectStrength"
+              placeholder="60">
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('facultyAddSubject')">
+
+          SAVE SUBJECT
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          My Subject List
+        </div>
+
+        <p style="color:#6b7280;">
+
+          Your saved subjects will appear here.
+
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "papers") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📄 Question Papers</h2>
+
+        <p>
+          Submit CIE question papers to the collection process.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Subject Code</label>
+
+            <input id="paperSubjectCode">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>CIE</label>
+
+            <select id="paperCIE">
+
+              <option>CIE-1</option>
+              <option>CIE-2</option>
+              <option>CIE-3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Submission Status</label>
+
+            <select id="paperStatus">
+
+              <option>Submitted</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('facultySubmitQuestionPaper')">
+
+          SUBMIT QUESTION PAPER
+
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "duties") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>👨‍🏫 My CIE Duties</h2>
+
+        <p>
+          Examination duties assigned to you.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <p style="color:#6b7280;">
+
+          Your day-wise and time-wise duties will appear here
+          after duty allocation.
+
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "timetable") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📅 CIE Timetable</h2>
+
+        <p>
+          View your department CIE timetable.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        ${slotTable()}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+/* ============================================================
+   OFFICE STAFF 1
+   ============================================================ */
+
+function renderOffice1Page(main, page) {
+
+  if (page === "subjects") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📚 Subject & Strength</h2>
+
+        <p>
+          View examination subject and strength day/time wise.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Day</label>
+
+            <select id="allocationDay">
+
+              <option>Day 1</option>
+              <option>Day 2</option>
+              <option>Day 3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Time</label>
+
+            <select id="allocationTime">
+
+              <option>8:00 - 9:30</option>
+              <option>10:00 - 11:30</option>
+              <option>12:00 - 1:30</option>
+              <option>2:00 - 3:30</option>
+              <option>4:00 - 5:30</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="loadAllocationData()">
+
+          LOAD SUBJECTS
+
+        </button>
+
+      </div>
+
+
+      <div
+        class="card"
+        id="allocationData">
+
+        <p style="color:#6b7280;">
+          Select Day and Time and click Load.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "rooms") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>🏫 Room Allocation</h2>
+
+        <p>
+          Allocate examination rooms based on subject strength.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Day</label>
+
+            <select id="roomDay">
+
+              <option>Day 1</option>
+              <option>Day 2</option>
+              <option>Day 3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Time Slot</label>
+
+            <select id="roomTime">
+
+              <option>8:00 - 9:30</option>
+              <option>10:00 - 11:30</option>
+              <option>12:00 - 1:30</option>
+              <option>2:00 - 3:30</option>
+              <option>4:00 - 5:30</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Subject Code</label>
+
+            <input id="roomSubjectCode">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Strength</label>
+
+            <input
+              type="number"
+              id="roomStrength">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Room Number</label>
+
+            <input
+              id="roomNumber"
+              placeholder="R101">
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('allocateRoom')">
+
+          ALLOCATE ROOM
+
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "duties") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>👨‍🏫 Duty Allocation</h2>
+
+        <p>
+          Assign invigilators day and slot wise.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Day</label>
+
+            <select id="dutyDay">
+
+              <option>Day 1</option>
+              <option>Day 2</option>
+              <option>Day 3</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Time</label>
+
+            <select id="dutyTime">
+
+              <option>8:00 - 9:30</option>
+              <option>10:00 - 11:30</option>
+              <option>12:00 - 1:30</option>
+              <option>2:00 - 3:30</option>
+              <option>4:00 - 5:30</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Room</label>
+
+            <input id="dutyRoom">
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Invigilator</label>
+
+            <input id="dutyInvigilator">
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn btn-primary"
+          onclick="submitBackend('allocateDuty')">
+
+          ASSIGN INVIGILATOR
+
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Additional Duties
+        </div>
+
+        <div class="action-grid">
+
+          ${actionCard(
+            "👔",
+            "Senior Supervisor",
+            "Assign Dean/HOD/Professor senior supervisor.",
+            "supervisor"
+          )}
+
+          ${actionCard(
+            "👥",
+            "Squad",
+            "Assign squad members.",
+            "squad"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "supervisor") {
+
+    main.innerHTML = dutySpecialPage(
+      "👔 Senior Supervisor",
+      "Assign Dean/HOD/Professor senior supervisors.",
+      "allocateSeniorSupervisor"
+    );
+
+    return;
+
+  }
+
+
+  if (page === "squad") {
+
+    main.innerHTML = dutySpecialPage(
+      "👥 Squad",
+      "Assign squad for CIE examination.",
+      "allocateSquad"
+    );
+
+    return;
+
+  }
+
+
+  if (page === "conflicts") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>⚠️ Conflict Check</h2>
+
+        <p>
+          Check staff duty conflicts before final duty orders.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <button
+          class="btn btn-warning"
+          onclick="runConflictCheck()">
+
+          CHECK DUTY CONFLICTS
+
+        </button>
+
+
+        <div
+          id="conflictResult"
+          style="margin-top:20px;">
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+function dutySpecialPage(
+  title,
+  description,
+  backendFunction
+) {
+
+  return `
+
+    <div class="page-header">
+
+      <h2>${title}</h2>
+
+      <p>${description}</p>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Day</label>
+
+          <select id="specialDay">
+
+            <option>Day 1</option>
+            <option>Day 2</option>
+            <option>Day 3</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Time</label>
+
+          <select id="specialTime">
+
+            <option>8:00 - 9:30</option>
+            <option>10:00 - 11:30</option>
+            <option>12:00 - 1:30</option>
+            <option>2:00 - 3:30</option>
+            <option>4:00 - 5:30</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Staff Name</label>
+
+          <input
+            id="specialStaff">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Designation</label>
+
+          <input
+            id="specialDesignation">
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="btn btn-primary"
+        onclick="submitBackend('${backendFunction}')">
+
+        SAVE ASSIGNMENT
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   OFFICE STAFF 2
+   ============================================================ */
+
+function renderOffice2Page(main, page) {
+
+  if (page === "timetable") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📅 Timetable Printing</h2>
+
+        <p>
+          Print master, semester and department timetables.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="action-grid">
+
+          ${printCard(
+            "Master Timetable",
+            "Print complete CIE timetable.",
+            "printMasterTimetable"
+          )}
+
+          ${printCard(
+            "Semester-wise Timetable",
+            "Print semester-wise timetable.",
+            "printSemesterTimetable"
+          )}
+
+          ${printCard(
+            "Department-wise Timetable",
+            "Print department-wise timetable.",
+            "printDepartmentTimetable"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "pockets") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>📦 Pocket Verification</h2>
+
+        <p>
+          Print question paper pocket verification sheets
+          day and time wise.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="action-grid">
+
+          ${printCard(
+            "Day 1 Verification",
+            "Print Day 1 verification sheet.",
+            "generateCIEPocketVerificationPrintout"
+          )}
+
+          ${printCard(
+            "Day 2 Verification",
+            "Print Day 2 verification sheet.",
+            "generateCIEPocketVerificationPrintout"
+          )}
+
+          ${printCard(
+            "Day 3 Verification",
+            "Print Day 3 verification sheet.",
+            "generateCIEPocketVerificationPrintout"
+          )}
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          Verification Procedure
+        </div>
+
+        <ol>
+
+          <li>
+            Select the day and time.
+          </li>
+
+          <li>
+            Check expected subject and strength.
+          </li>
+
+          <li>
+            Physically verify the question paper pocket.
+          </li>
+
+          <li>
+            Mark received / missing / wrong slot.
+          </li>
+
+          <li>
+            Submit verification report.
+          </li>
+
+        </ol>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "duties") {
+
+    main.innerHTML = `
+
+      <div class="page-header">
+
+        <h2>👨‍🏫 Duty Lists</h2>
+
+        <p>
+          Print day-wise and slot-wise duty lists.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="action-grid">
+
+          ${printCard(
+            "Day 1 Duty List",
+            "Print all Day 1 duties.",
+            "printDayWiseDutyList"
+          )}
+
+          ${printCard(
+            "Day 2 Duty List",
+            "Print all Day 2 duties.",
+            "printDayWiseDutyList"
+          )}
+
+          ${printCard(
+            "Day 3 Duty List",
+            "Print all Day 3 duties.",
+            "printDayWiseDutyList"
+          )}
+
+          ${printCard(
+            "Room-wise Duty",
+            "Print room-wise allocation.",
+            "printRoomWiseDuty"
+          )}
+
+          ${printCard(
+            "Staff-wise Duty",
+            "Print individual staff duties.",
+            "printStaffWiseDuty"
+          )}
+
+          ${printCard(
+            "Supervisor List",
+            "Print senior supervisor list.",
+            "printSupervisorList"
+          )}
+
+          ${printCard(
+            "Squad List",
+            "Print squad list.",
+            "printSquadList"
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (page === "reports") {
+
+    renderPrintReports(main);
+
+  }
+
+}
+
+
+/* ============================================================
+   PRINT FUNCTIONS
+   ============================================================ */
+
+function printCard(
+  title,
+  description,
+  backendFunction
+) {
+
+  return `
+
+    <div class="action-card"
+         onclick="callPrintFunction('${backendFunction}')">
+
+      <div class="action-icon">
+        🖨️
+      </div>
+
+      <h3>
+        ${title}
+      </h3>
+
+      <p>
+        ${description}
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderPrintReports(main) {
+
+  main.innerHTML = `
+
+    <div class="page-header">
+
+      <h2>🖨 Reports & Printing</h2>
+
+      <p>
+        Examination reports and final printouts.
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="action-grid">
+
+        ${printCard(
+          "CIE Master Report",
+          "Complete CIE report.",
+          "printCIEReport"
+        )}
+
+        ${printCard(
+          "Subject Strength",
+          "Subject-wise registered strength.",
+          "printSubjectStrength"
+        )}
+
+        ${printCard(
+          "Final Duty Order",
+          "Final staff duty order.",
+          "printFinalDutyOrder"
+        )}
+
+        ${printCard(
+          "Faculty List",
+          "Faculty information.",
+          "printFacultyList"
+        )}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function callPrintFunction(functionName) {
+
+  toast(
+    "Preparing printout...",
+    "info"
+  );
+
+
+  if (
+    typeof google === "undefined" ||
+    !google.script ||
+    !google.script.run
+  ) {
+
+    window.print();
+
+    return;
+
+  }
+
+
+  const runner =
+    google.script.run
+
+      .withSuccessHandler(function(result) {
+
+        if (
+          typeof result === "string" &&
+          result.trim()
+        ) {
+
+          openPrintWindow(result);
+
+        } else {
+
+          window.print();
+
         }
 
-        function canEdit(functionName, role) {
-            const p = getPerm(functionName, role);
-            return p === 'full' || p === 'own' || p === 'dept' || p === 'alloc';
+      })
+
+      .withFailureHandler(function(error) {
+
+        toast(
+          error.message ||
+          "Print function is not yet connected.",
+          "warning"
+        );
+
+      });
+
+
+  if (
+    typeof runner[functionName] === "function"
+  ) {
+
+    runner[functionName]();
+
+  } else {
+
+    toast(
+      "Backend print function not yet connected.",
+      "warning"
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   COMMON TABLES
+   ============================================================ */
+
+function slotTable() {
+
+  const slots = [
+
+    "8:00 - 9:30",
+    "10:00 - 11:30",
+    "12:00 - 1:30",
+    "2:00 - 3:30",
+    "4:00 - 5:30"
+
+  ];
+
+
+  let rows = "";
+
+  slots.forEach(function(slot) {
+
+    rows += `
+
+      <tr>
+
+        <td>Day 1</td>
+
+        <td>${slot}</td>
+
+        <td>1st / 3rd / 5th / 7th</td>
+
+      </tr>
+
+    `;
+
+  });
+
+
+  return `
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Day</th>
+            <th>Time</th>
+            <th>Semester</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+function hodTimetableTable() {
+
+  return `
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Day</th>
+            <th>Time</th>
+            <th>Semester</th>
+            <th>Subject Code</th>
+            <th>Subject Name</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="hodTTBody">
+
+          <tr>
+
+            <td>Day 1</td>
+            <td>8:00 - 9:30</td>
+            <td>1</td>
+            <td>MAT101</td>
+            <td>Mathematics-I</td>
+
+            <td>
+
+              <button
+                class="btn btn-outline"
+                onclick="editTimetable()">
+
+                Edit
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   TIMETABLE
+   ============================================================ */
+
+function addTimetableRow() {
+
+  openModal(
+    "Add CIE Timetable Entry",
+    `
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>Day</label>
+
+          <select id="modalTTDay">
+
+            <option>Day 1</option>
+            <option>Day 2</option>
+            <option>Day 3</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Time</label>
+
+          <select id="modalTTTime">
+
+            <option>8:00 - 9:30</option>
+            <option>10:00 - 11:30</option>
+            <option>12:00 - 1:30</option>
+            <option>2:00 - 3:30</option>
+            <option>4:00 - 5:30</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Semester</label>
+
+          <input id="modalTTSemester">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Subject Code</label>
+
+          <input id="modalTTCode">
+
+        </div>
+
+
+        <div class="form-group full-width">
+
+          <label>Subject Name</label>
+
+          <input id="modalTTName">
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="btn btn-primary"
+        onclick="saveTimetableEntry()">
+
+        SAVE
+
+      </button>
+
+    `
+  );
+
+}
+
+
+function saveTimetableEntry() {
+
+  const data = {
+
+    day:
+      document.getElementById(
+        "modalTTDay"
+      ).value,
+
+    time:
+      document.getElementById(
+        "modalTTTime"
+      ).value,
+
+    semester:
+      document.getElementById(
+        "modalTTSemester"
+      ).value,
+
+    subjectCode:
+      document.getElementById(
+        "modalTTCode"
+      ).value,
+
+    subjectName:
+      document.getElementById(
+        "modalTTName"
+      ).value
+
+  };
+
+
+  closeModal();
+
+
+  callBackend(
+    "hodSaveTimetable",
+    data
+  );
+
+}
+
+
+function editTimetable() {
+
+  toast(
+    "Timetable editing will be connected to HOD backend.",
+    "info"
+  );
+
+}
+
+
+/* ============================================================
+   OFFICE ALLOCATION
+   ============================================================ */
+
+function loadAllocationData() {
+
+  const day =
+    document.getElementById(
+      "allocationDay"
+    ).value;
+
+  const time =
+    document.getElementById(
+      "allocationTime"
+    ).value;
+
+
+  const area =
+    document.getElementById(
+      "allocationData"
+    );
+
+
+  area.innerHTML = `
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Day</th>
+            <th>Time</th>
+            <th>Semester</th>
+            <th>Department</th>
+            <th>Subject Code</th>
+            <th>Subject</th>
+            <th>Strength</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr>
+
+            <td>${day}</td>
+            <td>${time}</td>
+            <td>1</td>
+            <td>CSE</td>
+            <td>MAT101</td>
+            <td>Mathematics-I</td>
+            <td>60</td>
+
+          </tr>
+
+          <tr>
+
+            <td>${day}</td>
+            <td>${time}</td>
+            <td>3</td>
+            <td>CSE</td>
+            <td>MAT301</td>
+            <td>Mathematics-III</td>
+            <td>55</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <p style="color:#6b7280;margin-top:12px;">
+
+      Actual data will be loaded from Subject Registration /
+      Subject Strength backend.
+
+    </p>
+
+  `;
+
+}
+
+
+/* ============================================================
+   CONFLICT CHECK
+   ============================================================ */
+
+function runConflictCheck() {
+
+  const result =
+    document.getElementById(
+      "conflictResult"
+    );
+
+
+  result.innerHTML =
+    "<p>Checking conflicts...</p>";
+
+
+  if (
+    typeof google !== "undefined" &&
+    google.script &&
+    google.script.run
+  ) {
+
+    google.script.run
+
+      .withSuccessHandler(function(data) {
+
+        result.innerHTML = `
+
+          <div class="badge badge-active">
+
+            Conflict check completed.
+
+          </div>
+
+          <p style="margin-top:12px;">
+
+            Review the generated
+            <strong>CIE_Duty_Conflict_Report</strong>
+            sheet.
+
+          </p>
+
+        `;
+
+      })
+
+      .withFailureHandler(function(error) {
+
+        result.innerHTML = `
+
+          <div class="badge badge-danger">
+
+            ${escapeHTML(
+              error.message ||
+              "Conflict check failed."
+            )}
+
+          </div>
+
+        `;
+
+      })
+
+      .generateCIEStaffDutyConflictReport();
+
+  }
+
+}
+
+
+/* ============================================================
+   ADMIN USER APPROVAL
+   ============================================================ */
+
+function loadPendingUsers() {
+
+  const area =
+    document.getElementById(
+      "pendingUsersArea"
+    );
+
+
+  area.innerHTML =
+    "<p>Loading...</p>";
+
+
+  if (
+    typeof google === "undefined" ||
+    !google.script ||
+    !google.script.run
+  ) {
+
+    area.innerHTML =
+      "<p>Apps Script backend unavailable.</p>";
+
+    return;
+
+  }
+
+
+  google.script.run
+
+    .withSuccessHandler(function(users) {
+
+      if (
+        !users ||
+        !users.length
+      ) {
+
+        area.innerHTML = `
+
+          <p style="color:#6b7280;">
+
+            No pending registrations.
+
+          </p>
+
+        `;
+
+        return;
+
+      }
+
+
+      let rows = "";
+
+
+      users.forEach(function(user) {
+
+        rows += `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(user.name || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(user.email || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(user.role || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(user.department || "")}
+            </td>
+
+            <td>
+
+              <button
+                class="btn btn-success"
+                onclick="approveUser('${escapeAttribute(user.userId || user.email)}')">
+
+                Approve
+
+              </button>
+
+              <button
+                class="btn btn-danger"
+                onclick="rejectUser('${escapeAttribute(user.userId || user.email)}')">
+
+                Reject
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+
+      area.innerHTML = `
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Action</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              ${rows}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      `;
+
+    })
+
+    .withFailureHandler(function(error) {
+
+      area.innerHTML = `
+
+        <p style="color:#dc2626;">
+
+          ${escapeHTML(
+            error.message ||
+            "Unable to load users."
+          )}
+
+        </p>
+
+      `;
+
+    })
+
+    .getPendingUsers();
+
+}
+
+
+function approveUser(userId) {
+
+  if (!confirm(
+    "Approve this user?"
+  )) return;
+
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        "User approved.",
+        "success"
+      );
+
+      loadPendingUsers();
+
+    })
+
+    .withFailureHandler(function(error) {
+
+      toast(
+        error.message ||
+        "Approval failed.",
+        "error"
+      );
+
+    })
+
+    .approveUser(userId);
+
+}
+
+
+function rejectUser(userId) {
+
+  if (!confirm(
+    "Reject this user?"
+  )) return;
+
+
+  google.script.run
+
+    .withSuccessHandler(function(result) {
+
+      toast(
+        result.message ||
+        "User rejected.",
+        "success"
+      );
+
+      loadPendingUsers();
+
+    })
+
+    .withFailureHandler(function(error) {
+
+      toast(
+        error.message ||
+        "Rejection failed.",
+        "error"
+      );
+
+    })
+
+    .rejectUser(userId);
+
+}
+
+
+/* ============================================================
+   FINAL LOCK
+   ============================================================ */
+
+function confirmFinalLock() {
+
+  if (!confirm(
+    "Are you sure you want to lock this CIE? " +
+    "Further changes may be restricted."
+  )) {
+
+    return;
+
+  }
+
+
+  callBackend(
+    "adminFinalLockCIE",
+    {
+      academicYear: "2026-27",
+      cie: "CIE-1"
+    }
+  );
+
+}
+
+
+/* ============================================================
+   BACKEND CALL HELPER
+   ============================================================ */
+
+function submitBackend(functionName) {
+
+  const data = collectFormData();
+
+  callBackend(
+    functionName,
+    data
+  );
+
+}
+
+
+function callBackend(functionName, data) {
+
+  if (
+    typeof google === "undefined" ||
+    !google.script ||
+    !google.script.run
+  ) {
+
+    toast(
+      "Apps Script backend is not available.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  toast(
+    "Saving...",
+    "info"
+  );
+
+
+  const runner =
+    google.script.run
+
+      .withSuccessHandler(function(result) {
+
+        if (
+          result &&
+          result.message
+        ) {
+
+          toast(
+            result.message,
+            result.success === false
+              ? "warning"
+              : "success"
+          );
+
+        } else {
+
+          toast(
+            "Saved successfully.",
+            "success"
+          );
+
         }
 
-        function canView(functionName, role) {
-            const p = getPerm(functionName, role);
-            return p !== 'none';
-        }
+      })
 
-        function canPrint(functionName, role) {
-            const p = getPerm(functionName, role);
-            return p === 'print' || p === 'full' || p === 'dept' || p === 'alloc';
-        }
+      .withFailureHandler(function(error) {
 
-        function getSheetName(functionName) {
-            return functionName.replace(/[\/\-]/g, '_');
-        }
+        toast(
+          error.message ||
+          "Backend function is not connected.",
+          "error"
+        );
 
-        function toast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const el = document.createElement('div');
-            el.className = `toast toast-${type}`;
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-triangle-exclamation',
-                info: 'fa-info-circle'
-            };
-            el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${message}`;
-            container.appendChild(el);
-            setTimeout(() => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateX(40px)';
-                setTimeout(() => el.remove(), 300);
-            }, 3000);
-        }
+      });
 
-        function showModal(title, bodyHTML) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalBody').innerHTML = bodyHTML;
-            document.getElementById('modalOverlay').classList.add('open');
-        }
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('open');
-        }
-        document.getElementById('modalClose').addEventListener('click', closeModal);
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target === e.currentTarget) closeModal();
-        });
+  if (
+    typeof runner[functionName] === "function"
+  ) {
 
-        // ================================================================
-        // 5. DATA LAYER (Google Sheets + localStorage fallback)
-        // ================================================================
-        async function fetchData(sheetName) {
-            if (USE_LOCAL_STORAGE) {
-                const key = `examflow_${sheetName}`;
-                const raw = localStorage.getItem(key);
-                return raw ? JSON.parse(raw) : [];
-            }
-            if (!SHEETS_API_URL) return [];
-            try {
-                const res = await fetch(`${SHEETS_API_URL}?action=read&sheet=${sheetName}`);
-                const data = await res.json();
-                return data || [];
-            } catch (e) {
-                console.error('Fetch error:', e);
-                return [];
-            }
-        }
+    runner[functionName](data);
 
-        async function saveData(sheetName, rows) {
-            if (USE_LOCAL_STORAGE) {
-                const key = `examflow_${sheetName}`;
-                localStorage.setItem(key, JSON.stringify(rows));
-                return true;
-            }
-            if (!SHEETS_API_URL) return false;
-            try {
-                const res = await fetch(SHEETS_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'write', sheet: sheetName, data: rows })
-                });
-                return res.ok;
-            } catch (e) {
-                console.error('Save error:', e);
-                return false;
-            }
-        }
+  } else {
 
-        async function loadAllData() {
-            for (const fn of FUNCTIONS) {
-                const sheet = getSheetName(fn);
-                allData[fn] = await fetchData(sheet);
-            }
-        }
+    toast(
+      functionName +
+      " is not yet added to Code.gs.",
+      "warning"
+    );
 
-        async function saveOneSheet(functionName) {
-            const sheet = getSheetName(functionName);
-            const rows = allData[functionName] || [];
-            await saveData(sheet, rows);
-        }
+  }
 
-        // ================================================================
-        // 6. RENDER SIDEBAR
-        // ================================================================
-        function renderSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            let html = '';
-            const sections = [
-                { title: '📊 Core', items: ['Academic Year', 'ODD/EVEN', 'CIE-1/2/3'] },
-                { title: '👥 Faculty', items: ['Faculty Details', 'Subject', 'Strength'] },
-                { title: '📅 Scheduling', items: ['Timetable', 'Rooms'] },
-                { title: '🔒 Exam Ops', items: ['Invigilation', 'Senior Supervisor', 'Squad'] },
-                { title: '📄 Papers', items: ['Question Paper', 'Pocket Verification'] },
-                { title: '⚙️ Admin', items: ['Conflict Check', 'Duty Editing', 'Print Reports', 'Final Lock'] }
-            ];
+}
 
-            for (const section of sections) {
-                html += `<div class="nav-section"><div class="section-title">${section.title}</div>`;
-                for (const fn of section.items) {
-                    const perm = getPerm(fn, currentRole);
-                    const icon = FUNCTION_ICONS[fn] || 'fa-circle';
-                    const canSee = canView(fn, currentRole);
-                    const label = PERM_LABELS[perm] || perm;
-                    const cls = canSee ? '' : 'disabled';
-                    const active = fn === currentTab ? 'active' : '';
-                    const badge = canSee ? `<span class="badge ${PERM_CLASSES[perm]}">${label}</span>` :
-                        `<span class="badge none">${label}</span>`;
-                    html += `
-                        <div class="nav-item ${cls} ${active}" data-function="${fn}">
-                            <span class="icon"><i class="fas ${icon}"></i></span>
-                            <span>${fn}</span>
-                            ${badge}
-                        </div>
-                    `;
-                }
-                html += '</div>';
-            }
 
-            sidebar.innerHTML = html;
+/* ============================================================
+   COLLECT FORM DATA
+   ============================================================ */
 
-            // Click handlers
-            sidebar.querySelectorAll('.nav-item:not(.disabled)').forEach(el => {
-                el.addEventListener('click', () => {
-                    const fn = el.dataset.function;
-                    if (fn) {
-                        currentTab = fn;
-                        renderContent();
-                        renderSidebar(); // update active state
-                    }
-                });
-            });
-        }
+function collectFormData() {
 
-        // ================================================================
-        // 7. RENDER CONTENT
-        // ================================================================
-        function renderContent() {
-            const content = document.getElementById('content');
-            const fn = currentTab;
-            const perm = getPerm(fn, currentRole);
-            const canSee = canView(fn, currentRole);
+  const data = {
 
-            if (!canSee) {
-                content.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-lock"></i>
-                        <h4>Access Denied</h4>
-                        <p>You don't have permission to view <strong>${fn}</strong>.</p>
-                    </div>
-                `;
-                return;
-            }
+    userId:
+      currentUser
+        ? currentUser.userId
+        : "",
 
-            const icon = FUNCTION_ICONS[fn] || 'fa-circle';
-            const isEditable = canEdit(fn, currentRole);
-            const isPrintable = canPrint(fn, currentRole);
-            const rows = allData[fn] || [];
+    name:
+      currentUser
+        ? currentUser.name
+        : "",
 
-            // Build the table
-            let tableHTML = '';
-            if (rows.length === 0) {
-                tableHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h4>No Data</h4>
-                        <p>No records found for <strong>${fn}</strong>. ${isEditable ? 'Click "Add New" to create one.' : ''}</p>
-                    </div>
-                `;
-            } else {
-                const headers = Object.keys(rows[0] || {});
-                let thead = '<thead><tr>';
-                for (const h of headers) {
-                    thead += `<th>${h}</th>`;
-                }
-                if (isEditable || isPrintable) {
-                    thead += `<th>Actions</th>`;
-                }
-                thead += '</tr></thead>';
+    email:
+      currentUser
+        ? currentUser.email
+        : "",
 
-                let tbody = '<tbody>';
-                for (const row of rows) {
-                    tbody += '<tr>';
-                    for (const h of headers) {
-                        tbody += `<td>${row[h] ?? ''}</td>`;
-                    }
-                    if (isEditable || isPrintable) {
-                        tbody += '<td><div class="actions-cell">';
-                        if (isEditable) {
-                            tbody += `<button class="btn btn-primary btn-xs edit-row" data-idx="${rows.indexOf(row)}"><i class="fas fa-edit"></i></button>`;
-                            tbody +=
-                                `<button class="btn btn-danger btn-xs delete-row" data-idx="${rows.indexOf(row)}"><i class="fas fa-trash"></i></button>`;
-                        }
-                        if (isPrintable) {
-                            tbody +=
-                                `<button class="btn btn-warning btn-xs print-row" data-idx="${rows.indexOf(row)}"><i class="fas fa-print"></i></button>`;
-                        }
-                        tbody += '</div></td>';
-                    }
-                    tbody += '</tr>';
-                }
-                tbody += '</tbody>';
-                tableHTML = `
-                    <div class="table-wrap">
-                        <table>${thead}${tbody}</table>
-                    </div>
-                `;
-            }
+    role:
+      currentUser
+        ? currentUser.role
+        : "",
 
-            // Build action buttons
-            let actionsHTML = '';
-            if (isEditable) {
-                actionsHTML += `<button class="btn btn-primary btn-sm" id="addBtn"><i class="fas fa-plus"></i> Add New</button>`;
-            }
-            if (isPrintable) {
-                actionsHTML += `<button class="btn btn-warning btn-sm" id="printBtn"><i class="fas fa-print"></i> Print</button>`;
-            }
-            // Refresh button always visible
-            actionsHTML += `<button class="btn btn-outline btn-sm" id="refreshBtn"><i class="fas fa-sync"></i> Refresh</button>`;
+    department:
+      currentUser
+        ? currentUser.department
+        : "",
 
-            // Permission badge
-            const permLabel = PERM_LABELS[perm] || perm;
+    academicYear:
+      getValue("academicYear") ||
+      getValue("cieAcademicYear") ||
+      getValue("ttYear") ||
+      getValue("facultySubjectYear") ||
+      "2026-27",
 
-            content.innerHTML = `
-                <div class="page-header">
-                    <div>
-                        <h2><i class="fas ${icon}"></i> ${fn}</h2>
-                        <p>Permission: <strong>${permLabel}</strong> · ${rows.length} record(s)</p>
-                    </div>
-                    <div class="actions">${actionsHTML}</div>
-                </div>
+    semesterType:
+      getValue("semesterType") ||
+      getValue("cieType") ||
+      "ODD",
 
-                <div class="card">
-                    ${tableHTML}
-                </div>
-            `;
+    cie:
+      getValue("cieNumber") ||
+      getValue("ttCIE") ||
+      getValue("facultySubjectCIE") ||
+      "CIE-1",
 
-            // ---- Event bindings ----
-            const addBtn = document.getElementById('addBtn');
-            if (addBtn) addBtn.addEventListener('click', () => openAddForm(fn));
+    semester:
+      getValue("ttSemester") ||
+      getValue("facultySubjectSemester") ||
+      "",
 
-            const refreshBtn = document.getElementById('refreshBtn');
-            if (refreshBtn) refreshBtn.addEventListener('click', async () => {
-                const sheet = getSheetName(fn);
-                allData[fn] = await fetchData(sheet);
-                renderContent();
-                toast('Refreshed', 'success');
-            });
+    subjectName:
+      getValue("facultySubjectName"),
 
-            // Edit rows
-            document.querySelectorAll('.edit-row').forEach(el => {
-                el.addEventListener('click', () => {
-                    const idx = parseInt(el.dataset.idx);
-                    openEditForm(fn, idx);
-                });
-            });
+    subjectCode:
+      getValue("facultySubjectCode"),
 
-            // Delete rows
-            document.querySelectorAll('.delete-row').forEach(el => {
-                el.addEventListener('click', async () => {
-                    const idx = parseInt(el.dataset.idx);
-                    if (confirm(`Delete this record from "${fn}"?`)) {
-                        allData[fn].splice(idx, 1);
-                        await saveOneSheet(fn);
-                        renderContent();
-                        toast('Deleted', 'success');
-                    }
-                });
-            });
+    section:
+      getValue("facultySubjectSection"),
 
-            // Print rows
-            document.querySelectorAll('.print-row').forEach(el => {
-                el.addEventListener('click', () => {
-                    const idx = parseInt(el.dataset.idx);
-                    const row = allData[fn][idx];
-                    if (row) printRecord(fn, row);
-                });
-            });
+    strength:
+      getValue("facultySubjectStrength"),
 
-            // Print all
-            const printBtn = document.getElementById('printBtn');
-            if (printBtn) printBtn.addEventListener('click', () => printAll(fn));
-        }
+    facultyName:
+      getValue("facultyName"),
 
-        // ================================================================
-        // 8. FORMS (Add / Edit)
-        // ================================================================
-        function openAddForm(functionName) {
-            const perm = getPerm(functionName, currentRole);
-            if (!canEdit(functionName, currentRole)) {
-                toast('You cannot edit this data.', 'error');
-                return;
-            }
+    designation:
+      getValue("facultyDesignation"),
 
-            // Build dynamic form based on existing data structure
-            const existing = allData[functionName] || [];
-            let fields = {};
-            if (existing.length > 0) {
-                fields = Object.keys(existing[0]).reduce((acc, k) => { acc[k] = ''; return acc; }, {});
-            } else {
-                // Default fields based on function name
-                const defaults = {
-                    'Academic Year': { Year: '', Description: '' },
-                    'ODD/EVEN': { Semester: '', Year: '' },
-                    'CIE-1/2/3': { Exam: '', Date: '', Subject: '' },
-                    'Faculty Details': { Name: '', Department: '', Email: '', Phone: '' },
-                    'Subject': { Code: '', Name: '', Credits: '' },
-                    'Strength': { Subject: '', Total: '', Present: '' },
-                    'Timetable': { Day: '', Time: '', Room: '', Subject: '' },
-                    'Rooms': { RoomNo: '', Capacity: '', Building: '' },
-                    'Invigilation': { Exam: '', Room: '', Invigilator: '' },
-                    'Senior Supervisor': { Exam: '', Supervisor: '', Room: '' },
-                    'Squad': { Exam: '', SquadLead: '', Members: '' },
-                    'Question Paper': { Exam: '', Subject: '', File: '' },
-                    'Pocket Verification': { Exam: '', Student: '', Status: '' },
-                    'Conflict Check': { Exam: '', Conflict: '', Resolution: '' },
-                    'Duty Editing': { Date: '', Duty: '', AssignedTo: '' },
-                    'Print Reports': { Report: '', Generated: '', By: '' },
-                    'Final Lock': { Exam: '', Locked: '', LockedBy: '' }
-                };
-                fields = defaults[functionName] || { Name: '', Value: '' };
-            }
+    experience:
+      getValue("facultyExperience"),
 
-            let formHTML = '';
-            for (const [key, val] of Object.entries(fields)) {
-                formHTML += `
-                    <div class="form-group">
-                        <label>${key}</label>
-                        <input type="text" id="field_${key}" value="${val}" placeholder="Enter ${key}" />
-                    </div>
-                `;
-            }
+    employeeId:
+      getValue("facultyEmployeeId"),
 
-            const modalBody = `
-                <form id="addForm">
-                    ${formHTML}
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
-                    </div>
-                </form>
-            `;
+    day:
+      getValue("dutyDay") ||
+      getValue("specialDay") ||
+      getValue("roomDay"),
 
-            showModal(`Add New — ${functionName}`, modalBody);
+    time:
+      getValue("dutyTime") ||
+      getValue("specialTime") ||
+      getValue("roomTime"),
 
-            document.getElementById('addForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const form = e.target;
-                const data = {};
-                for (const [key] of Object.entries(fields)) {
-                    const input = document.getElementById(`field_${key}`);
-                    data[key] = input ? input.value.trim() : '';
-                }
-                // Check if empty
-                const hasValue = Object.values(data).some(v => v !== '');
-                if (!hasValue) {
-                    toast('Please fill at least one field.', 'warning');
-                    return;
-                }
-                allData[functionName].push(data);
-                await saveOneSheet(functionName);
-                closeModal();
-                renderContent();
-                toast('Record added!', 'success');
-            });
-        }
+    room:
+      getValue("dutyRoom") ||
+      getValue("roomNumber"),
 
-        function openEditForm(functionName, idx) {
-            const perm = getPerm(functionName, currentRole);
-            if (!canEdit(functionName, currentRole)) {
-                toast('You cannot edit this data.', 'error');
-                return;
-            }
-            const row = allData[functionName][idx];
-            if (!row) {
-                toast('Record not found.', 'error');
-                return;
-            }
+    invigilator:
+      getValue("dutyInvigilator"),
 
-            let formHTML = '';
-            for (const [key, val] of Object.entries(row)) {
-                formHTML += `
-                    <div class="form-group">
-                        <label>${key}</label>
-                        <input type="text" id="edit_${key}" value="${val ?? ''}" placeholder="Enter ${key}" />
-                    </div>
-                `;
-            }
+    supervisor:
+      getValue("specialStaff"),
 
-            const modalBody = `
-                <form id="editForm">
-                    ${formHTML}
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update</button>
-                    </div>
-                </form>
-            `;
+    supervisorDesignation:
+      getValue("specialDesignation")
 
-            showModal(`Edit — ${functionName}`, modalBody);
+  };
 
-            document.getElementById('editForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const form = e.target;
-                const updated = {};
-                for (const [key] of Object.entries(row)) {
-                    const input = document.getElementById(`edit_${key}`);
-                    updated[key] = input ? input.value.trim() : '';
-                }
-                allData[functionName][idx] = updated;
-                await saveOneSheet(functionName);
-                closeModal();
-                renderContent();
-                toast('Updated!', 'success');
-            });
-        }
 
-        // ================================================================
-        // 9. PRINT FUNCTIONS
-        // ================================================================
-        function printRecord(functionName, row) {
-            let text = `${functionName} Record\n${'='.repeat(40)}\n`;
-            for (const [k, v] of Object.entries(row)) {
-                text += `${k}: ${v ?? ''}\n`;
-            }
-            alert(text); // simple print preview
-            // Could also open a new window with formatted content
-        }
+  return data;
 
-        function printAll(functionName) {
-            const rows = allData[functionName] || [];
-            if (rows.length === 0) {
-                toast('No data to print.', 'warning');
-                return;
-            }
-            let text = `${functionName} — Full Report\n${'='.repeat(50)}\n\n`;
-            for (let i = 0; i < rows.length; i++) {
-                text += `Record #${i + 1}\n`;
-                for (const [k, v] of Object.entries(rows[i])) {
-                    text += `  ${k}: ${v ?? ''}\n`;
-                }
-                text += '\n';
-            }
-            // Open in new window for printing
-            const win = window.open('', '_blank');
-            if (win) {
-                win.document.write(`<pre style="font-family:monospace;padding:20px;font-size:14px;">${text}</pre>`);
-                win.document.title = `${functionName} Report`;
-                win.print();
-            } else {
-                alert(text);
-            }
-        }
+}
 
-        // ================================================================
-        // 10. PERMISSION MATRIX VIEW (extra: show full matrix)
-        // ================================================================
-        function renderPermissionMatrix() {
-            const content = document.getElementById('content');
-            const roles = ['Admin', 'HOD', 'Faculty', 'Office 1', 'Office 2'];
-            let html = `
-                <div class="page-header">
-                    <h2><i class="fas fa-table"></i> Permission Matrix</h2>
-                    <p>Complete access control overview</p>
-                </div>
-                <div class="card">
-                    <div class="table-wrap">
-                        <table class="perm-matrix">
-                            <thead>
-                                <tr>
-                                    <th>Function</th>
-                                    ${roles.map(r => `<th>${r}</th>`).join('')}
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-            for (const fn of FUNCTIONS) {
-                html += `<tr><td><strong>${fn}</strong></td>`;
-                for (const role of roles) {
-                    const p = getPerm(fn, role);
-                    const label = PERM_LABELS[p] || p;
-                    const cls = PERM_CLASSES[p] || 'none';
-                    html += `<td><span class="badge-perm ${cls}">${label}</span></td>`;
-                }
-                html += '</tr>';
-            }
-            html += `
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-            content.innerHTML = html;
-        }
 
-        // ================================================================
-        // 11. LOGIN / LOGOUT
-        // ================================================================
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const role = document.getElementById('roleSelect').value;
-            if (!role) {
-                toast('Please select a role.', 'warning');
-                return;
-            }
-            currentRole = role;
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('app').classList.add('active');
-            document.getElementById('roleDisplay').textContent = role;
+function getValue(id) {
 
-            await loadAllData();
-            renderSidebar();
+  const element =
+    document.getElementById(id);
 
-            // Show matrix by default, or first accessible function
-            const firstAccessible = FUNCTIONS.find(fn => canView(fn, currentRole));
-            if (firstAccessible) {
-                currentTab = firstAccessible;
-                renderContent();
-            } else {
-                // fallback: show matrix
-                renderPermissionMatrix();
-            }
+  return element
+    ? element.value.trim()
+    : "";
 
-            toast(`Welcome, ${role}! 👋`, 'success');
-        });
+}
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            document.getElementById('app').classList.remove('active');
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('roleSelect').value = '';
-            currentRole = 'Admin';
-            toast('Logged out.', 'info');
-        });
 
-        // ================================================================
-        // 12. INIT — load data on page load
-        // ================================================================
-        (async function init() {
-            // Pre-load data for all sheets
-            await loadAllData();
-            // Show login page by default
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('app').classList.remove('active');
-        })();
+/* ============================================================
+   MODAL
+   ============================================================ */
 
-        // Expose functions for inline onclick
-        window.closeModal = closeModal;
-        window.openAddForm = openAddForm;
-        window.openEditForm = openEditForm;
-        window.printRecord = printRecord;
-        window.printAll = printAll;
+function openModal(title, body) {
 
-        console.log('✅ ExamFlow loaded. Permissions:', PERMISSION_MATRIX);
-        console.log('ℹ️  Use localStorage fallback:', USE_LOCAL_STORAGE);
-        if (!SHEETS_API_URL && !USE_LOCAL_STORAGE) {
-            console.warn('⚠️  No SHEETS_API_URL set and localStorage disabled. Data will not persist.');
-        }
-    </script>
+  document
+    .getElementById("modalTitle")
+    .textContent = title;
+
+  document
+    .getElementById("modalBody")
+    .innerHTML = body;
+
+  document
+    .getElementById("modal")
+    .classList.add("open");
+
+}
+
+
+function closeModal() {
+
+  document
+    .getElementById("modal")
+    .classList.remove("open");
+
+}
+
+
+/* ============================================================
+   SECURITY / DISPLAY HELPERS
+   ============================================================ */
+
+function escapeHTML(value) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+  return escapeHTML(value)
+    .replace(/`/g, "&#096;");
+
+}
+
+
+/* ============================================================
+   INIT
+   ============================================================ */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    document
+      .getElementById("loginPage")
+      .style.display = "flex";
+
+    document
+      .getElementById("app")
+      .classList.remove("active");
+
+  }
+);
+
+</script>
 
 </body>
 </html>

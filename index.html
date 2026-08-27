@@ -1,1357 +1,774 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>CIE Examination System</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-background": "#0b1c30",
-                        "primary-fixed-dim": "#adc7f7",
-                        "inverse-surface": "#213145",
-                        "surface-dim": "#cbdbf5",
-                        "primary-container": "#1a365d",
-                        "primary": "#002045",
-                        "outline-variant": "#c4c6cf",
-                        "on-error": "#ffffff",
-                        "primary-fixed": "#d6e3ff",
-                        "secondary-container": "#fed65b",
-                        "surface": "#f8f9ff",
-                        "surface-container-highest": "#d3e4fe",
-                        "surface-container-lowest": "#ffffff",
-                        "surface-variant": "#d3e4fe",
-                        "error-container": "#ffdad6",
-                        "on-error-container": "#93000a",
-                        "tertiary-container": "#333638",
-                        "on-primary": "#ffffff",
-                        "on-primary-fixed-variant": "#2d476f",
-                        "surface-bright": "#f8f9ff",
-                        "secondary-fixed": "#ffe088",
-                        "on-surface": "#0b1c30",
-                        "on-tertiary-container": "#9c9fa1",
-                        "on-secondary-container": "#745c00",
-                        "surface-tint": "#455f88",
-                        "surface-container-high": "#dce9ff",
-                        "tertiary-fixed": "#e0e3e5",
-                        "on-secondary": "#ffffff",
-                        "on-tertiary-fixed": "#191c1e",
-                        "secondary": "#735c00",
-                        "surface-container": "#e5eeff",
-                        "inverse-on-surface": "#eaf1ff",
-                        "tertiary-fixed-dim": "#c4c7c9",
-                        "tertiary": "#1d2123",
-                        "background": "#f8f9ff",
-                        "surface-container-low": "#eff4ff",
-                        "inverse-primary": "#adc7f7",
-                        "on-tertiary-fixed-variant": "#444749",
-                        "on-secondary-fixed": "#241a00",
-                        "on-primary-container": "#86a0cd",
-                        "on-secondary-fixed-variant": "#574500",
-                        "on-tertiary": "#ffffff",
-                        "on-surface-variant": "#43474e",
-                        "on-primary-fixed": "#001b3c",
-                        "outline": "#74777f",
-                        "secondary-fixed-dim": "#e9c349",
-                        "error": "#ba1a1a"
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    spacing: {
-                        "margin-desktop": "32px",
-                        "unit": "8px",
-                        "gutter": "24px",
-                        "margin-mobile": "16px",
-                        "container-max": "1440px"
-                    },
-                    fontFamily: {
-                        "body-lg": ["Inter"],
-                        "display-lg": ["Inter"],
-                        "label-sm": ["Inter"],
-                        "body-md": ["Inter"],
-                        "headline-md": ["Inter"],
-                        "headline-lg": ["Inter"],
-                        "label-md": ["Inter"],
-                        "headline-lg-mobile": ["Inter"],
-                        "body-sm": ["Inter"]
-                    },
-                    fontSize: {
-                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
-                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
-                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
-                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
-                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
-                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
-                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9ff;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .material-symbols-outlined.filled {
-            font-variation-settings: 'FILL' 1;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #c4c6cf;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #74777f;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .fade-in {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        @keyframes loadProgress {
-            0% {
-                width: 0;
-            }
-            100% {
-                width: var(--target-width);
-            }
-        }
-        .progress-bar-fill {
-            animation: loadProgress 1.2s ease-out forwards;
-        }
-
-        .nav-item {
-            transition: all 0.2s ease;
-        }
-        .nav-item:hover {
-            background-color: #dce9ff;
-        }
-        .nav-item.active {
-            background-color: #1a365d;
-            color: #ffffff;
-        }
-        .nav-item.active .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1;
-        }
-
-        .role-card {
-            transition: all 0.2s ease;
-        }
-        .role-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 32, 69, 0.08);
-            border-color: #1a365d;
-        }
-
-        .view-transition {
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-        .view-hidden {
-            opacity: 0;
-            transform: scale(0.97);
-            pointer-events: none;
-            position: absolute;
-            width: 100%;
-        }
-        .view-visible {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-            position: relative;
-        }
-
-        .mobile-nav-item {
-            transition: all 0.15s ease;
-        }
-        .mobile-nav-item.active {
-            color: #002045;
-        }
-        .mobile-nav-item.active .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1;
-        }
-        .mobile-nav-item:not(.active) {
-            color: #43474e;
-        }
-        .admin-only {
-            display: none;
-        }
-        .admin-only.visible {
-            display: flex;
-        }
-    </style>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIE Examination Management</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #222; }
+    #loginPage { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a8a, #2563eb); padding: 20px; }
+    .login-box { width: 100%; max-width: 420px; background: white; padding: 35px; border-radius: 15px; box-shadow: 0 15px 40px rgba(0,0,0,.2); }
+    .login-box h1 { margin-top: 0; text-align: center; color: #1e3a8a; }
+    .login-box p { text-align: center; color: #666; }
+    input, select, textarea { width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 7px; margin-top: 6px; margin-bottom: 15px; font-size: 14px; }
+    button { border: none; padding: 11px 16px; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .login-btn { width: 100%; background: #2563eb; color: white; }
+    #app { display: none; min-height: 100vh; }
+    .topbar { height: 65px; background: #1e3a8a; color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; }
+    .topbar h2 { margin: 0; font-size: 20px; }
+    .user-info { display: flex; align-items: center; gap: 15px; }
+    .logout { background: #dc2626; color: white; }
+    .layout { display: flex; min-height: calc(100vh - 65px); }
+    .sidebar { width: 250px; background: #111827; color: white; padding: 15px; }
+    .sidebar h3 { margin: 10px 0 15px; color: #93c5fd; }
+    .menu-btn { width: 100%; text-align: left; background: transparent; color: #ddd; margin-bottom: 5px; padding: 12px; }
+    .menu-btn:hover, .menu-btn.active { background: #2563eb; color: white; }
+    .content { flex: 1; padding: 25px; overflow-x: auto; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .page-title { margin-top: 0; color: #1e3a8a; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-top: 20px; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 3px 12px rgba(0,0,0,.08); text-align: center; }
+    .card h3 { margin-top: 0; }
+    .card p { color: #666; }
+    .stat-card { background: #2563eb; color: white; }
+    .stat-card p { color: #ddd; }
+    .primary { background: #2563eb; color: white; }
+    .success { background: #16a34a; color: white; }
+    .warning { background: #d97706; color: white; }
+    .danger { background: #dc2626; color: white; }
+    .dark { background: #374151; color: white; }
+    .table-container { background: white; padding: 15px; border-radius: 10px; overflow-x: auto; margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; white-space: nowrap; }
+    th { background: #eff6ff; color: #1e3a8a; }
+    .form-box { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; max-width: 900px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+    .form-group label { font-weight: 600; font-size: 13px; }
+    .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-success { background: #16a34a; color: white; }
+    .btn-warning { background: #d97706; color: white; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+    @media(max-width: 768px) { .sidebar { width: 210px; } .topbar { padding: 0 12px; } .topbar h2 { font-size: 16px; } .content { padding: 15px; } }
+    .welcome-banner { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 20px; }
+    .dashboard-grid .table-container { margin-top: 0; }
+    @media(max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .slot-select { width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
+    .timetable-grid td { text-align: center; vertical-align: middle; }
+    .slot-actions { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin-top: 5px; }
+    .slot-actions button { padding: 4px 8px; font-size: 12px; }
+    .has-subject { background-color: #e8f5e9; }
+  </style>
 </head>
 <body>
 
-    <!-- ============================================================ -->
-    <!-- APP CONTAINER -->
-    <!-- ============================================================ -->
-    <div id="app" class="min-h-screen flex flex-col md:flex-row bg-background text-on-background">
-
-        <!-- ========================================================== -->
-        <!-- LOGIN VIEW (shown initially) -->
-        <!-- ========================================================== -->
-        <div id="loginView" class="view-visible w-full min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop">
-            <div class="w-full max-w-[1024px] bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden flex flex-col md:flex-row">
-
-                <!-- Left Branding -->
-                <div class="hidden md:block md:w-1/2 relative bg-surface-container-low" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8QVzKEY4ZONHAyKnrW2q89Wd9ttlW0mlxj0J7A01JbVAZ9r2iZZN1-4YZbF2AN9eTCpV_nZyh6UiDXBHFWPKZf4xNNRDnS3e5Q5Fluu-ka1ql-KLOF8m_8Ixu-K8litnNn50w9pisRz8k1FtE4MFn0m3O7FkqgHW_p-IHavv2RCjQRO3Xwnr_4l6OYoKAWQ7BAVgKV_Hxwor6BwprttQl0V537qHQikarvkeo-yDTH5KYPv5vLYMP'); background-size: cover; background-position: center;">
-                    <div class="absolute inset-0 bg-primary/80 flex flex-col justify-between p-12">
-                        <div>
-                            <div class="flex items-center gap-3 mb-6">
-                                <span class="material-symbols-outlined text-on-primary text-4xl filled">account_balance</span>
-                                <h1 class="font-headline-lg text-headline-lg text-on-primary tracking-tight">CIE Examination</h1>
-                            </div>
-                            <p class="font-body-lg text-body-lg text-primary-fixed-dim">Academic Excellence System</p>
-                        </div>
-                        <div>
-                            <p class="font-body-md text-body-md text-surface-container-highest">Secure login portal for faculty and administration. Ensure academic integrity and streamlined examination management.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Login Area -->
-                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-surface-container-lowest relative">
-
-                    <!-- Mobile Brand -->
-                    <div class="md:hidden flex items-center gap-2 mb-8 justify-center">
-                        <span class="material-symbols-outlined text-primary text-3xl filled">account_balance</span>
-                        <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">CIE Examination</h1>
-                    </div>
-
-                    <!-- Login Form -->
-                    <div id="loginFormView" class="transition-all duration-300">
-                        <div class="mb-8 text-center md:text-left">
-                            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Welcome Back</h2>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Please enter your institutional credentials.</p>
-                        </div>
-                        <form class="space-y-6" onsubmit="handleLogin(event)">
-                            <div>
-                                <label class="block font-label-md text-label-md text-on-surface mb-1" for="employee-id">Employee ID</label>
-                                <div class="relative">
-                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">badge</span>
-                                    <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="employee-id" placeholder="e.g. EMP12345" required type="text" value="EMP12345" />
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block font-label-md text-label-md text-on-surface mb-1" for="password">Password</label>
-                                <div class="relative">
-                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
-                                    <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="password" placeholder="••••••••" required type="password" value="password" />
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input class="w-4 h-4 rounded text-primary border-outline-variant focus:ring-primary focus:ring-offset-surface-container-lowest bg-surface-container-lowest" type="checkbox" checked />
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">Remember me</span>
-                                </label>
-                                <a class="font-label-sm text-label-sm text-primary hover:underline" href="#">Forgot Password?</a>
-                            </div>
-                            <button class="w-full bg-primary text-on-primary py-3 px-4 rounded font-label-md text-label-md hover:bg-primary-container transition-colors active:opacity-80 flex items-center justify-center gap-2" type="submit">
-                                Sign In
-                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Role Selection (hidden initially) -->
-                    <div id="roleSelectionView" class="hidden transition-all duration-300">
-                        <div class="mb-8 text-center md:text-left">
-                            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Select Role</h2>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant">Choose your active role for this session.</p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button onclick="selectRole('hod')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
-                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
-                                    <span class="material-symbols-outlined text-primary text-2xl">supervisor_account</span>
-                                </div>
-                                <span class="font-label-md text-label-md text-on-surface">HOD</span>
-                            </button>
-                            <button onclick="selectRole('faculty')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
-                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
-                                    <span class="material-symbols-outlined text-primary text-2xl">school</span>
-                                </div>
-                                <span class="font-label-md text-label-md text-on-surface">Faculty</span>
-                            </button>
-                            <button onclick="selectRole('office')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
-                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
-                                    <span class="material-symbols-outlined text-primary text-2xl">support_agent</span>
-                                </div>
-                                <span class="font-label-md text-label-md text-on-surface">Office Staff</span>
-                            </button>
-                            <button onclick="selectRole('admin')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
-                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
-                                    <span class="material-symbols-outlined text-primary text-2xl">admin_panel_settings</span>
-                                </div>
-                                <span class="font-label-md text-label-md text-on-surface">Admin</span>
-                            </button>
-                        </div>
-                        <button class="mt-8 w-full bg-transparent border border-primary text-primary py-3 px-4 rounded font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" onclick="goBackToLogin()">
-                            <span class="material-symbols-outlined text-sm">arrow_back</span>
-                            Back to Login
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- ========================================================== -->
-        <!-- DASHBOARD VIEW (hidden initially) -->
-        <!-- ========================================================== -->
-        <div id="dashboardView" class="view-hidden w-full min-h-screen flex flex-col md:flex-row">
-
-            <!-- ========================================================== -->
-            <!-- NAVIGATION DRAWER (Desktop) -->
-            <!-- ========================================================== -->
-            <nav id="desktopNav" class="hidden md:flex h-screen w-[280px] fixed left-0 top-0 border-r border-outline-variant bg-surface flex-col gap-1 py-4 z-40 shadow-sm overflow-y-auto flex-shrink-0">
-
-                <!-- Header -->
-                <div class="px-6 pb-6 border-b border-outline-variant/30 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">CE</div>
-                    <div>
-                        <h2 class="font-headline-md text-headline-md text-primary tracking-tight">CIE Exam</h2>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant" id="navRoleDisplay">Admin</p>
-                    </div>
-                </div>
-
-                <!-- Nav Items -->
-                <div class="flex flex-col gap-1 px-3 pt-4">
-                    <a href="#" onclick="switchDashboardTab('overview')" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="overview">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        <span class="font-label-md text-label-md">Overview</span>
-                    </a>
-                    <a href="#" onclick="switchDashboardTab('subjects')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="subjects">
-                        <span class="material-symbols-outlined">book</span>
-                        <span class="font-label-md text-label-md">Subjects</span>
-                    </a>
-                    <a href="#" onclick="switchDashboardTab('timetable')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="timetable">
-                        <span class="material-symbols-outlined">event_available</span>
-                        <span class="font-label-md text-label-md">Timetable</span>
-                    </a>
-                    <a href="#" onclick="switchDashboardTab('duties')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="duties">
-                        <span class="material-symbols-outlined">assignment_ind</span>
-                        <span class="font-label-md text-label-md">Duties</span>
-                    </a>
-                    <a href="#" onclick="switchDashboardTab('verification')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="verification">
-                        <span class="material-symbols-outlined">verified</span>
-                        <span class="font-label-md text-label-md">Verification</span>
-                    </a>
-                    <a href="#" onclick="switchDashboardTab('conduct')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="conduct">
-                        <span class="material-symbols-outlined">gavel</span>
-                        <span class="font-label-md text-label-md">Conduct</span>
-                    </a>
-                    <!-- Admin-only nav item -->
-                    <a href="#" onclick="switchDashboardTab('admin-setup')" class="nav-item admin-only flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="admin-setup" id="adminSetupNav">
-                        <span class="material-symbols-outlined">settings</span>
-                        <span class="font-label-md text-label-md">Admin Setup</span>
-                    </a>
-                </div>
-
-                <!-- Logout -->
-                <div class="mt-auto px-3 pt-4 border-t border-outline-variant/30">
-                    <button onclick="handleLogout()" class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-error-container/20 hover:text-error transition-all w-full cursor-pointer">
-                        <span class="material-symbols-outlined">logout</span>
-                        <span class="font-label-md text-label-md">Logout</span>
-                    </button>
-                </div>
-            </nav>
-
-            <!-- ========================================================== -->
-            <!-- MAIN CONTENT -->
-            <!-- ========================================================== -->
-            <div class="flex-1 md:ml-[280px] flex flex-col min-h-screen">
-
-                <!-- TopAppBar -->
-                <header class="bg-surface-container-lowest text-primary w-full sticky top-0 border-b border-outline-variant flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 z-30 flex-shrink-0">
-                    <div class="flex items-center gap-4">
-                        <button onclick="toggleMobileNav()" class="md:hidden p-2 -ml-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer active:opacity-80">
-                            <span class="material-symbols-outlined">menu</span>
-                        </button>
-                        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight">CIE Examination</h1>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer active:opacity-80">
-                            <span class="material-symbols-outlined">notifications</span>
-                        </button>
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer active:opacity-80 hover:ring-2 ring-primary-container transition-all bg-surface-variant flex items-center justify-center">
-                            <span class="material-symbols-outlined text-on-surface-variant">person</span>
-                        </div>
-                    </div>
-                </header>
-
-                <!-- ========================================================== -->
-                <!-- DASHBOARD TABS CONTENT -->
-                <!-- ========================================================== -->
-                <main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pb-24 md:pb-8 overflow-y-auto">
-
-                    <!-- ===================== TAB: OVERVIEW ===================== -->
-                    <div id="tab-overview" class="dashboard-tab space-y-6 fade-in">
-                        <!-- Welcome -->
-                        <section class="flex flex-col gap-1">
-                            <h1 class="font-display-lg text-display-lg text-primary" id="dashboardGreeting">Dashboard</h1>
-                            <p class="font-body-md text-body-md text-on-surface-variant" id="dashboardSubGreeting">Manage your CIE Examination tasks.</p>
-                        </section>
-
-                        <!-- Progress Widget -->
-                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
-                            <div class="flex-1 w-full">
-                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Overall CIE Completion</h3>
-                                <p class="font-body-md text-body-md text-on-surface-variant mb-4">Fall Semester 2024 — Progress across all departments</p>
-                                <div class="w-full bg-surface-container h-4 rounded-full overflow-hidden">
-                                    <div class="bg-primary h-full rounded-full progress-bar-fill" style="--target-width: 68%; width: 68%;"></div>
-                                </div>
-                                <div class="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
-                                    <span>0%</span>
-                                    <span class="font-bold text-primary">68% Completed</span>
-                                    <span>100%</span>
-                                </div>
-                            </div>
-                            <div class="flex gap-4 w-full md:w-auto">
-                                <div class="bg-surface p-4 rounded-lg border border-outline-variant flex-1 md:flex-none md:w-32 text-center">
-                                    <span class="block font-display-lg text-display-lg text-primary">12</span>
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant">Active Exams</span>
-                                </div>
-                                <div class="bg-surface p-4 rounded-lg border border-outline-variant flex-1 md:flex-none md:w-32 text-center">
-                                    <span class="block font-display-lg text-display-lg text-secondary-container-dark">4</span>
-                                    <span class="font-label-sm text-label-sm text-on-surface-variant">Pending Review</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Quick Stats Grid -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-full bg-primary-container/10 flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined text-primary text-3xl">groups</span>
-                                </div>
-                                <div>
-                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Faculty</p>
-                                    <p class="font-display-lg text-display-lg text-primary">48</p>
-                                </div>
-                            </div>
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined text-secondary text-3xl">description</span>
-                                </div>
-                                <div>
-                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Q Papers</p>
-                                    <p class="font-display-lg text-display-lg text-primary">32</p>
-                                </div>
-                            </div>
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
-                                <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                                    <span class="material-symbols-outlined text-green-700 text-3xl">check_circle</span>
-                                </div>
-                                <div>
-                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Verified</p>
-                                    <p class="font-display-lg text-display-lg text-primary">28</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: SUBJECTS ===================== -->
-                    <div id="tab-subjects" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h2 class="font-headline-lg text-headline-lg text-primary">Assigned Subjects</h2>
-                                <p class="font-body-md text-body-md text-on-surface-variant">Manage your subjects, strength, and question papers.</p>
-                            </div>
-                            <button class="bg-secondary text-on-secondary font-label-md px-4 py-2 rounded flex items-center gap-2 hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
-                                <span class="material-symbols-outlined text-[20px]">add</span>
-                                Add Entry
-                            </button>
-                        </div>
-
-                        <div class="space-y-4">
-                            <!-- Subject 1 -->
-                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">CS301</span>
-                                        <h3 class="font-body-lg text-on-surface font-semibold">Data Structures</h3>
-                                    </div>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 3 • B.Tech Computer Science</p>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
-                                            <span class="font-body-md text-on-surface font-semibold leading-tight">120</span>
-                                        </div>
-                                    </div>
-                                    <button class="bg-primary text-on-primary font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
-                                        <span class="material-symbols-outlined text-[18px]">upload</span>
-                                        Upload Paper
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Subject 2 -->
-                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">CS305</span>
-                                        <h3 class="font-body-lg text-on-surface font-semibold">Database Systems</h3>
-                                    </div>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 3 • B.Tech Computer Science</p>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
-                                            <span class="font-body-md text-on-surface font-semibold leading-tight">115</span>
-                                        </div>
-                                    </div>
-                                    <div class="bg-[#e6f4ea] text-[#137333] border border-[#ceead6] font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
-                                        <span class="material-symbols-outlined text-[18px] filled">check_circle</span>
-                                        Paper Submitted
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Subject 3 -->
-                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
-                                <div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">MA202</span>
-                                        <h3 class="font-body-lg text-on-surface font-semibold">Applied Mathematics IV</h3>
-                                    </div>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 4 • B.Tech Mathematics</p>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
-                                        <div class="flex flex-col">
-                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
-                                            <span class="font-body-md text-on-surface font-semibold leading-tight">98</span>
-                                        </div>
-                                    </div>
-                                    <button class="bg-primary text-on-primary font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
-                                        <span class="material-symbols-outlined text-[18px]">upload</span>
-                                        Upload Paper
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: TIMETABLE ===================== -->
-                    <div id="tab-timetable" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                            <div>
-                                <h2 class="font-headline-lg text-headline-lg text-primary">Timetable Overview</h2>
-                                <p class="font-body-md text-body-md text-on-surface-variant">Manage schedules and faculty coordination for upcoming CIEs.</p>
-                            </div>
-                            <button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-full flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm">
-                                <span class="material-symbols-outlined text-[18px]">add</span>
-                                Create Schedule
-                            </button>
-                        </div>
-
-                        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-headline-md text-headline-md text-on-background flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-primary">event</span>
-                                    Upcoming Examinations
-                                </h3>
-                                <a class="font-label-md text-label-md text-primary hover:underline" href="#">View All</a>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse min-w-[600px]">
-                                    <thead>
-                                        <tr class="bg-surface-container-low border-b border-outline-variant">
-                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant rounded-tl-lg">Date &amp; Time</th>
-                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Course Code</th>
-                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Subject</th>
-                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Venue</th>
-                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant rounded-tr-lg">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="font-body-sm text-body-sm">
-                                        <tr class="border-b border-outline-variant/50 hover:bg-surface-container-highest/50 transition-colors">
-                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 15, 2023</div><div class="text-on-surface-variant text-xs">10:00 AM - 12:00 PM</div></td>
-                                            <td class="py-3 px-4">CS401</td>
-                                            <td class="py-3 px-4">Database Management Systems</td>
-                                            <td class="py-3 px-4">Block A, Room 101</td>
-                                            <td class="py-3 px-4">
-                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
-                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-outline-variant/50 hover:bg-surface-container-highest/50 transition-colors">
-                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 16, 2023</div><div class="text-on-surface-variant text-xs">02:00 PM - 04:00 PM</div></td>
-                                            <td class="py-3 px-4">EE305</td>
-                                            <td class="py-3 px-4">Signals and Systems</td>
-                                            <td class="py-3 px-4">Block B, Hall 2</td>
-                                            <td class="py-3 px-4">
-                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
-                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-surface-container-highest/50 transition-colors">
-                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 18, 2023</div><div class="text-on-surface-variant text-xs">09:30 AM - 11:30 AM</div></td>
-                                            <td class="py-3 px-4">MA202</td>
-                                            <td class="py-3 px-4">Applied Mathematics IV</td>
-                                            <td class="py-3 px-4">Main Auditorium</td>
-                                            <td class="py-3 px-4">
-                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
-                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- QP Verification & Manage Timetable -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
-                                <h3 class="font-headline-md text-headline-md text-on-background mb-4 flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-primary">verified</span>
-                                    QP Verification
-                                </h3>
-                                <div class="flex flex-col gap-5">
-                                    <div>
-                                        <div class="flex justify-between items-end mb-2">
-                                            <span class="font-label-md text-label-md text-on-background">CS401 - DBMS</span>
-                                            <span class="font-body-sm text-body-sm font-semibold text-primary">100%</span>
-                                        </div>
-                                        <div class="w-full bg-surface-container-high rounded-full h-2">
-                                            <div class="bg-green-600 h-2 rounded-full" style="width:100%"></div>
-                                        </div>
-                                        <div class="mt-1 flex items-center gap-1 text-green-700 text-xs font-medium">
-                                            <span class="material-symbols-outlined text-[14px] filled">check_circle</span> Verified &amp; Approved
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-end mb-2">
-                                            <span class="font-label-md text-label-md text-on-background">EE305 - Signals</span>
-                                            <span class="font-body-sm text-body-sm font-semibold text-amber-600">60%</span>
-                                        </div>
-                                        <div class="w-full bg-surface-container-high rounded-full h-2">
-                                            <div class="bg-amber-500 h-2 rounded-full" style="width:60%"></div>
-                                        </div>
-                                        <div class="mt-1 flex items-center gap-1 text-amber-700 text-xs font-medium">
-                                            <span class="material-symbols-outlined text-[14px]">pending</span> Pending HOD Approval
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-end mb-2">
-                                            <span class="font-label-md text-label-md text-on-background">MA202 - Math IV</span>
-                                            <span class="font-body-sm text-body-sm font-semibold text-error">0%</span>
-                                        </div>
-                                        <div class="w-full bg-surface-container-high rounded-full h-2">
-                                            <div class="bg-error h-2 rounded-full" style="width:5%"></div>
-                                        </div>
-                                        <div class="mt-1 flex items-center gap-1 text-error text-xs font-medium">
-                                            <span class="material-symbols-outlined text-[14px]">error</span> Draft Not Submitted
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="rounded-xl border border-outline-variant p-6 shadow-sm flex flex-col justify-center relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9ff 0%, #e5eeff 100%);">
-                                <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary-fixed-dim rounded-full opacity-20 blur-2xl"></div>
-                                <div class="relative z-10">
-                                    <h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">Manage CIE Timetable</h3>
-                                    <p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-sm">Draft, review, and publish examination schedules. Ensure zero clashes for cross-department electives.</p>
-                                    <div class="flex flex-wrap gap-4">
-                                        <button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors shadow-sm">Open Scheduler</button>
-                                        <button class="border border-primary text-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors bg-transparent">View Conflicts</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: DUTIES ===================== -->
-                    <div id="tab-duties" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div>
-                            <h2 class="font-headline-lg text-headline-lg text-primary">Upcoming Duties</h2>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Manage invigilation, evaluation, and coordination duties.</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Duty 1 -->
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
-                                <div class="flex gap-4">
-                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
-                                        <span class="font-label-sm text-primary uppercase">Oct</span>
-                                        <span class="font-display-lg text-display-lg text-primary leading-none">15</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-label-md text-on-surface font-semibold">Invigilation - Room 302</h4>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 09:30 AM - 12:30 PM
-                                        </p>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">person</span> Dr. Sarah Jenkins
-                                        </p>
-                                        <span class="inline-block mt-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Confirmed</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Duty 2 -->
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
-                                <div class="flex gap-4">
-                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
-                                        <span class="font-label-sm text-primary uppercase">Oct</span>
-                                        <span class="font-display-lg text-display-lg text-primary leading-none">18</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-label-md text-on-surface font-semibold">Evaluation - Section A</h4>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">schedule</span> Deadline: 5:00 PM
-                                        </p>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">person</span> Prof. Michael Chen
-                                        </p>
-                                        <span class="inline-block mt-2 bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-semibold">Pending</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Duty 3 -->
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
-                                <div class="flex gap-4">
-                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
-                                        <span class="font-label-sm text-primary uppercase">Oct</span>
-                                        <span class="font-display-lg text-display-lg text-primary leading-none">22</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-label-md text-on-surface font-semibold">Chief Superintendent</h4>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 08:30 AM - 01:30 PM
-                                        </p>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">person</span> Dr. Emily Thorne
-                                        </p>
-                                        <span class="inline-block mt-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Confirmed</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Duty 4 (Unassigned) -->
-                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm border-dashed">
-                                <div class="flex gap-4">
-                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
-                                        <span class="font-label-sm text-primary uppercase">Oct</span>
-                                        <span class="font-display-lg text-display-lg text-primary leading-none">25</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-label-md text-on-surface font-semibold">Invigilation - Room 104</h4>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 02:00 PM - 05:00 PM
-                                        </p>
-                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
-                                            <span class="material-symbols-outlined text-[16px]">person</span> <span class="italic">Unassigned</span>
-                                        </p>
-                                        <button class="mt-2 bg-primary text-on-primary font-label-md text-label-md px-4 py-1.5 rounded text-sm hover:bg-primary/90 transition-colors">Assign Duty</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: VERIFICATION ===================== -->
-                    <div id="tab-verification" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div>
-                            <h2 class="font-headline-lg text-headline-lg text-primary">Verification Queue</h2>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Review and verify question papers submitted by faculty.</p>
-                        </div>
-
-                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
-                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
-                                    <span class="material-symbols-outlined">verified</span> Pending Reviews
-                                </h3>
-                                <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">3 Pending</span>
-                            </div>
-                            <div class="overflow-x-auto p-4">
-                                <table class="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr class="border-b border-outline-variant text-on-surface-variant font-label-md text-label-md bg-surface-container-low">
-                                            <th class="p-3 font-medium">Paper Code</th>
-                                            <th class="p-3 font-medium">Subject</th>
-                                            <th class="p-3 font-medium">Setter</th>
-                                            <th class="p-3 font-medium">Status</th>
-                                            <th class="p-3 font-medium text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="font-body-sm text-body-sm">
-                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
-                                            <td class="p-3 font-bold">CS-401</td>
-                                            <td class="p-3">Data Structures</td>
-                                            <td class="p-3">Dr. A. Smith</td>
-                                            <td class="p-3">
-                                                <span class="bg-secondary-container/20 text-secondary-dark px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
-                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Pending Review
-                                                </span>
-                                            </td>
-                                            <td class="p-3 text-right">
-                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Verify</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
-                                            <td class="p-3 font-bold">ENG-102</td>
-                                            <td class="p-3">Tech Communication</td>
-                                            <td class="p-3">Prof. J. Doe</td>
-                                            <td class="p-3">
-                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
-                                                    <span class="material-symbols-outlined text-[14px] filled">check_circle</span> Verified
-                                                </span>
-                                            </td>
-                                            <td class="p-3 text-right">
-                                                <button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
-                                            <td class="p-3 font-bold">MATH-201</td>
-                                            <td class="p-3">Linear Algebra</td>
-                                            <td class="p-3">Dr. R. Singh</td>
-                                            <td class="p-3">
-                                                <span class="bg-secondary-container/20 text-secondary-dark px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
-                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Pending Review
-                                                </span>
-                                            </td>
-                                            <td class="p-3 text-right">
-                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Verify</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-surface transition-colors">
-                                            <td class="p-3 font-bold">PHY-301</td>
-                                            <td class="p-3">Quantum Physics</td>
-                                            <td class="p-3">Dr. M. Khan</td>
-                                            <td class="p-3">
-                                                <span class="bg-error-container/20 text-error px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
-                                                    <span class="material-symbols-outlined text-[14px]">error</span> Rejected
-                                                </span>
-                                            </td>
-                                            <td class="p-3 text-right">
-                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Resubmit</button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: CONDUCT ===================== -->
-                    <div id="tab-conduct" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div>
-                            <h2 class="font-headline-lg text-headline-lg text-primary">Exam Conduct</h2>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Live status, room monitoring, and incident reporting.</p>
-                        </div>
-
-                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm relative overflow-hidden">
-                            <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #002045 1px, transparent 0); background-size: 24px 24px;"></div>
-                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center relative z-10">
-                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
-                                    <span class="material-symbols-outlined">gavel</span> Live Status
-                                </h3>
-                                <span class="font-label-sm text-label-sm text-on-surface-variant">Fall 2024</span>
-                            </div>
-                            <div class="p-6 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Current Session -->
-                                <div class="bg-surface border border-outline-variant rounded-lg p-5 flex flex-col gap-4">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Current Session</h4>
-                                            <p class="font-headline-md text-headline-md text-primary">Morning (09:00 - 12:00)</p>
-                                        </div>
-                                        <div class="h-3 w-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]" title="Live"></div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-4 mt-2">
-                                        <div>
-                                            <p class="font-label-sm text-label-sm text-on-surface-variant">Rooms Active</p>
-                                            <p class="font-body-lg text-body-lg text-on-surface font-semibold">12 / 12</p>
-                                        </div>
-                                        <div>
-                                            <p class="font-label-sm text-label-sm text-on-surface-variant">Attendance</p>
-                                            <p class="font-body-lg text-body-lg text-on-surface font-semibold">98.5%</p>
-                                        </div>
-                                    </div>
-                                    <button class="mt-auto w-full py-2 bg-secondary-container text-on-secondary-container rounded font-label-md text-label-md hover:bg-secondary-container/90 transition-colors font-bold">Report Incident</button>
-                                </div>
-
-                                <!-- Alerts -->
-                                <div class="flex flex-col gap-3">
-                                    <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1">Active Alerts</h4>
-                                    <div class="p-3 border-l-4 border-secondary-container bg-surface flex items-start gap-3 rounded-r shadow-sm">
-                                        <span class="material-symbols-outlined text-secondary-dark mt-0.5">warning</span>
-                                        <div>
-                                            <p class="font-label-md text-label-md text-on-surface">Late start in Room 104</p>
-                                            <p class="font-body-sm text-body-sm text-on-surface-variant">Invigilator arrived 5 mins late. Adjusted end time.</p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 border-l-4 border-outline-variant bg-surface flex items-start gap-3 rounded-r shadow-sm opacity-60">
-                                        <span class="material-symbols-outlined text-outline mt-0.5">info</span>
-                                        <div>
-                                            <p class="font-label-md text-label-md text-on-surface">Question Paper Distribution</p>
-                                            <p class="font-body-sm text-body-sm text-on-surface-variant">Completed across all venues at 08:55 AM.</p>
-                                        </div>
-                                    </div>
-                                    <div class="p-3 border-l-4 border-green-500 bg-surface flex items-start gap-3 rounded-r shadow-sm">
-                                        <span class="material-symbols-outlined text-green-600 mt-0.5 filled">check_circle</span>
-                                        <div>
-                                            <p class="font-label-md text-label-md text-on-surface">All venues operational</p>
-                                            <p class="font-body-sm text-body-sm text-on-surface-variant">No disruptions reported. Smooth conduct.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ===================== TAB: ADMIN SETUP (new) ===================== -->
-                    <div id="tab-admin-setup" class="dashboard-tab hidden space-y-6 fade-in">
-                        <div>
-                            <h2 class="font-headline-lg text-headline-lg text-primary">Admin Setup</h2>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Create new academic IDs, manage semesters and CIE phases.</p>
-                        </div>
-
-                        <!-- Create New ID Form -->
-                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
-                            <h3 class="font-headline-md text-headline-md text-on-background mb-4 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-primary">add_circle</span>
-                                Create New ID
-                            </h3>
-                            <form id="adminSetupForm" onsubmit="handleAdminSetup(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="newId">New ID / Faculty Code</label>
-                                    <input class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="newId" placeholder="e.g. FAC-2024-01" required />
-                                </div>
-                                <div>
-                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="academicYear">Academic Year</label>
-                                    <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="academicYear">
-                                        <option value="2024-25">2024-25</option>
-                                        <option value="2025-26">2025-26</option>
-                                        <option value="2026-27">2026-27</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="semesterType">Semester Type</label>
-                                    <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="semesterType">
-                                        <option value="ODD">ODD</option>
-                                        <option value="EVEN">EVEN</option>
-                                        <option value="SUMMER">SUMMER</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-label-md text-label-md text-on-surface mb-1">CIE Phases</label>
-                                    <div class="flex flex-wrap gap-3 pt-1">
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 1" checked /> CIE 1
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 2" checked /> CIE 2
-                                        </label>
-                                        <label class="flex items-center gap-1 cursor-pointer">
-                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 3" /> CIE 3
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="md:col-span-2 flex justify-end">
-                                    <button type="submit" class="bg-primary text-on-primary font-label-md px-6 py-2 rounded hover:bg-primary/90 transition-colors flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-[18px]">save</span> Create ID
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Existing Records Table -->
-                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
-                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
-                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
-                                    <span class="material-symbols-outlined">list</span> Existing Academic IDs
-                                </h3>
-                                <span class="font-label-sm text-label-sm text-on-surface-variant" id="recordCount">4 entries</span>
-                            </div>
-                            <div class="overflow-x-auto p-4">
-                                <table class="w-full text-left border-collapse" id="adminTable">
-                                    <thead>
-                                        <tr class="border-b border-outline-variant text-on-surface-variant font-label-md text-label-md bg-surface-container-low">
-                                            <th class="p-3 font-medium">ID</th>
-                                            <th class="p-3 font-medium">Academic Year</th>
-                                            <th class="p-3 font-medium">Semester</th>
-                                            <th class="p-3 font-medium">CIE Phases</th>
-                                            <th class="p-3 font-medium text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="adminTableBody" class="font-body-sm text-body-sm">
-                                        <!-- rows will be injected by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                </main>
-
-                <!-- ========================================================== -->
-                <!-- BOTTOM NAV (Mobile) -->
-                <!-- ========================================================== -->
-                <nav id="mobileNav" class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-                    <button onclick="switchDashboardTab('overview')" class="mobile-nav-item active flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="overview">
-                        <span class="material-symbols-outlined text-[24px]">dashboard</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Overview</span>
-                    </button>
-                    <button onclick="switchDashboardTab('subjects')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="subjects">
-                        <span class="material-symbols-outlined text-[24px]">book</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Subjects</span>
-                    </button>
-                    <button onclick="switchDashboardTab('timetable')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="timetable">
-                        <span class="material-symbols-outlined text-[24px]">event_available</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Timetable</span>
-                    </button>
-                    <button onclick="switchDashboardTab('duties')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="duties">
-                        <span class="material-symbols-outlined text-[24px]">assignment_ind</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Duties</span>
-                    </button>
-                    <button onclick="switchDashboardTab('verification')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="verification">
-                        <span class="material-symbols-outlined text-[24px]">verified</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Verify</span>
-                    </button>
-                    <button onclick="switchDashboardTab('conduct')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="conduct">
-                        <span class="material-symbols-outlined text-[24px]">gavel</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Conduct</span>
-                    </button>
-                    <!-- Admin-only mobile nav -->
-                    <button onclick="switchDashboardTab('admin-setup')" class="mobile-nav-item admin-only flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="admin-setup">
-                        <span class="material-symbols-outlined text-[24px]">settings</span>
-                        <span class="font-label-sm text-[10px] leading-tight">Setup</span>
-                    </button>
-                </nav>
-
-            </div>
-            <!-- end main content wrapper -->
-        </div>
-        <!-- end dashboardView -->
-
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="login-box">
+    <div id="loginForm">
+      <h1>CIE Management</h1>
+      <p>Continuous Internal Evaluation</p>
+      <label>Official Email</label>
+      <input type="email" id="loginEmail" placeholder="Enter official email">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password">
+      <button class="login-btn" onclick="login()">LOGIN</button>
+      <p id="loginMessage"></p>
+      <hr>
+      <p>New user? <button type="button" onclick="showSignup()" style="background:none;color:#2563eb;padding:0;">SIGN UP</button></p>
     </div>
-    <!-- end app -->
+    <div id="signupForm" style="display:none;">
+      <h1>Create Account</h1>
+      <p>CIE Examination System</p>
+      <label>Full Name *</label>
+      <input type="text" id="signupName" placeholder="Enter full name">
+      <label>Official Email *</label>
+      <input type="email" id="signupEmail" placeholder="College email">
+      <label>Mobile Number</label>
+      <input type="text" id="signupMobile" placeholder="Mobile number">
+      <label>Designation *</label>
+      <select id="signupDesignation">
+        <option value="">Select Designation</option>
+        <option>Professor</option>
+        <option>Associate Professor</option>
+        <option>Assistant Professor</option>
+        <option>HOD</option>
+        <option>Office Staff</option>
+      </select>
+      <label>Department / Branch *</label>
+      <select id="signupDepartment">
+        <option value="">Select Department</option>
+        <option>CSE</option><option>ISE</option><option>ECE</option><option>EEE</option>
+        <option>ME</option><option>CIVIL</option><option>AIML</option><option>DS</option>
+        <option>CHEMICAL</option><option>AERONAUTICAL</option><option>BIOTECH</option>
+        <option>MATHEMATICS</option><option>OTHER</option>
+      </select>
+      <label>Requested Role *</label>
+      <select id="signupRole">
+        <option value="FACULTY">Faculty</option>
+        <option value="HOD">HOD</option>
+        <option value="OFFICE_STAFF_1">Office Staff 1</option>
+        <option value="OFFICE_STAFF_2">Office Staff 2</option>
+      </select>
+      <label>Employee ID</label>
+      <input type="text" id="signupEmployeeId" placeholder="Employee ID">
+      <label>Password *</label>
+      <input type="password" id="signupPassword" placeholder="Create password">
+      <label>Confirm Password *</label>
+      <input type="password" id="signupConfirmPassword" placeholder="Confirm password">
+      <button class="login-btn" onclick="signup()">CREATE ACCOUNT</button>
+      <p id="signupMessage"></p>
+      <hr>
+      <p>Already registered? <button type="button" onclick="showLogin()" style="background:none;color:#2563eb;padding:0;">LOGIN</button></p>
+    </div>
+  </div>
+</div>
 
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <h2>CIE Examination Management</h2>
+    <div class="user-info">
+      <span id="loggedUser">User</span>
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="sidebar">
+      <h3 id="roleTitle">Dashboard</h3>
+      <div id="menu"></div>
+    </div>
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div id="dashboard" class="page active">
+        <h1 class="page-title">Dashboard</h1>
+        <div id="welcomeBanner" class="welcome-banner">
+          <p id="welcomeText">Welcome, <span id="userName"></span>!</p>
+        </div>
+        <div id="statsCards" class="cards"></div>
+        <div class="dashboard-grid">
+          <div><h3>Recent Subjects</h3><div id="recentSubjects" class="table-container">Loading...</div></div>
+          <div><h3>Recent Faculty</h3><div id="recentFaculty" class="table-container">Loading...</div></div>
+        </div>
+        <div class="cards" style="margin-top:10px;">
+          <div class="card"><h3>➕ Add Faculty</h3><p>Add a new faculty member</p><button class="btn-primary" onclick="showPage('faculty')">Go</button></div>
+          <div class="card"><h3>📅 Timetable</h3><p>Manage timetable grid</p><button class="btn-primary" onclick="showPage('semesterTimetable')">Go</button></div>
+          <div class="card"><h3>📚 View Subjects</h3><p>See all department subjects</p><button class="btn-primary" onclick="showPage('subjects')">Go</button></div>
+        </div>
+      </div>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================================================ -->
-    <script>
-        // ----- State -----
-        let currentRole = 'admin';
-        let currentTab = 'overview';
+      <!-- SUBJECTS -->
+      <div id="subjects" class="page">
+        <h1 class="page-title">Subject Registration</h1>
+        <div class="form-box">
+          <h3>Add Subject</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Academic Year</label><input id="subjectYear" placeholder="2026-27"></div>
+            <div class="form-group"><label>Semester</label><select id="subjectSemester"><option value="">Select Semester</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+            <div class="form-group"><label>Department</label><input id="subjectDepartment" placeholder="CSE"></div>
+            <div class="form-group"><label>Subject Code</label><input id="subjectCode" placeholder="MAT101"></div>
+            <div class="form-group"><label>Subject Name</label><input id="subjectName" placeholder="Engineering Mathematics"></div>
+            <div class="form-group"><label>Section</label><input id="subjectSection" placeholder="A"></div>
+            <div class="form-group"><label>Strength</label><input type="number" id="subjectStrength" placeholder="60"></div>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-primary" onclick="addSubject()">+ Add Subject</button>
+            <button class="btn-warning" onclick="loadSubjects()">View Subjects</button>
+          </div>
+        </div>
+        <div id="subjectTable" class="table-container">No data loaded.</div>
+      </div>
 
-        // ----- Mock data for admin table -----
-        let adminRecords = [
-            { id: 'FAC-2024-01', year: '2024-25', semester: 'ODD', cie: ['CIE 1', 'CIE 2'] },
-            { id: 'FAC-2024-02', year: '2024-25', semester: 'EVEN', cie: ['CIE 1', 'CIE 2', 'CIE 3'] },
-            { id: 'FAC-2025-01', year: '2025-26', semester: 'ODD', cie: ['CIE 1'] },
-        ];
+      <!-- FACULTY -->
+      <div id="faculty" class="page">
+        <h1 class="page-title">Faculty Information</h1>
+        <div class="form-box">
+          <h3>Add Faculty</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Staff Name</label><input id="staffName"></div>
+            <div class="form-group"><label>Designation</label><input id="staffDesignation"></div>
+            <div class="form-group"><label>Department</label><input id="staffDepartment"></div>
+            <div class="form-group"><label>Experience</label><input id="staffExperience"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="staffEmail"></div>
+            <div class="form-group"><label>Mobile</label><input type="text" id="staffMobile"></div>
+          </div>
+          <button class="btn-primary" onclick="addFaculty()">+ Add Faculty</button>
+        </div>
+        <div class="table-container" id="facultyTable">No faculty loaded.</div>
+      </div>
 
-        // ----- DOM refs -----
-        const loginView = document.getElementById('loginView');
-        const loginFormView = document.getElementById('loginFormView');
-        const roleSelectionView = document.getElementById('roleSelectionView');
-        const dashboardView = document.getElementById('dashboardView');
-        const navRoleDisplay = document.getElementById('navRoleDisplay');
-        const dashboardGreeting = document.getElementById('dashboardGreeting');
-        const dashboardSubGreeting = document.getElementById('dashboardSubGreeting');
-        const adminSetupNav = document.getElementById('adminSetupNav');
-        const adminTableBody = document.getElementById('adminTableBody');
-        const recordCount = document.getElementById('recordCount');
+      <!-- TIMETABLE GRID (with department name and print) -->
+      <div id="semesterTimetable" class="page">
+        <h1 class="page-title">Semester-wise CIE Timetable</h1>
+        <div class="form-box" style="max-width:100%;">
+          <div class="form-grid" style="grid-template-columns: auto 1fr auto auto; gap: 10px;">
+            <div>
+              <label>Semester</label>
+              <select id="ttSemester" onchange="loadTimetableGrid()">
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8</option>
+              </select>
+            </div>
+            <div style="display:flex;align-items:end;gap:10px;">
+              <span style="color:#1e3a8a;font-weight:bold;font-size:16px;">
+                Department: <span id="gridDept"></span>
+              </span>
+              <button class="btn-primary" onclick="loadTimetableGrid()">🔄 Refresh</button>
+              <button class="btn-success" onclick="printTimetable()">🖨️ Print</button>
+            </div>
+          </div>
+          <div id="timetableGridContainer" style="overflow-x:auto;margin-top:15px;">
+            <p>Loading timetable...</p>
+          </div>
+        </div>
+      </div>
 
-        // ----- Login -----
-        function handleLogin(e) {
-            e.preventDefault();
-            loginFormView.classList.add('hidden');
-            roleSelectionView.classList.remove('hidden');
-        }
+      <!-- OTHER PAGES (Admin only, placeholders) -->
+      <div id="timetable" class="page"><h1>Admin Timetable</h1></div>
+      <div id="questionPaper" class="page"><h1>Question Papers</h1></div>
+      <div id="duties" class="page"><h1>Duty Allocation</h1></div>
+      <div id="examDay" class="page"><h1>Exam Day Control</h1></div>
+      <div id="myDuties" class="page"><h1>My Duties</h1></div>
+      <div id="reports" class="page"><h1>Reports</h1></div>
+      <div id="examSetup" class="page"><h1>Exam Setup</h1></div>
+    </div>
+  </div>
+</div>
 
-        function goBackToLogin() {
-            roleSelectionView.classList.add('hidden');
-            loginFormView.classList.remove('hidden');
-        }
+<script>
+/* ======================================================
+   GLOBAL USER
+   ====================================================== */
+let currentUser = null;
 
-        // ----- Role Selection -----
-        function selectRole(role) {
-            currentRole = role;
-            const roleNames = {
-                hod: 'HOD',
-                faculty: 'Faculty',
-                office: 'Office Staff',
-                admin: 'Admin'
-            };
-            const greetings = {
-                hod: 'HOD Dashboard',
-                faculty: 'Faculty Dashboard',
-                office: 'Office Staff Dashboard',
-                admin: 'Admin Dashboard'
-            };
-            const subGreetings = {
-                hod: 'Manage schedules, verification, and faculty coordination.',
-                faculty: 'Manage your subjects, student strengths, and upcoming duties.',
-                office: 'Manage examination logistics and support operations.',
-                admin: 'Oversee all CIE Examination activities and reports.'
-            };
+/* ======================================================
+   TOGGLE LOGIN / SIGNUP
+   ====================================================== */
+function showSignup() {
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("signupForm").style.display = "block";
+  document.getElementById("signupMessage").innerText = "";
+}
 
-            // Switch to dashboard
-            loginView.classList.add('view-hidden');
-            loginView.classList.remove('view-visible');
-            dashboardView.classList.remove('view-hidden');
-            dashboardView.classList.add('view-visible');
+function showLogin() {
+  document.getElementById("loginForm").style.display = "block";
+  document.getElementById("signupForm").style.display = "none";
+  document.getElementById("loginMessage").innerText = "";
+}
 
-            navRoleDisplay.textContent = roleNames[role] || 'Admin';
-            dashboardGreeting.textContent = greetings[role] || 'Dashboard';
-            dashboardSubGreeting.textContent = subGreetings[role] || 'Manage your CIE Examination tasks.';
+/* ======================================================
+   LOGIN
+   ====================================================== */
+function login() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  if (!email || !password) {
+    document.getElementById("loginMessage").innerText = "Please enter email and password.";
+    return;
+  }
+  console.log("Attempting login for:", email);
+  google.script.run
+    .withSuccessHandler(function(user) {
+      console.log("Login success:", user);
+      if (!user) {
+        document.getElementById("loginMessage").innerText = "Invalid login.";
+        return;
+      }
+      currentUser = user;
+      showApplication();
+    })
+    .withFailureHandler(function(error) {
+      console.error("Login error:", error);
+      document.getElementById("loginMessage").innerText = error.message;
+    })
+    .loginUser(email, password);
+}
 
-            // Show/hide admin-only nav items
-            const isAdmin = (role === 'admin');
-            document.querySelectorAll('.admin-only').forEach(el => {
-                if (isAdmin) {
-                    el.classList.add('visible');
-                    el.style.display = 'flex'; // for flex items
-                } else {
-                    el.classList.remove('visible');
-                    el.style.display = 'none';
-                }
-            });
+/* ======================================================
+   SIGNUP
+   ====================================================== */
+function signup() {
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const mobile = document.getElementById("signupMobile").value.trim();
+  const password = document.getElementById("signupPassword").value;
+  const confirmPassword = document.getElementById("signupConfirmPassword").value;
+  const role = document.getElementById("signupRole").value;
+  const department = document.getElementById("signupDepartment").value;
+  const designation = document.getElementById("signupDesignation").value;
+  const employeeId = document.getElementById("signupEmployeeId").value.trim();
 
-            // Reset to overview
-            switchDashboardTab('overview');
-            // Render admin table
-            renderAdminTable();
-        }
+  if (!name || !email || !password || !department) {
+    document.getElementById("signupMessage").innerText = "Please fill all required fields.";
+    return;
+  }
+  if (password !== confirmPassword) {
+    document.getElementById("signupMessage").innerText = "Passwords do not match.";
+    return;
+  }
 
-        // ----- Logout -----
-        function handleLogout() {
-            dashboardView.classList.remove('view-visible');
-            dashboardView.classList.add('view-hidden');
-            loginView.classList.remove('view-hidden');
-            loginView.classList.add('view-visible');
-            roleSelectionView.classList.add('hidden');
-            loginFormView.classList.remove('hidden');
-            // Reset mobile nav
-            document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
-            document.querySelector('.mobile-nav-item[data-tab="overview"]')?.classList.add('active');
-        }
+  const data = {
+    name: name,
+    email: email,
+    mobile: mobile,
+    password: password,
+    role: role,
+    department: department,
+    designation: designation,
+    employeeId: employeeId
+  };
 
-        // ----- Tab Switching -----
-        function switchDashboardTab(tabId) {
-            currentTab = tabId;
+  console.log("Signup data:", data);
 
-            // Hide all tabs
-            document.querySelectorAll('.dashboard-tab').forEach(el => {
-                el.classList.add('hidden');
-            });
+  google.script.run
+    .withSuccessHandler(function(response) {
+      document.getElementById("signupMessage").innerText = response.message;
+      if (response.success) {
+        setTimeout(function() {
+          showLogin();
+          document.getElementById("loginMessage").innerText = "Account created! Please login.";
+        }, 2000);
+      }
+    })
+    .withFailureHandler(function(error) {
+      console.error("Backend error:", error);
+      document.getElementById("signupMessage").innerText = error.message;
+    })
+    .signupUser(data);
+}
 
-            // Show target
-            const target = document.getElementById('tab-' + tabId);
-            if (target) {
-                target.classList.remove('hidden');
-                target.classList.remove('fade-in');
-                void target.offsetWidth;
-                target.classList.add('fade-in');
-            }
+/* ======================================================
+   SHOW APPLICATION
+   ====================================================== */
+function showApplication() {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("loggedUser").innerText = currentUser.name || currentUser.email || "User";
+  buildMenu();
+  buildDashboard();
+}
 
-            // Update desktop nav
-            document.querySelectorAll('#desktopNav .nav-item').forEach(el => {
-                el.classList.remove('active');
-                el.classList.add('text-on-surface-variant');
-                const elTab = el.getAttribute('data-tab');
-                if (elTab === tabId) {
-                    el.classList.add('active');
-                    el.classList.remove('text-on-surface-variant');
-                    el.style.backgroundColor = '#1a365d';
-                    el.style.color = '#ffffff';
-                    const icon = el.querySelector('.material-symbols-outlined');
-                    if (icon) icon.style.fontVariationSettings = "'FILL' 1";
-                } else {
-                    el.style.backgroundColor = 'transparent';
-                    el.style.color = '';
-                    const icon = el.querySelector('.material-symbols-outlined');
-                    if (icon) icon.style.fontVariationSettings = "'FILL' 0";
-                }
-            });
+/* ======================================================
+   ROLE HELPERS
+   ====================================================== */
+function isHOD() {
+  return currentUser && String(currentUser.role || "").toUpperCase() === "HOD";
+}
+function getDepartment() {
+  return currentUser ? currentUser.department || "" : "";
+}
 
-            // Update mobile nav
-            document.querySelectorAll('.mobile-nav-item').forEach(el => {
-                el.classList.remove('active');
-                const elTab = el.getAttribute('data-tab');
-                if (elTab === tabId) {
-                    el.classList.add('active');
-                }
-            });
-        }
+/* ======================================================
+   MENU
+   ====================================================== */
+function buildMenu() {
+  const role = String(currentUser.role || "").toUpperCase();
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
+  addMenu("🏠 Dashboard", "dashboard");
+  if (role === "ADMIN") {
+    addMenu("📚 Subjects & Strength", "subjects");
+    addMenu("👨🏫 Faculty", "faculty");
+    addMenu("📅 CIE Timetable", "timetable");
+    addMenu("🏫 Duty Allocation", "duties");
+    addMenu("📦 Question Papers", "questionPaper");
+    addMenu("📝 Exam Day Control", "examDay");
+    addMenu("📊 Reports", "reports");
+    addMenu("⚙️ Exam Setup", "examSetup");
+  } else if (role === "HOD") {
+    addMenu("👨🏫 Faculty", "faculty");
+    addMenu("📅 Timetable", "semesterTimetable");
+    addMenu("📚 Subjects", "subjects");
+  } else if (role === "FACULTY") {
+    addMenu("📚 My Subjects", "subjects");
+    addMenu("📅 My CIE Duties", "myDuties");
+  } else {
+    addMenu("📝 Exam Work", "examDay");
+  }
+}
+function addMenu(text, page) {
+  const button = document.createElement("button");
+  button.className = "menu-btn";
+  button.innerText = text;
+  button.onclick = function() { showPage(page); };
+  document.getElementById("menu").appendChild(button);
+}
 
-        // ----- Mobile Nav Toggle -----
-        function toggleMobileNav() {
-            const nav = document.getElementById('desktopNav');
-            if (nav) {
-                if (nav.style.display === 'flex') {
-                    nav.style.display = 'none';
-                } else {
-                    nav.style.display = 'flex';
-                    nav.style.position = 'fixed';
-                    nav.style.top = '0';
-                    nav.style.left = '0';
-                    nav.style.width = '280px';
-                    nav.style.height = '100vh';
-                    nav.style.zIndex = '999';
-                    nav.style.background = '#f8f9ff';
-                }
-            }
-        }
+/* ======================================================
+   SHOW PAGE
+   ====================================================== */
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  const target = document.getElementById(page);
+  if (target) target.classList.add("active");
+  if (isHOD()) {
+    if (page === "faculty") {
+      const deptField = document.getElementById("staffDepartment");
+      if (deptField) { deptField.value = getDepartment(); deptField.disabled = true; }
+      loadFaculty();
+    }
+    if (page === "subjects") {
+      const deptField = document.getElementById("subjectDepartment");
+      if (deptField) { deptField.value = getDepartment(); deptField.disabled = true; }
+      loadSubjects();
+    }
+    if (page === "semesterTimetable") {
+      document.getElementById("gridDept").innerText = getDepartment();
+      loadTimetableGrid();
+    }
+    if (page === "dashboard") {
+      loadDashboardData();
+    }
+  }
+}
 
-        // Close mobile nav on outside click
-        document.addEventListener('click', function(e) {
-            const nav = document.getElementById('desktopNav');
-            if (window.innerWidth < 768 && nav && nav.style.display === 'flex') {
-                const isNav = nav.contains(e.target);
-                const isMenuBtn = e.target.closest('button') && e.target.closest('button').querySelector(
-                    '.material-symbols-outlined')?.textContent === 'menu';
-                if (!isNav && !isMenuBtn) {
-                    nav.style.display = 'none';
-                }
-            }
+/* ======================================================
+   DASHBOARD
+   ====================================================== */
+function buildDashboard() {
+  const role = String(currentUser.role || "").toUpperCase();
+  const userName = document.getElementById("userName");
+  if (userName) userName.innerText = currentUser.name || "User";
+  if (role === "ADMIN") {
+    document.getElementById("welcomeText").innerText = "Welcome, Admin!";
+  } else if (role === "HOD") {
+    document.getElementById("welcomeText").innerText = "Welcome, HOD of " + getDepartment() + "!";
+    loadDashboardData();
+  } else if (role === "FACULTY") {
+    document.getElementById("welcomeText").innerText = "Welcome, Faculty!";
+  } else {
+    document.getElementById("welcomeText").innerText = "Welcome!";
+  }
+}
+
+function loadDashboardData() {
+  if (!isHOD()) return;
+  // Stats
+  google.script.run
+    .withSuccessHandler(function(stats) {
+      const statsContainer = document.getElementById("statsCards");
+      statsContainer.innerHTML = "";
+      createStatCard(statsContainer, "👨‍🏫", "Total Faculty", stats.facultyCount || 0);
+      createStatCard(statsContainer, "📚", "Total Subjects", stats.subjectCount || 0);
+    })
+    .withFailureHandler(function(error) {
+      console.error("Stats error:", error);
+      document.getElementById("statsCards").innerHTML = "Unable to load stats.";
+    })
+    .getDepartmentStats(getDepartment());
+
+  // Recent subjects
+  google.script.run
+    .withSuccessHandler(function(subjects) {
+      const container = document.getElementById("recentSubjects");
+      if (!subjects || subjects.length === 0) {
+        container.innerHTML = "No subjects yet.";
+        return;
+      }
+      const recent = subjects.slice(-5).reverse();
+      renderMiniTable(container, recent);
+    })
+    .withFailureHandler(function(error) {
+      document.getElementById("recentSubjects").innerHTML = "Error loading subjects.";
+    })
+    .getDepartmentSubjects(getDepartment());
+
+  // Recent faculty
+  google.script.run
+    .withSuccessHandler(function(faculty) {
+      const container = document.getElementById("recentFaculty");
+      if (!faculty || faculty.length === 0) {
+        container.innerHTML = "No faculty yet.";
+        return;
+      }
+      const recent = faculty.slice(-5).reverse();
+      renderMiniTable(container, recent);
+    })
+    .withFailureHandler(function(error) {
+      document.getElementById("recentFaculty").innerHTML = "Error loading faculty.";
+    })
+    .getDepartmentFaculty(getDepartment());
+}
+
+function createStatCard(parent, icon, label, value) {
+  const div = document.createElement("div");
+  div.className = "card stat-card";
+  div.innerHTML = "<h3>" + icon + " " + label + "</h3><p style='font-size:24px;font-weight:bold;'>" + value + "</p>";
+  parent.appendChild(div);
+}
+
+function renderMiniTable(container, data) {
+  if (!data || data.length === 0) { container.innerHTML = "No data."; return; }
+  let html = "<table><thead><tr>";
+  const keys = Object.keys(data[0]).slice(0, 3);
+  keys.forEach(function(k) { html += "<th>" + k.replace(/_/g, ' ') + "</th>"; });
+  html += "</tr></thead><tbody>";
+  data.forEach(function(item) {
+    html += "<tr>";
+    keys.forEach(function(k) { html += "<td>" + (item[k] || "") + "</td>"; });
+    html += "</tr>";
+  });
+  html += "</tbody></table>";
+  container.innerHTML = html;
+}
+
+/* ======================================================
+   SUBJECT & FACULTY
+   ====================================================== */
+function addSubject() {
+  const data = {
+    Academic_Year: document.getElementById("subjectYear").value,
+    Semester: document.getElementById("subjectSemester").value,
+    Department: document.getElementById("subjectDepartment").value,
+    Subject_Code: document.getElementById("subjectCode").value,
+    Subject_Name: document.getElementById("subjectName").value,
+    Section: document.getElementById("subjectSection").value,
+    Strength: document.getElementById("subjectStrength").value
+  };
+  if (!data.Academic_Year || !data.Semester || !data.Department || !data.Subject_Code || !data.Subject_Name) {
+    alert("Please fill all required fields.");
+    return;
+  }
+  google.script.run
+    .withSuccessHandler(function(result) {
+      alert(result.message);
+      clearSubjectForm();
+      loadSubjects();
+    })
+    .withFailureHandler(function(error) { alert("Error: " + error.message); })
+    .addSubjectByHOD(data);
+}
+function clearSubjectForm() {
+  document.getElementById("subjectYear").value = "";
+  document.getElementById("subjectSemester").value = "";
+  document.getElementById("subjectCode").value = "";
+  document.getElementById("subjectName").value = "";
+  document.getElementById("subjectSection").value = "";
+  document.getElementById("subjectStrength").value = "";
+}
+function loadSubjects() {
+  const container = document.getElementById("subjectTable");
+  container.innerHTML = "Loading...";
+  google.script.run
+    .withSuccessHandler(function(subjects) {
+      if (!subjects || subjects.length === 0) { container.innerHTML = "No subjects found."; return; }
+      renderTable(container, subjects);
+    })
+    .withFailureHandler(function(error) { container.innerHTML = "Error: " + error.message; })
+    .getDepartmentSubjects(getDepartment());
+}
+
+function addFaculty() {
+  const data = {
+    Staff_Name: document.getElementById("staffName").value.trim(),
+    Designation: document.getElementById("staffDesignation").value.trim(),
+    Department: document.getElementById("staffDepartment").value.trim(),
+    Experience: document.getElementById("staffExperience").value,
+    Email: document.getElementById("staffEmail").value.trim(),
+    Mobile: document.getElementById("staffMobile").value.trim()
+  };
+  if (!data.Staff_Name || !data.Designation || !data.Department || !data.Email) {
+    alert("Name, Designation, Department, and Email are required.");
+    return;
+  }
+  google.script.run
+    .withSuccessHandler(function(result) {
+      alert(result.message);
+      clearFacultyForm();
+      loadFaculty();
+    })
+    .withFailureHandler(function(error) { alert("Error: " + error.message); })
+    .addFacultyByHOD(data);
+}
+function clearFacultyForm() {
+  document.getElementById("staffName").value = "";
+  document.getElementById("staffDesignation").value = "";
+  document.getElementById("staffExperience").value = "";
+  document.getElementById("staffEmail").value = "";
+  document.getElementById("staffMobile").value = "";
+}
+function loadFaculty() {
+  const container = document.getElementById("facultyTable");
+  container.innerHTML = "Loading...";
+  google.script.run
+    .withSuccessHandler(function(faculty) {
+      if (!faculty || faculty.length === 0) { container.innerHTML = "No faculty found."; return; }
+      renderTable(container, faculty);
+    })
+    .withFailureHandler(function(error) { container.innerHTML = "Error: " + error.message; })
+    .getDepartmentFaculty(getDepartment());
+}
+
+function renderTable(container, data) {
+  if (!data || data.length === 0) { container.innerHTML = "No data found."; return; }
+  let html = "<table><thead><tr>";
+  const keys = Object.keys(data[0]);
+  keys.forEach(function(k) { html += "<th>" + k.replace(/_/g, ' ') + "</th>"; });
+  html += "</tr></thead><tbody>";
+  data.forEach(function(item) {
+    html += "<tr>";
+    keys.forEach(function(k) { html += "<td>" + (item[k] || "") + "</td>"; });
+    html += "</tr>";
+  });
+  html += "</tbody></table>";
+  container.innerHTML = html;
+}
+
+/* ======================================================
+   TIMETABLE GRID
+   ====================================================== */
+function loadTimetableGrid() {
+  if (!isHOD()) return;
+  const semester = document.getElementById("ttSemester").value;
+  const container = document.getElementById("timetableGridContainer");
+  container.innerHTML = "Loading timetable...";
+  const department = getDepartment();
+  if (!department) { container.innerHTML = "Department not found."; return; }
+
+  document.getElementById("gridDept").innerText = department;
+
+  // Get subjects for dropdown
+  google.script.run
+    .withSuccessHandler(function(subjects) {
+      let subjectOptions = '<option value="">Select</option>';
+      if (subjects && subjects.length > 0) {
+        subjects.forEach(function(s) {
+          subjectOptions += '<option value="' + s.Subject_Code + '">' + s.Subject_Code + ' - ' + s.Subject_Name + '</option>';
         });
+      } else {
+        subjectOptions = '<option value="">No subjects found</option>';
+      }
+      // Get timetable entries
+      google.script.run
+        .withSuccessHandler(function(entries) {
+          renderTimetableGrid(container, semester, department, entries, subjectOptions);
+        })
+        .withFailureHandler(function(error) {
+          container.innerHTML = "Error loading timetable: " + error.message;
+        })
+        .getSemesterTimetable(semester, department);
+    })
+    .withFailureHandler(function(error) {
+      container.innerHTML = "Error loading subjects: " + error.message;
+    })
+    .getDepartmentSubjects(department);
+}
 
-        // ----- Admin Setup Functions -----
-        function renderAdminTable() {
-            if (!adminTableBody) return;
-            adminTableBody.innerHTML = '';
-            adminRecords.forEach((rec, index) => {
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-outline-variant hover:bg-surface transition-colors';
-                tr.innerHTML = `
-                    <td class="p-3 font-bold">${rec.id}</td>
-                    <td class="p-3">${rec.year}</td>
-                    <td class="p-3">${rec.semester}</td>
-                    <td class="p-3">${rec.cie.join(', ')}</td>
-                    <td class="p-3 text-right">
-                        <button class="text-primary hover:underline font-label-sm text-label-sm mr-2" onclick="deleteRecord(${index})">Delete</button>
-                        <button class="text-outline hover:text-primary transition-colors" onclick="editRecord(${index})"><span class="material-symbols-outlined text-[18px]">edit</span></button>
-                    </td>
-                `;
-                adminTableBody.appendChild(tr);
-            });
-            recordCount.textContent = adminRecords.length + ' entries';
-        }
+function renderTimetableGrid(container, semester, department, entries, subjectOptions) {
+  const days = ["Day 1", "Day 2", "Day 3"];
+  const times = ["8:00–9:30", "10:00–11:30", "12:00–1:30", "2:00–3:30", "4:00–5:30"];
+  const lookup = {};
+  entries.forEach(function(e) {
+    const key = e.Day + "|" + e.Time;
+    lookup[key] = e.Subject_Code;
+  });
 
-        function handleAdminSetup(e) {
-            e.preventDefault();
-            const id = document.getElementById('newId').value.trim();
-            const year = document.getElementById('academicYear').value;
-            const semester = document.getElementById('semesterType').value;
-            const cieCheckboxes = document.querySelectorAll('#adminSetupForm input[type="checkbox"]:checked');
-            const cie = Array.from(cieCheckboxes).map(cb => cb.value);
+  let html = '<table class="timetable-grid" style="width:100%;border-collapse:collapse;">';
+  html += '<tr><th style="background:#e0e0e0;padding:10px;">Day / Time</th>';
+  times.forEach(function(t) { html += '<th style="background:#e0e0e0;padding:10px;">' + t + '</th>'; });
+  html += '</tr>';
 
-            if (!id) {
-                alert('Please enter a valid ID.');
-                return;
-            }
-            if (cie.length === 0) {
-                alert('Select at least one CIE phase.');
-                return;
-            }
+  days.forEach(function(day) {
+    html += '<tr>';
+    html += '<td style="background:#f0f0f0;font-weight:bold;padding:10px;">' + day + '</td>';
+    times.forEach(function(time) {
+      const key = day + "|" + time;
+      const subject = lookup[key] || "";
+      const hasSubject = subject !== "";
+      html += '<td class="' + (hasSubject ? 'has-subject' : '') + '" style="padding:8px;border:1px solid #ddd;">';
+      html += '<select class="slot-select" id="sel_' + key.replace(/\s/g,'') + '">' + subjectOptions + '</select><br>';
+      html += '<div class="slot-actions">';
+      html += '<button class="btn-success btn-sm" onclick="saveSlot(\'' + semester + '\',\'' + day + '\',\'' + time + '\',\'' + department + '\')">Save</button>';
+      if (hasSubject) {
+        html += '<button class="btn-danger btn-sm" onclick="removeSlot(\'' + semester + '\',\'' + day + '\',\'' + time + '\',\'' + department + '\')">Remove</button>';
+      }
+      html += '</div>';
+      // Set the selected value
+      html += '<script>document.getElementById("sel_' + key.replace(/\s/g,'') + '").value = "' + subject + '";<\/script>';
+      html += '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
 
-            adminRecords.push({ id, year, semester, cie });
-            renderAdminTable();
-            document.getElementById('newId').value = '';
-            // reset checkboxes to default (CIE 1 & 2 checked, CIE 3 unchecked)
-            document.querySelectorAll('#adminSetupForm input[type="checkbox"]').forEach(cb => {
-                cb.checked = (cb.value === 'CIE 1' || cb.value === 'CIE 2');
-            });
-        }
+function saveSlot(semester, day, time, department) {
+  const key = day + "|" + time;
+  const selectId = "sel_" + key.replace(/\s/g,'');
+  const select = document.getElementById(selectId);
+  if (!select) { alert("Element not found."); return; }
+  const subjectCode = select.value;
+  if (!subjectCode) { alert("Please select a subject."); return; }
+  google.script.run
+    .withSuccessHandler(function(result) {
+      alert(result.message);
+      loadTimetableGrid();
+    })
+    .withFailureHandler(function(error) {
+      alert("Error: " + error.message);
+    })
+    .saveTimetableSlot(semester, day, time, subjectCode, department);
+}
 
-        function deleteRecord(index) {
-            if (confirm('Delete this record?')) {
-                adminRecords.splice(index, 1);
-                renderAdminTable();
-            }
-        }
+function removeSlot(semester, day, time, department) {
+  if (!confirm("Remove this timetable entry?")) return;
+  google.script.run
+    .withSuccessHandler(function(result) {
+      alert(result.message);
+      loadTimetableGrid();
+    })
+    .withFailureHandler(function(error) {
+      alert("Error: " + error.message);
+    })
+    .deleteTimetableSlot(semester, day, time, department);
+}
 
-        function editRecord(index) {
-            const rec = adminRecords[index];
-            // Populate form with current values
-            document.getElementById('newId').value = rec.id;
-            document.getElementById('academicYear').value = rec.year;
-            document.getElementById('semesterType').value = rec.semester;
-            document.querySelectorAll('#adminSetupForm input[type="checkbox"]').forEach(cb => {
-                cb.checked = rec.cie.includes(cb.value);
-            });
-            // Remove the record after editing (we'll re-add on submit)
-            adminRecords.splice(index, 1);
-            renderAdminTable();
-            // Scroll to form
-            document.getElementById('adminSetupForm').scrollIntoView({ behavior: 'smooth' });
-        }
+function printTimetable() {
+  const semester = document.getElementById("ttSemester").value;
+  const department = getDepartment();
+  if (!department) { alert("Department not found."); return; }
+  google.script.run
+    .withSuccessHandler(function() {
+      alert("Timetable printout generated. Check the new sheet in your spreadsheet.");
+    })
+    .withFailureHandler(function(error) {
+      alert("Error: " + error.message);
+    })
+    .generateDepartmentTimetablePrintout(semester, department);
+}
 
-        // ----- Init -----
-        document.addEventListener('DOMContentLoaded', function() {
-            loginView.classList.add('view-visible');
-            loginView.classList.remove('view-hidden');
-            dashboardView.classList.add('view-hidden');
-            dashboardView.classList.remove('view-visible');
-            // Hide admin-only items initially
-            document.querySelectorAll('.admin-only').forEach(el => {
-                el.style.display = 'none';
-            });
-            renderAdminTable();
-        });
+/* ======================================================
+   PLACEHOLDERS (Admin only)
+   ====================================================== */
+function viewMasterTimetable() { alert("Not implemented."); }
+function printPocketVerification() { alert("Not implemented."); }
+function missingPockets() { alert("Not implemented."); }
+function assignDuty() { alert("Not implemented."); }
+function editDuty() { alert("Not implemented."); }
+function removeDuty() { alert("Not implemented."); }
+function printDayDuty(day) { alert("Printing " + day + " duty list."); }
+function printStaffDutyOrder() { alert("Not implemented."); }
+function printAllDuty() { alert("Not implemented."); }
+function checkConflicts() { alert("Not implemented."); }
+function addSemester() { alert("Not implemented."); }
+function addExam() { alert("Not implemented."); }
 
-        // ----- Keyboard shortcut: Escape to logout -----
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !dashboardView.classList.contains('view-hidden')) {
-                handleLogout();
-            }
-        });
-    </script>
+/* ======================================================
+   LOGOUT
+   ====================================================== */
+function logout() {
+  currentUser = null;
+  document.getElementById("app").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+  document.getElementById("loginEmail").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+</script>
 
 </body>
 </html>

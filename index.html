@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CIE Examination System</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-background": "#0b1c30",
+                        "primary-fixed-dim": "#adc7f7",
+                        "inverse-surface": "#213145",
+                        "surface-dim": "#cbdbf5",
+                        "primary-container": "#1a365d",
+                        "primary": "#002045",
+                        "outline-variant": "#c4c6cf",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#d6e3ff",
+                        "secondary-container": "#fed65b",
+                        "surface": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#d3e4fe",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#333638",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#2d476f",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed": "#ffe088",
+                        "on-surface": "#0b1c30",
+                        "on-tertiary-container": "#9c9fa1",
+                        "on-secondary-container": "#745c00",
+                        "surface-tint": "#455f88",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary": "#735c00",
+                        "surface-container": "#e5eeff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "tertiary": "#1d2123",
+                        "background": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "inverse-primary": "#adc7f7",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-secondary-fixed": "#241a00",
+                        "on-primary-container": "#86a0cd",
+                        "on-secondary-fixed-variant": "#574500",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#43474e",
+                        "on-primary-fixed": "#001b3c",
+                        "outline": "#74777f",
+                        "secondary-fixed-dim": "#e9c349",
+                        "error": "#ba1a1a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-desktop": "32px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1440px"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c4c6cf;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #74777f;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: var(--target-width);
+            }
+        }
+        .progress-bar-fill {
+            animation: loadProgress 1.2s ease-out forwards;
+        }
+
+        .nav-item {
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover {
+            background-color: #dce9ff;
+        }
+        .nav-item.active {
+            background-color: #1a365d;
+            color: #ffffff;
+        }
+        .nav-item.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        .role-card {
+            transition: all 0.2s ease;
+        }
+        .role-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 32, 69, 0.08);
+            border-color: #1a365d;
+        }
+
+        .view-transition {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .view-hidden {
+            opacity: 0;
+            transform: scale(0.97);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+        .view-visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .mobile-nav-item {
+            transition: all 0.15s ease;
+        }
+        .mobile-nav-item.active {
+            color: #002045;
+        }
+        .mobile-nav-item.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+        .mobile-nav-item:not(.active) {
+            color: #43474e;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- APP CONTAINER -->
+    <!-- ============================================================ -->
+    <div id="app" class="min-h-screen flex flex-col md:flex-row bg-background text-on-background">
+
+        <!-- ========================================================== -->
+        <!-- LOGIN VIEW (shown initially) -->
+        <!-- ========================================================== -->
+        <div id="loginView" class="view-visible w-full min-h-screen flex items-center justify-center p-margin-mobile md:p-margin-desktop">
+            <div class="w-full max-w-[1024px] bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden flex flex-col md:flex-row">
+
+                <!-- Left Branding -->
+                <div class="hidden md:block md:w-1/2 relative bg-surface-container-low" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB8QVzKEY4ZONHAyKnrW2q89Wd9ttlW0mlxj0J7A01JbVAZ9r2iZZN1-4YZbF2AN9eTCpV_nZyh6UiDXBHFWPKZf4xNNRDnS3e5Q5Fluu-ka1ql-KLOF8m_8Ixu-K8litnNn50w9pisRz8k1FtE4MFn0m3O7FkqgHW_p-IHavv2RCjQRO3Xwnr_4l6OYoKAWQ7BAVgKV_Hxwor6BwprttQl0V537qHQikarvkeo-yDTH5KYPv5vLYMP'); background-size: cover; background-position: center;">
+                    <div class="absolute inset-0 bg-primary/80 flex flex-col justify-between p-12">
+                        <div>
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="material-symbols-outlined text-on-primary text-4xl filled">account_balance</span>
+                                <h1 class="font-headline-lg text-headline-lg text-on-primary tracking-tight">CIE Examination</h1>
+                            </div>
+                            <p class="font-body-lg text-body-lg text-primary-fixed-dim">Academic Excellence System</p>
+                        </div>
+                        <div>
+                            <p class="font-body-md text-body-md text-surface-container-highest">Secure login portal for faculty and administration. Ensure academic integrity and streamlined examination management.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Login Area -->
+                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-surface-container-lowest relative">
+
+                    <!-- Mobile Brand -->
+                    <div class="md:hidden flex items-center gap-2 mb-8 justify-center">
+                        <span class="material-symbols-outlined text-primary text-3xl filled">account_balance</span>
+                        <h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">CIE Examination</h1>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div id="loginFormView" class="transition-all duration-300">
+                        <div class="mb-8 text-center md:text-left">
+                            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Welcome Back</h2>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Please enter your institutional credentials.</p>
+                        </div>
+                        <form class="space-y-6" onsubmit="handleLogin(event)">
+                            <div>
+                                <label class="block font-label-md text-label-md text-on-surface mb-1" for="employee-id">Employee ID</label>
+                                <div class="relative">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">badge</span>
+                                    <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="employee-id" placeholder="e.g. EMP12345" required type="text" value="EMP12345" />
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-label-md text-label-md text-on-surface mb-1" for="password">Password</label>
+                                <div class="relative">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
+                                    <input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="password" placeholder="••••••••" required type="password" value="password" />
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input class="w-4 h-4 rounded text-primary border-outline-variant focus:ring-primary focus:ring-offset-surface-container-lowest bg-surface-container-lowest" type="checkbox" checked />
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant">Remember me</span>
+                                </label>
+                                <a class="font-label-sm text-label-sm text-primary hover:underline" href="#">Forgot Password?</a>
+                            </div>
+                            <button class="w-full bg-primary text-on-primary py-3 px-4 rounded font-label-md text-label-md hover:bg-primary-container transition-colors active:opacity-80 flex items-center justify-center gap-2" type="submit">
+                                Sign In
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Role Selection (hidden initially) -->
+                    <div id="roleSelectionView" class="hidden transition-all duration-300">
+                        <div class="mb-8 text-center md:text-left">
+                            <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Select Role</h2>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Choose your active role for this session.</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="selectRole('hod')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-2xl">supervisor_account</span>
+                                </div>
+                                <span class="font-label-md text-label-md text-on-surface">HOD</span>
+                            </button>
+                            <button onclick="selectRole('faculty')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-2xl">school</span>
+                                </div>
+                                <span class="font-label-md text-label-md text-on-surface">Faculty</span>
+                            </button>
+                            <button onclick="selectRole('office')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-2xl">support_agent</span>
+                                </div>
+                                <span class="font-label-md text-label-md text-on-surface">Office Staff</span>
+                            </button>
+                            <button onclick="selectRole('admin')" class="role-card flex flex-col items-center justify-center p-6 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container-high transition-colors group">
+                                <div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center mb-3 group-hover:bg-primary-container/20 transition-colors">
+                                    <span class="material-symbols-outlined text-primary text-2xl">admin_panel_settings</span>
+                                </div>
+                                <span class="font-label-md text-label-md text-on-surface">Admin</span>
+                            </button>
+                        </div>
+                        <button class="mt-8 w-full bg-transparent border border-primary text-primary py-3 px-4 rounded font-label-md text-label-md hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2" onclick="goBackToLogin()">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span>
+                            Back to Login
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================== -->
+        <!-- DASHBOARD VIEW (hidden initially) -->
+        <!-- ========================================================== -->
+        <div id="dashboardView" class="view-hidden w-full min-h-screen flex flex-col md:flex-row">
+
+            <!-- ========================================================== -->
+            <!-- NAVIGATION DRAWER (Desktop) -->
+            <!-- ========================================================== -->
+            <nav id="desktopNav" class="hidden md:flex h-screen w-[280px] fixed left-0 top-0 border-r border-outline-variant bg-surface flex-col gap-1 py-4 z-40 shadow-sm overflow-y-auto flex-shrink-0">
+
+                <!-- Header -->
+                <div class="px-6 pb-6 border-b border-outline-variant/30 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">CE</div>
+                    <div>
+                        <h2 class="font-headline-md text-headline-md text-primary tracking-tight">CIE Exam</h2>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant" id="navRoleDisplay">Admin</p>
+                    </div>
+                </div>
+
+                <!-- Nav Items -->
+                <div class="flex flex-col gap-1 px-3 pt-4">
+                    <a href="#" onclick="switchDashboardTab('overview')" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="overview">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="font-label-md text-label-md">Overview</span>
+                    </a>
+                    <a href="#" onclick="switchDashboardTab('subjects')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="subjects">
+                        <span class="material-symbols-outlined">book</span>
+                        <span class="font-label-md text-label-md">Subjects</span>
+                    </a>
+                    <a href="#" onclick="switchDashboardTab('timetable')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="timetable">
+                        <span class="material-symbols-outlined">event_available</span>
+                        <span class="font-label-md text-label-md">Timetable</span>
+                    </a>
+                    <a href="#" onclick="switchDashboardTab('duties')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="duties">
+                        <span class="material-symbols-outlined">assignment_ind</span>
+                        <span class="font-label-md text-label-md">Duties</span>
+                    </a>
+                    <a href="#" onclick="switchDashboardTab('verification')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="verification">
+                        <span class="material-symbols-outlined">verified</span>
+                        <span class="font-label-md text-label-md">Verification</span>
+                    </a>
+                    <a href="#" onclick="switchDashboardTab('conduct')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="conduct">
+                        <span class="material-symbols-outlined">gavel</span>
+                        <span class="font-label-md text-label-md">Conduct</span>
+                    </a>
+                </div>
+
+                <!-- Logout -->
+                <div class="mt-auto px-3 pt-4 border-t border-outline-variant/30">
+                    <button onclick="handleLogout()" class="flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-error-container/20 hover:text-error transition-all w-full cursor-pointer">
+                        <span class="material-symbols-outlined">logout</span>
+                        <span class="font-label-md text-label-md">Logout</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- ========================================================== -->
+            <!-- MAIN CONTENT -->
+            <!-- ========================================================== -->
+            <div class="flex-1 md:ml-[280px] flex flex-col min-h-screen">
+
+                <!-- TopAppBar -->
+                <header class="bg-surface-container-lowest text-primary w-full sticky top-0 border-b border-outline-variant flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 z-30 flex-shrink-0">
+                    <div class="flex items-center gap-4">
+                        <button onclick="toggleMobileNav()" class="md:hidden p-2 -ml-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer active:opacity-80">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary tracking-tight">CIE Examination</h1>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="p-2 rounded-full hover:bg-surface-container-high text-on-surface-variant transition-colors cursor-pointer active:opacity-80">
+                            <span class="material-symbols-outlined">notifications</span>
+                        </button>
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer active:opacity-80 hover:ring-2 ring-primary-container transition-all bg-surface-variant flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-surface-variant">person</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- ========================================================== -->
+                <!-- DASHBOARD TABS CONTENT -->
+                <!-- ========================================================== -->
+                <main class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pb-24 md:pb-8 overflow-y-auto">
+
+                    <!-- ===================== TAB: OVERVIEW ===================== -->
+                    <div id="tab-overview" class="dashboard-tab space-y-6 fade-in">
+                        <!-- Welcome -->
+                        <section class="flex flex-col gap-1">
+                            <h1 class="font-display-lg text-display-lg text-primary" id="dashboardGreeting">Dashboard</h1>
+                            <p class="font-body-md text-body-md text-on-surface-variant" id="dashboardSubGreeting">Manage your CIE Examination tasks.</p>
+                        </section>
+
+                        <!-- Progress Widget -->
+                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div class="flex-1 w-full">
+                                <h3 class="font-headline-md text-headline-md text-primary mb-2">Overall CIE Completion</h3>
+                                <p class="font-body-md text-body-md text-on-surface-variant mb-4">Fall Semester 2024 — Progress across all departments</p>
+                                <div class="w-full bg-surface-container h-4 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full progress-bar-fill" style="--target-width: 68%; width: 68%;"></div>
+                                </div>
+                                <div class="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
+                                    <span>0%</span>
+                                    <span class="font-bold text-primary">68% Completed</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 w-full md:w-auto">
+                                <div class="bg-surface p-4 rounded-lg border border-outline-variant flex-1 md:flex-none md:w-32 text-center">
+                                    <span class="block font-display-lg text-display-lg text-primary">12</span>
+                                    <span class="font-label-sm text-label-sm text-on-surface-variant">Active Exams</span>
+                                </div>
+                                <div class="bg-surface p-4 rounded-lg border border-outline-variant flex-1 md:flex-none md:w-32 text-center">
+                                    <span class="block font-display-lg text-display-lg text-secondary-container-dark">4</span>
+                                    <span class="font-label-sm text-label-sm text-on-surface-variant">Pending Review</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-full bg-primary-container/10 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-primary text-3xl">groups</span>
+                                </div>
+                                <div>
+                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Faculty</p>
+                                    <p class="font-display-lg text-display-lg text-primary">48</p>
+                                </div>
+                            </div>
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-secondary text-3xl">description</span>
+                                </div>
+                                <div>
+                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Q Papers</p>
+                                    <p class="font-display-lg text-display-lg text-primary">32</p>
+                                </div>
+                            </div>
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-green-700 text-3xl">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Verified</p>
+                                    <p class="font-display-lg text-display-lg text-primary">28</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: SUBJECTS ===================== -->
+                    <div id="tab-subjects" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="font-headline-lg text-headline-lg text-primary">Assigned Subjects</h2>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Manage your subjects, strength, and question papers.</p>
+                            </div>
+                            <button class="bg-secondary text-on-secondary font-label-md px-4 py-2 rounded flex items-center gap-2 hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">add</span>
+                                Add Entry
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Subject 1 -->
+                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">CS301</span>
+                                        <h3 class="font-body-lg text-on-surface font-semibold">Data Structures</h3>
+                                    </div>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 3 • B.Tech Computer Science</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
+                                            <span class="font-body-md text-on-surface font-semibold leading-tight">120</span>
+                                        </div>
+                                    </div>
+                                    <button class="bg-primary text-on-primary font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
+                                        <span class="material-symbols-outlined text-[18px]">upload</span>
+                                        Upload Paper
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Subject 2 -->
+                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">CS305</span>
+                                        <h3 class="font-body-lg text-on-surface font-semibold">Database Systems</h3>
+                                    </div>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 3 • B.Tech Computer Science</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
+                                            <span class="font-body-md text-on-surface font-semibold leading-tight">115</span>
+                                        </div>
+                                    </div>
+                                    <div class="bg-[#e6f4ea] text-[#137333] border border-[#ceead6] font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
+                                        <span class="material-symbols-outlined text-[18px] filled">check_circle</span>
+                                        Paper Submitted
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subject 3 -->
+                            <div class="bg-surface border border-outline-variant rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-surface-container-high transition-colors">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-label-md text-primary bg-primary-container px-2 py-0.5 rounded text-xs">MA202</span>
+                                        <h3 class="font-body-lg text-on-surface font-semibold">Applied Mathematics IV</h3>
+                                    </div>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Semester 4 • B.Tech Mathematics</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+                                    <div class="bg-surface-container-lowest border border-outline-variant rounded px-3 py-1 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-outline text-[18px]">group</span>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] text-on-surface-variant font-label-sm uppercase leading-none">Strength</span>
+                                            <span class="font-body-md text-on-surface font-semibold leading-tight">98</span>
+                                        </div>
+                                    </div>
+                                    <button class="bg-primary text-on-primary font-label-md px-3 py-2 rounded flex items-center gap-2 flex-1 sm:flex-none justify-center">
+                                        <span class="material-symbols-outlined text-[18px]">upload</span>
+                                        Upload Paper
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: TIMETABLE ===================== -->
+                    <div id="tab-timetable" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                            <div>
+                                <h2 class="font-headline-lg text-headline-lg text-primary">Timetable Overview</h2>
+                                <p class="font-body-md text-body-md text-on-surface-variant">Manage schedules and faculty coordination for upcoming CIEs.</p>
+                            </div>
+                            <button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-full flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm">
+                                <span class="material-symbols-outlined text-[18px]">add</span>
+                                Create Schedule
+                            </button>
+                        </div>
+
+                        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-headline-md text-headline-md text-on-background flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary">event</span>
+                                    Upcoming Examinations
+                                </h3>
+                                <a class="font-label-md text-label-md text-primary hover:underline" href="#">View All</a>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse min-w-[600px]">
+                                    <thead>
+                                        <tr class="bg-surface-container-low border-b border-outline-variant">
+                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant rounded-tl-lg">Date &amp; Time</th>
+                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Course Code</th>
+                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Subject</th>
+                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant">Venue</th>
+                                            <th class="py-3 px-4 font-label-md text-label-md text-on-surface-variant rounded-tr-lg">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-body-sm text-body-sm">
+                                        <tr class="border-b border-outline-variant/50 hover:bg-surface-container-highest/50 transition-colors">
+                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 15, 2023</div><div class="text-on-surface-variant text-xs">10:00 AM - 12:00 PM</div></td>
+                                            <td class="py-3 px-4">CS401</td>
+                                            <td class="py-3 px-4">Database Management Systems</td>
+                                            <td class="py-3 px-4">Block A, Room 101</td>
+                                            <td class="py-3 px-4">
+                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
+                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-outline-variant/50 hover:bg-surface-container-highest/50 transition-colors">
+                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 16, 2023</div><div class="text-on-surface-variant text-xs">02:00 PM - 04:00 PM</div></td>
+                                            <td class="py-3 px-4">EE305</td>
+                                            <td class="py-3 px-4">Signals and Systems</td>
+                                            <td class="py-3 px-4">Block B, Hall 2</td>
+                                            <td class="py-3 px-4">
+                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
+                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-surface-container-highest/50 transition-colors">
+                                            <td class="py-3 px-4 whitespace-nowrap"><div class="font-medium">Oct 18, 2023</div><div class="text-on-surface-variant text-xs">09:30 AM - 11:30 AM</div></td>
+                                            <td class="py-3 px-4">MA202</td>
+                                            <td class="py-3 px-4">Applied Mathematics IV</td>
+                                            <td class="py-3 px-4">Main Auditorium</td>
+                                            <td class="py-3 px-4">
+                                                <span class="inline-flex items-center gap-1 bg-secondary-container/20 text-on-secondary-container px-2 py-1 rounded-md text-xs font-semibold">
+                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Scheduled
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- QP Verification & Manage Timetable -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+                                <h3 class="font-headline-md text-headline-md text-on-background mb-4 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary">verified</span>
+                                    QP Verification
+                                </h3>
+                                <div class="flex flex-col gap-5">
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="font-label-md text-label-md text-on-background">CS401 - DBMS</span>
+                                            <span class="font-body-sm text-body-sm font-semibold text-primary">100%</span>
+                                        </div>
+                                        <div class="w-full bg-surface-container-high rounded-full h-2">
+                                            <div class="bg-green-600 h-2 rounded-full" style="width:100%"></div>
+                                        </div>
+                                        <div class="mt-1 flex items-center gap-1 text-green-700 text-xs font-medium">
+                                            <span class="material-symbols-outlined text-[14px] filled">check_circle</span> Verified &amp; Approved
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="font-label-md text-label-md text-on-background">EE305 - Signals</span>
+                                            <span class="font-body-sm text-body-sm font-semibold text-amber-600">60%</span>
+                                        </div>
+                                        <div class="w-full bg-surface-container-high rounded-full h-2">
+                                            <div class="bg-amber-500 h-2 rounded-full" style="width:60%"></div>
+                                        </div>
+                                        <div class="mt-1 flex items-center gap-1 text-amber-700 text-xs font-medium">
+                                            <span class="material-symbols-outlined text-[14px]">pending</span> Pending HOD Approval
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <span class="font-label-md text-label-md text-on-background">MA202 - Math IV</span>
+                                            <span class="font-body-sm text-body-sm font-semibold text-error">0%</span>
+                                        </div>
+                                        <div class="w-full bg-surface-container-high rounded-full h-2">
+                                            <div class="bg-error h-2 rounded-full" style="width:5%"></div>
+                                        </div>
+                                        <div class="mt-1 flex items-center gap-1 text-error text-xs font-medium">
+                                            <span class="material-symbols-outlined text-[14px]">error</span> Draft Not Submitted
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl border border-outline-variant p-6 shadow-sm flex flex-col justify-center relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9ff 0%, #e5eeff 100%);">
+                                <div class="absolute -right-10 -top-10 w-40 h-40 bg-primary-fixed-dim rounded-full opacity-20 blur-2xl"></div>
+                                <div class="relative z-10">
+                                    <h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">Manage CIE Timetable</h3>
+                                    <p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-sm">Draft, review, and publish examination schedules. Ensure zero clashes for cross-department electives.</p>
+                                    <div class="flex flex-wrap gap-4">
+                                        <button class="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors shadow-sm">Open Scheduler</button>
+                                        <button class="border border-primary text-primary font-label-md text-label-md px-6 py-3 rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors bg-transparent">View Conflicts</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: DUTIES ===================== -->
+                    <div id="tab-duties" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div>
+                            <h2 class="font-headline-lg text-headline-lg text-primary">Upcoming Duties</h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant">Manage invigilation, evaluation, and coordination duties.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Duty 1 -->
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                                <div class="flex gap-4">
+                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
+                                        <span class="font-label-sm text-primary uppercase">Oct</span>
+                                        <span class="font-display-lg text-display-lg text-primary leading-none">15</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-label-md text-on-surface font-semibold">Invigilation - Room 302</h4>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 09:30 AM - 12:30 PM
+                                        </p>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">person</span> Dr. Sarah Jenkins
+                                        </p>
+                                        <span class="inline-block mt-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Confirmed</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Duty 2 -->
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                                <div class="flex gap-4">
+                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
+                                        <span class="font-label-sm text-primary uppercase">Oct</span>
+                                        <span class="font-display-lg text-display-lg text-primary leading-none">18</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-label-md text-on-surface font-semibold">Evaluation - Section A</h4>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">schedule</span> Deadline: 5:00 PM
+                                        </p>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">person</span> Prof. Michael Chen
+                                        </p>
+                                        <span class="inline-block mt-2 bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-semibold">Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Duty 3 -->
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                                <div class="flex gap-4">
+                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
+                                        <span class="font-label-sm text-primary uppercase">Oct</span>
+                                        <span class="font-display-lg text-display-lg text-primary leading-none">22</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-label-md text-on-surface font-semibold">Chief Superintendent</h4>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 08:30 AM - 01:30 PM
+                                        </p>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">person</span> Dr. Emily Thorne
+                                        </p>
+                                        <span class="inline-block mt-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">Confirmed</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Duty 4 (Unassigned) -->
+                            <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm border-dashed">
+                                <div class="flex gap-4">
+                                    <div class="flex flex-col items-center justify-center bg-surface-container-low w-16 h-16 rounded-xl border border-outline-variant shrink-0">
+                                        <span class="font-label-sm text-primary uppercase">Oct</span>
+                                        <span class="font-display-lg text-display-lg text-primary leading-none">25</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-label-md text-on-surface font-semibold">Invigilation - Room 104</h4>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">schedule</span> 02:00 PM - 05:00 PM
+                                        </p>
+                                        <p class="font-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[16px]">person</span> <span class="italic">Unassigned</span>
+                                        </p>
+                                        <button class="mt-2 bg-primary text-on-primary font-label-md text-label-md px-4 py-1.5 rounded text-sm hover:bg-primary/90 transition-colors">Assign Duty</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: VERIFICATION ===================== -->
+                    <div id="tab-verification" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div>
+                            <h2 class="font-headline-lg text-headline-lg text-primary">Verification Queue</h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant">Review and verify question papers submitted by faculty.</p>
+                        </div>
+
+                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined">verified</span> Pending Reviews
+                                </h3>
+                                <span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-sm text-label-sm">3 Pending</span>
+                            </div>
+                            <div class="overflow-x-auto p-4">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-outline-variant text-on-surface-variant font-label-md text-label-md bg-surface-container-low">
+                                            <th class="p-3 font-medium">Paper Code</th>
+                                            <th class="p-3 font-medium">Subject</th>
+                                            <th class="p-3 font-medium">Setter</th>
+                                            <th class="p-3 font-medium">Status</th>
+                                            <th class="p-3 font-medium text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-body-sm text-body-sm">
+                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
+                                            <td class="p-3 font-bold">CS-401</td>
+                                            <td class="p-3">Data Structures</td>
+                                            <td class="p-3">Dr. A. Smith</td>
+                                            <td class="p-3">
+                                                <span class="bg-secondary-container/20 text-secondary-dark px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
+                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Pending Review
+                                                </span>
+                                            </td>
+                                            <td class="p-3 text-right">
+                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Verify</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
+                                            <td class="p-3 font-bold">ENG-102</td>
+                                            <td class="p-3">Tech Communication</td>
+                                            <td class="p-3">Prof. J. Doe</td>
+                                            <td class="p-3">
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
+                                                    <span class="material-symbols-outlined text-[14px] filled">check_circle</span> Verified
+                                                </span>
+                                            </td>
+                                            <td class="p-3 text-right">
+                                                <button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-outline-variant hover:bg-surface transition-colors">
+                                            <td class="p-3 font-bold">MATH-201</td>
+                                            <td class="p-3">Linear Algebra</td>
+                                            <td class="p-3">Dr. R. Singh</td>
+                                            <td class="p-3">
+                                                <span class="bg-secondary-container/20 text-secondary-dark px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
+                                                    <span class="material-symbols-outlined text-[14px]">schedule</span> Pending Review
+                                                </span>
+                                            </td>
+                                            <td class="p-3 text-right">
+                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Verify</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-surface transition-colors">
+                                            <td class="p-3 font-bold">PHY-301</td>
+                                            <td class="p-3">Quantum Physics</td>
+                                            <td class="p-3">Dr. M. Khan</td>
+                                            <td class="p-3">
+                                                <span class="bg-error-container/20 text-error px-2 py-1 rounded-sm text-xs font-semibold flex w-max items-center gap-1">
+                                                    <span class="material-symbols-outlined text-[14px]">error</span> Rejected
+                                                </span>
+                                            </td>
+                                            <td class="p-3 text-right">
+                                                <button class="text-primary hover:underline font-label-sm text-label-sm">Resubmit</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: CONDUCT ===================== -->
+                    <div id="tab-conduct" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div>
+                            <h2 class="font-headline-lg text-headline-lg text-primary">Exam Conduct</h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant">Live status, room monitoring, and incident reporting.</p>
+                        </div>
+
+                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #002045 1px, transparent 0); background-size: 24px 24px;"></div>
+                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center relative z-10">
+                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined">gavel</span> Live Status
+                                </h3>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant">Fall 2024</span>
+                            </div>
+                            <div class="p-6 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Current Session -->
+                                <div class="bg-surface border border-outline-variant rounded-lg p-5 flex flex-col gap-4">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Current Session</h4>
+                                            <p class="font-headline-md text-headline-md text-primary">Morning (09:00 - 12:00)</p>
+                                        </div>
+                                        <div class="h-3 w-3 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]" title="Live"></div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 mt-2">
+                                        <div>
+                                            <p class="font-label-sm text-label-sm text-on-surface-variant">Rooms Active</p>
+                                            <p class="font-body-lg text-body-lg text-on-surface font-semibold">12 / 12</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-label-sm text-label-sm text-on-surface-variant">Attendance</p>
+                                            <p class="font-body-lg text-body-lg text-on-surface font-semibold">98.5%</p>
+                                        </div>
+                                    </div>
+                                    <button class="mt-auto w-full py-2 bg-secondary-container text-on-secondary-container rounded font-label-md text-label-md hover:bg-secondary-container/90 transition-colors font-bold">Report Incident</button>
+                                </div>
+
+                                <!-- Alerts -->
+                                <div class="flex flex-col gap-3">
+                                    <h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-1">Active Alerts</h4>
+                                    <div class="p-3 border-l-4 border-secondary-container bg-surface flex items-start gap-3 rounded-r shadow-sm">
+                                        <span class="material-symbols-outlined text-secondary-dark mt-0.5">warning</span>
+                                        <div>
+                                            <p class="font-label-md text-label-md text-on-surface">Late start in Room 104</p>
+                                            <p class="font-body-sm text-body-sm text-on-surface-variant">Invigilator arrived 5 mins late. Adjusted end time.</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 border-l-4 border-outline-variant bg-surface flex items-start gap-3 rounded-r shadow-sm opacity-60">
+                                        <span class="material-symbols-outlined text-outline mt-0.5">info</span>
+                                        <div>
+                                            <p class="font-label-md text-label-md text-on-surface">Question Paper Distribution</p>
+                                            <p class="font-body-sm text-body-sm text-on-surface-variant">Completed across all venues at 08:55 AM.</p>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 border-l-4 border-green-500 bg-surface flex items-start gap-3 rounded-r shadow-sm">
+                                        <span class="material-symbols-outlined text-green-600 mt-0.5 filled">check_circle</span>
+                                        <div>
+                                            <p class="font-label-md text-label-md text-on-surface">All venues operational</p>
+                                            <p class="font-body-sm text-body-sm text-on-surface-variant">No disruptions reported. Smooth conduct.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+
+                <!-- ========================================================== -->
+                <!-- BOTTOM NAV (Mobile) -->
+                <!-- ========================================================== -->
+                <nav id="mobileNav" class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                    <button onclick="switchDashboardTab('overview')" class="mobile-nav-item active flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="overview">
+                        <span class="material-symbols-outlined text-[24px]">dashboard</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Overview</span>
+                    </button>
+                    <button onclick="switchDashboardTab('subjects')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="subjects">
+                        <span class="material-symbols-outlined text-[24px]">book</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Subjects</span>
+                    </button>
+                    <button onclick="switchDashboardTab('timetable')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="timetable">
+                        <span class="material-symbols-outlined text-[24px]">event_available</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Timetable</span>
+                    </button>
+                    <button onclick="switchDashboardTab('duties')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="duties">
+                        <span class="material-symbols-outlined text-[24px]">assignment_ind</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Duties</span>
+                    </button>
+                    <button onclick="switchDashboardTab('verification')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="verification">
+                        <span class="material-symbols-outlined text-[24px]">verified</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Verify</span>
+                    </button>
+                    <button onclick="switchDashboardTab('conduct')" class="mobile-nav-item flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="conduct">
+                        <span class="material-symbols-outlined text-[24px]">gavel</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Conduct</span>
+                    </button>
+                </nav>
+
+            </div>
+            <!-- end main content wrapper -->
+        </div>
+        <!-- end dashboardView -->
+
+    </div>
+    <!-- end app -->
+
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        // ----- State -----
+        let currentRole = 'admin';
+        let currentTab = 'overview';
+
+        // ----- DOM refs -----
+        const loginView = document.getElementById('loginView');
+        const loginFormView = document.getElementById('loginFormView');
+        const roleSelectionView = document.getElementById('roleSelectionView');
+        const dashboardView = document.getElementById('dashboardView');
+        const navRoleDisplay = document.getElementById('navRoleDisplay');
+        const dashboardGreeting = document.getElementById('dashboardGreeting');
+        const dashboardSubGreeting = document.getElementById('dashboardSubGreeting');
+
+        // ----- Login -----
+        function handleLogin(e) {
+            e.preventDefault();
+            // Show role selection
+            loginFormView.classList.add('hidden');
+            roleSelectionView.classList.remove('hidden');
+        }
+
+        function goBackToLogin() {
+            roleSelectionView.classList.add('hidden');
+            loginFormView.classList.remove('hidden');
+        }
+
+        // ----- Role Selection -----
+        function selectRole(role) {
+            currentRole = role;
+            const roleNames = {
+                hod: 'HOD',
+                faculty: 'Faculty',
+                office: 'Office Staff',
+                admin: 'Admin'
+            };
+            const greetings = {
+                hod: 'HOD Dashboard',
+                faculty: 'Faculty Dashboard',
+                office: 'Office Staff Dashboard',
+                admin: 'Admin Dashboard'
+            };
+            const subGreetings = {
+                hod: 'Manage schedules, verification, and faculty coordination.',
+                faculty: 'Manage your subjects, student strengths, and upcoming duties.',
+                office: 'Manage examination logistics and support operations.',
+                admin: 'Oversee all CIE Examination activities and reports.'
+            };
+
+            // Switch to dashboard
+            loginView.classList.add('view-hidden');
+            loginView.classList.remove('view-visible');
+            dashboardView.classList.remove('view-hidden');
+            dashboardView.classList.add('view-visible');
+
+            navRoleDisplay.textContent = roleNames[role] || 'Admin';
+            dashboardGreeting.textContent = greetings[role] || 'Dashboard';
+            dashboardSubGreeting.textContent = subGreetings[role] || 'Manage your CIE Examination tasks.';
+
+            // Reset to overview
+            switchDashboardTab('overview');
+        }
+
+        // ----- Logout -----
+        function handleLogout() {
+            dashboardView.classList.remove('view-visible');
+            dashboardView.classList.add('view-hidden');
+            loginView.classList.remove('view-hidden');
+            loginView.classList.add('view-visible');
+            roleSelectionView.classList.add('hidden');
+            loginFormView.classList.remove('hidden');
+            // Reset mobile nav
+            document.querySelectorAll('.mobile-nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelector('.mobile-nav-item[data-tab="overview"]')?.classList.add('active');
+        }
+
+        // ----- Tab Switching -----
+        function switchDashboardTab(tabId) {
+            currentTab = tabId;
+
+            // Hide all tabs
+            document.querySelectorAll('.dashboard-tab').forEach(el => {
+                el.classList.add('hidden');
+            });
+
+            // Show target
+            const target = document.getElementById('tab-' + tabId);
+            if (target) {
+                target.classList.remove('hidden');
+                // Re-trigger fade-in
+                target.classList.remove('fade-in');
+                void target.offsetWidth;
+                target.classList.add('fade-in');
+            }
+
+            // Update desktop nav
+            document.querySelectorAll('#desktopNav .nav-item').forEach(el => {
+                el.classList.remove('active');
+                el.classList.add('text-on-surface-variant');
+                const elTab = el.getAttribute('data-tab');
+                if (elTab === tabId) {
+                    el.classList.add('active');
+                    el.classList.remove('text-on-surface-variant');
+                    // style active
+                    el.style.backgroundColor = '#1a365d';
+                    el.style.color = '#ffffff';
+                    el.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+                } else {
+                    el.style.backgroundColor = 'transparent';
+                    el.style.color = '';
+                    const icon = el.querySelector('.material-symbols-outlined');
+                    if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+                }
+            });
+
+            // Update mobile nav
+            document.querySelectorAll('.mobile-nav-item').forEach(el => {
+                el.classList.remove('active');
+                const elTab = el.getAttribute('data-tab');
+                if (elTab === tabId) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        // ----- Mobile Nav Toggle (simple drawer) -----
+        function toggleMobileNav() {
+            // For simplicity, we just toggle a class on the body to show/hide
+            // but we'll keep it simple — on mobile, nav is hidden anyway.
+            // We'll just use it as a placeholder for future enhancement.
+            const nav = document.getElementById('desktopNav');
+            if (nav) {
+                if (nav.style.display === 'flex') {
+                    nav.style.display = 'none';
+                } else {
+                    nav.style.display = 'flex';
+                    nav.style.position = 'fixed';
+                    nav.style.top = '0';
+                    nav.style.left = '0';
+                    nav.style.width = '280px';
+                    nav.style.height = '100vh';
+                    nav.style.zIndex = '999';
+                    nav.style.background = '#f8f9ff';
+                }
+            }
+        }
+
+        // Close mobile nav on outside click (simple)
+        document.addEventListener('click', function(e) {
+            const nav = document.getElementById('desktopNav');
+            if (window.innerWidth < 768 && nav && nav.style.display === 'flex') {
+                const isNav = nav.contains(e.target);
+                const isMenuBtn = e.target.closest('button') && e.target.closest('button').querySelector(
+                    '.material-symbols-outlined')?.textContent === 'menu';
+                if (!isNav && !isMenuBtn) {
+                    nav.style.display = 'none';
+                }
+            }
+        });
+
+        // ----- Init: ensure login visible -----
+        document.addEventListener('DOMContentLoaded', function() {
+            loginView.classList.add('view-visible');
+            loginView.classList.remove('view-hidden');
+            dashboardView.classList.add('view-hidden');
+            dashboardView.classList.remove('view-visible');
+        });
+
+        // ----- Keyboard shortcut: Escape to logout -----
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !dashboardView.classList.contains('view-hidden')) {
+                handleLogout();
+            }
+        });
+    </script>
+
+</body>
+</html>

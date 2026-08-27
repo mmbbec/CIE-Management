@@ -211,6 +211,12 @@
         .mobile-nav-item:not(.active) {
             color: #43474e;
         }
+        .admin-only {
+            display: none;
+        }
+        .admin-only.visible {
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -372,6 +378,11 @@
                     <a href="#" onclick="switchDashboardTab('conduct')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="conduct">
                         <span class="material-symbols-outlined">gavel</span>
                         <span class="font-label-md text-label-md">Conduct</span>
+                    </a>
+                    <!-- Admin-only nav item -->
+                    <a href="#" onclick="switchDashboardTab('admin-setup')" class="nav-item admin-only flex items-center gap-3 px-4 py-3 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all duration-200 cursor-pointer" data-tab="admin-setup" id="adminSetupNav">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="font-label-md text-label-md">Admin Setup</span>
                     </a>
                 </div>
 
@@ -939,6 +950,89 @@
                         </div>
                     </div>
 
+                    <!-- ===================== TAB: ADMIN SETUP (new) ===================== -->
+                    <div id="tab-admin-setup" class="dashboard-tab hidden space-y-6 fade-in">
+                        <div>
+                            <h2 class="font-headline-lg text-headline-lg text-primary">Admin Setup</h2>
+                            <p class="font-body-md text-body-md text-on-surface-variant">Create new academic IDs, manage semesters and CIE phases.</p>
+                        </div>
+
+                        <!-- Create New ID Form -->
+                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+                            <h3 class="font-headline-md text-headline-md text-on-background mb-4 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">add_circle</span>
+                                Create New ID
+                            </h3>
+                            <form id="adminSetupForm" onsubmit="handleAdminSetup(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="newId">New ID / Faculty Code</label>
+                                    <input class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="newId" placeholder="e.g. FAC-2024-01" required />
+                                </div>
+                                <div>
+                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="academicYear">Academic Year</label>
+                                    <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="academicYear">
+                                        <option value="2024-25">2024-25</option>
+                                        <option value="2025-26">2025-26</option>
+                                        <option value="2026-27">2026-27</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-label-md text-label-md text-on-surface mb-1" for="semesterType">Semester Type</label>
+                                    <select class="w-full px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded focus:border-primary focus:ring-0 font-body-md text-body-md text-on-surface transition-colors" id="semesterType">
+                                        <option value="ODD">ODD</option>
+                                        <option value="EVEN">EVEN</option>
+                                        <option value="SUMMER">SUMMER</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block font-label-md text-label-md text-on-surface mb-1">CIE Phases</label>
+                                    <div class="flex flex-wrap gap-3 pt-1">
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 1" checked /> CIE 1
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 2" checked /> CIE 2
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer">
+                                            <input type="checkbox" class="rounded text-primary border-outline-variant focus:ring-primary" value="CIE 3" /> CIE 3
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2 flex justify-end">
+                                    <button type="submit" class="bg-primary text-on-primary font-label-md px-6 py-2 rounded hover:bg-primary/90 transition-colors flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[18px]">save</span> Create ID
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Existing Records Table -->
+                        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+                            <div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+                                <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+                                    <span class="material-symbols-outlined">list</span> Existing Academic IDs
+                                </h3>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant" id="recordCount">4 entries</span>
+                            </div>
+                            <div class="overflow-x-auto p-4">
+                                <table class="w-full text-left border-collapse" id="adminTable">
+                                    <thead>
+                                        <tr class="border-b border-outline-variant text-on-surface-variant font-label-md text-label-md bg-surface-container-low">
+                                            <th class="p-3 font-medium">ID</th>
+                                            <th class="p-3 font-medium">Academic Year</th>
+                                            <th class="p-3 font-medium">Semester</th>
+                                            <th class="p-3 font-medium">CIE Phases</th>
+                                            <th class="p-3 font-medium text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminTableBody" class="font-body-sm text-body-sm">
+                                        <!-- rows will be injected by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </main>
 
                 <!-- ========================================================== -->
@@ -969,6 +1063,11 @@
                         <span class="material-symbols-outlined text-[24px]">gavel</span>
                         <span class="font-label-sm text-[10px] leading-tight">Conduct</span>
                     </button>
+                    <!-- Admin-only mobile nav -->
+                    <button onclick="switchDashboardTab('admin-setup')" class="mobile-nav-item admin-only flex flex-col items-center justify-center min-w-[56px] py-1" data-tab="admin-setup">
+                        <span class="material-symbols-outlined text-[24px]">settings</span>
+                        <span class="font-label-sm text-[10px] leading-tight">Setup</span>
+                    </button>
                 </nav>
 
             </div>
@@ -988,6 +1087,13 @@
         let currentRole = 'admin';
         let currentTab = 'overview';
 
+        // ----- Mock data for admin table -----
+        let adminRecords = [
+            { id: 'FAC-2024-01', year: '2024-25', semester: 'ODD', cie: ['CIE 1', 'CIE 2'] },
+            { id: 'FAC-2024-02', year: '2024-25', semester: 'EVEN', cie: ['CIE 1', 'CIE 2', 'CIE 3'] },
+            { id: 'FAC-2025-01', year: '2025-26', semester: 'ODD', cie: ['CIE 1'] },
+        ];
+
         // ----- DOM refs -----
         const loginView = document.getElementById('loginView');
         const loginFormView = document.getElementById('loginFormView');
@@ -996,11 +1102,13 @@
         const navRoleDisplay = document.getElementById('navRoleDisplay');
         const dashboardGreeting = document.getElementById('dashboardGreeting');
         const dashboardSubGreeting = document.getElementById('dashboardSubGreeting');
+        const adminSetupNav = document.getElementById('adminSetupNav');
+        const adminTableBody = document.getElementById('adminTableBody');
+        const recordCount = document.getElementById('recordCount');
 
         // ----- Login -----
         function handleLogin(e) {
             e.preventDefault();
-            // Show role selection
             loginFormView.classList.add('hidden');
             roleSelectionView.classList.remove('hidden');
         }
@@ -1042,8 +1150,22 @@
             dashboardGreeting.textContent = greetings[role] || 'Dashboard';
             dashboardSubGreeting.textContent = subGreetings[role] || 'Manage your CIE Examination tasks.';
 
+            // Show/hide admin-only nav items
+            const isAdmin = (role === 'admin');
+            document.querySelectorAll('.admin-only').forEach(el => {
+                if (isAdmin) {
+                    el.classList.add('visible');
+                    el.style.display = 'flex'; // for flex items
+                } else {
+                    el.classList.remove('visible');
+                    el.style.display = 'none';
+                }
+            });
+
             // Reset to overview
             switchDashboardTab('overview');
+            // Render admin table
+            renderAdminTable();
         }
 
         // ----- Logout -----
@@ -1072,7 +1194,6 @@
             const target = document.getElementById('tab-' + tabId);
             if (target) {
                 target.classList.remove('hidden');
-                // Re-trigger fade-in
                 target.classList.remove('fade-in');
                 void target.offsetWidth;
                 target.classList.add('fade-in');
@@ -1086,10 +1207,10 @@
                 if (elTab === tabId) {
                     el.classList.add('active');
                     el.classList.remove('text-on-surface-variant');
-                    // style active
                     el.style.backgroundColor = '#1a365d';
                     el.style.color = '#ffffff';
-                    el.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+                    const icon = el.querySelector('.material-symbols-outlined');
+                    if (icon) icon.style.fontVariationSettings = "'FILL' 1";
                 } else {
                     el.style.backgroundColor = 'transparent';
                     el.style.color = '';
@@ -1108,11 +1229,8 @@
             });
         }
 
-        // ----- Mobile Nav Toggle (simple drawer) -----
+        // ----- Mobile Nav Toggle -----
         function toggleMobileNav() {
-            // For simplicity, we just toggle a class on the body to show/hide
-            // but we'll keep it simple — on mobile, nav is hidden anyway.
-            // We'll just use it as a placeholder for future enhancement.
             const nav = document.getElementById('desktopNav');
             if (nav) {
                 if (nav.style.display === 'flex') {
@@ -1130,7 +1248,7 @@
             }
         }
 
-        // Close mobile nav on outside click (simple)
+        // Close mobile nav on outside click
         document.addEventListener('click', function(e) {
             const nav = document.getElementById('desktopNav');
             if (window.innerWidth < 768 && nav && nav.style.display === 'flex') {
@@ -1143,12 +1261,88 @@
             }
         });
 
-        // ----- Init: ensure login visible -----
+        // ----- Admin Setup Functions -----
+        function renderAdminTable() {
+            if (!adminTableBody) return;
+            adminTableBody.innerHTML = '';
+            adminRecords.forEach((rec, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-outline-variant hover:bg-surface transition-colors';
+                tr.innerHTML = `
+                    <td class="p-3 font-bold">${rec.id}</td>
+                    <td class="p-3">${rec.year}</td>
+                    <td class="p-3">${rec.semester}</td>
+                    <td class="p-3">${rec.cie.join(', ')}</td>
+                    <td class="p-3 text-right">
+                        <button class="text-primary hover:underline font-label-sm text-label-sm mr-2" onclick="deleteRecord(${index})">Delete</button>
+                        <button class="text-outline hover:text-primary transition-colors" onclick="editRecord(${index})"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+                    </td>
+                `;
+                adminTableBody.appendChild(tr);
+            });
+            recordCount.textContent = adminRecords.length + ' entries';
+        }
+
+        function handleAdminSetup(e) {
+            e.preventDefault();
+            const id = document.getElementById('newId').value.trim();
+            const year = document.getElementById('academicYear').value;
+            const semester = document.getElementById('semesterType').value;
+            const cieCheckboxes = document.querySelectorAll('#adminSetupForm input[type="checkbox"]:checked');
+            const cie = Array.from(cieCheckboxes).map(cb => cb.value);
+
+            if (!id) {
+                alert('Please enter a valid ID.');
+                return;
+            }
+            if (cie.length === 0) {
+                alert('Select at least one CIE phase.');
+                return;
+            }
+
+            adminRecords.push({ id, year, semester, cie });
+            renderAdminTable();
+            document.getElementById('newId').value = '';
+            // reset checkboxes to default (CIE 1 & 2 checked, CIE 3 unchecked)
+            document.querySelectorAll('#adminSetupForm input[type="checkbox"]').forEach(cb => {
+                cb.checked = (cb.value === 'CIE 1' || cb.value === 'CIE 2');
+            });
+        }
+
+        function deleteRecord(index) {
+            if (confirm('Delete this record?')) {
+                adminRecords.splice(index, 1);
+                renderAdminTable();
+            }
+        }
+
+        function editRecord(index) {
+            const rec = adminRecords[index];
+            // Populate form with current values
+            document.getElementById('newId').value = rec.id;
+            document.getElementById('academicYear').value = rec.year;
+            document.getElementById('semesterType').value = rec.semester;
+            document.querySelectorAll('#adminSetupForm input[type="checkbox"]').forEach(cb => {
+                cb.checked = rec.cie.includes(cb.value);
+            });
+            // Remove the record after editing (we'll re-add on submit)
+            adminRecords.splice(index, 1);
+            renderAdminTable();
+            // Scroll to form
+            document.getElementById('adminSetupForm').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ----- Init -----
         document.addEventListener('DOMContentLoaded', function() {
             loginView.classList.add('view-visible');
             loginView.classList.remove('view-hidden');
             dashboardView.classList.add('view-hidden');
             dashboardView.classList.remove('view-visible');
+            // Hide admin-only items initially
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.style.display = 'none';
+            });
+            renderAdminTable();
         });
 
         // ----- Keyboard shortcut: Escape to logout -----

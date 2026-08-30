@@ -1,5071 +1,1929 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <base target="_top">
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
-
-  <title>CIE Examination Management System</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-  <style>
-
-    * {
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #dbeafe;
-
-      --success: #16a34a;
-      --success-light: #dcfce7;
-
-      --warning: #d97706;
-      --warning-light: #fef3c7;
-
-      --danger: #dc2626;
-      --danger-light: #fee2e2;
-
-      --purple: #7c3aed;
-      --purple-light: #ede9fe;
-
-      --bg: #f5f7fb;
-      --white: #ffffff;
-
-      --text: #111827;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-
-      --shadow:
-        0 4px 18px rgba(15, 23, 42, 0.07);
-
-      --radius: 14px;
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    button,
-    input,
-    select,
-    textarea {
-      font-family: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    /* =====================================================
-       LOGIN
-       ===================================================== */
-
-    .login-page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background:
-        linear-gradient(135deg, #eff6ff, #f8fafc);
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 460px;
-      background: white;
-      border-radius: 22px;
-      padding: 34px;
-      box-shadow: 0 20px 60px rgba(15,23,42,.12);
-      border: 1px solid var(--border);
-    }
-
-    .brand-login {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .brand-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 18px;
-      background: var(--primary-light);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: auto;
-      font-size: 30px;
-    }
-
-    .brand-login h1 {
-      margin: 15px 0 5px;
-      font-size: 25px;
-    }
-
-    .brand-login p {
-      color: var(--muted);
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 17px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 7px;
-      color: #374151;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 9px;
-      padding: 11px 12px;
-      background: white;
-      color: var(--text);
-      outline: none;
-      font-size: 14px;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.10);
-    }
-
-    .btn {
-      border: none;
-      border-radius: 9px;
-      padding: 11px 16px;
-      font-weight: 700;
-      font-size: 14px;
-      transition: .2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-success {
-      background: var(--success);
-      color: white;
-    }
-
-    .btn-warning {
-      background: var(--warning);
-      color: white;
-    }
-
-    .btn-danger {
-      background: var(--danger);
-      color: white;
-    }
-
-    .btn-outline {
-      background: white;
-      border: 1px solid var(--border);
-      color: #374151;
-    }
-
-    .btn-block {
-      width: 100%;
-    }
-
-    .login-message {
-      margin-top: 12px;
-      font-size: 13px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .login-footer {
-      text-align: center;
-      margin-top: 20px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .link-button {
-      border: none;
-      background: none;
-      color: var(--primary);
-      font-weight: 700;
-      padding: 0;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* =====================================================
-       APPLICATION
-       ===================================================== */
-
-    #app {
-      display: none;
-      min-height: 100vh;
-    }
-
-    #app.active {
-      display: block;
-    }
-
-    .topbar {
-      height: 70px;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .user-info {
-      text-align: right;
-    }
-
-    .user-name {
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .user-role {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .logout {
-      background: var(--danger-light);
-      color: var(--danger);
-      border: none;
-      padding: 8px 13px;
-      border-radius: 8px;
-      font-weight: 700;
-    }
-
-    .layout {
-      display: flex;
-      min-height: calc(100vh - 70px);
-    }
-
-    .sidebar {
-      width: 255px;
-      background: white;
-      border-right: 1px solid var(--border);
-      padding: 20px 14px;
-      flex-shrink: 0;
-    }
-
-    .nav-title {
-      font-size: 10px;
-      font-weight: 800;
-      color: #9ca3af;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin: 15px 10px 8px;
-    }
-
-    .nav-btn {
-      width: 100%;
-      text-align: left;
-      border: none;
-      background: transparent;
-      padding: 11px 12px;
-      border-radius: 9px;
-      margin-bottom: 3px;
-      color: #4b5563;
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .nav-btn:hover,
-    .nav-btn.active {
-      background: var(--primary-light);
-      color: var(--primary);
-    }
-
-    .main {
-      flex: 1;
-      padding: 28px;
-      min-width: 0;
-    }
-
-    /* =====================================================
-       PAGE HEADER
-       ===================================================== */
-
-    .page-header {
-      margin-bottom: 22px;
-    }
-
-    .page-header h2 {
-      margin: 0 0 5px;
-      font-size: 25px;
-    }
-
-    .page-header p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* =====================================================
-       CARDS
-       ===================================================== */
-
-    .cards {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(190px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow);
-    }
-
-    .stat-title {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow);
-      margin-bottom: 20px;
-    }
-
-    .card-title {
-      font-size: 17px;
-      font-weight: 800;
-      margin-bottom: 17px;
-    }
-
-    /* =====================================================
-       ACTION GRID
-       ===================================================== */
-
-    .action-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(190px, 1fr));
-      gap: 14px;
-    }
-
-    .action-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      background: white;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .action-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
-    }
-
-    .action-icon {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    .action-card h3 {
-      font-size: 14px;
-      margin: 0 0 5px;
-    }
-
-    .action-card p {
-      font-size: 12px;
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    /* =====================================================
-       TABLE
-       ===================================================== */
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 800;
-      text-align: left;
-      padding: 11px;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 11px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 9px;
-      border-radius: 50px;
-      font-size: 10px;
-      font-weight: 800;
-    }
-
-    .badge-active {
-      background: var(--success-light);
-      color: var(--success);
-    }
-
-    .badge-pending {
-      background: var(--warning-light);
-      color: var(--warning);
-    }
-
-    .badge-danger {
-      background: var(--danger-light);
-      color: var(--danger);
-    }
-
-    /* =====================================================
-       FORMS
-       ===================================================== */
-
-    .form-grid {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
-    }
-
-    .full-width {
-      grid-column: 1 / -1;
-    }
-
-    .section-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    /* =====================================================
-       MODAL
-       ===================================================== */
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 500;
-    }
-
-    .modal.open {
-      display: flex;
-    }
-
-    .modal-box {
-      width: 100%;
-      max-width: 650px;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: white;
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 25px 80px rgba(0,0,0,.20);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .modal-header h3 {
-      margin: 0;
-    }
-
-    .close {
-      border: none;
-      background: #f3f4f6;
-      border-radius: 8px;
-      font-size: 20px;
-      width: 34px;
-      height: 34px;
-    }
-
-    /* =====================================================
-       TOAST
-       ===================================================== */
-
-    #toastContainer {
-      position: fixed;
-      top: 85px;
-      right: 20px;
-      z-index: 1000;
-    }
-
-    .toast {
-      background: #111827;
-      color: white;
-      padding: 12px 17px;
-      border-radius: 9px;
-      margin-bottom: 8px;
-      box-shadow: var(--shadow);
-      font-size: 13px;
-      font-weight: 600;
-      animation: slideIn .2s ease;
-    }
-
-    .toast.success {
-      background: var(--success);
-    }
-
-    .toast.error {
-      background: var(--danger);
-    }
-
-    .toast.warning {
-      background: var(--warning);
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(30px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    /* =====================================================
-       PRINT
-       ===================================================== */
-
-    .print-area {
-      background: white;
-    }
-
-    @media print {
-
-      body * {
-        visibility: hidden;
-      }
-
-      .print-area,
-      .print-area * {
-        visibility: visible;
-      }
-
-      .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-    }
-
-    /* =====================================================
-       MOBILE
-       ===================================================== */
-
-    @media(max-width: 800px) {
-
-      .sidebar {
-        width: 210px;
-      }
-
-      .main {
-        padding: 18px;
-      }
-
-      .topbar {
-        padding: 0 15px;
-      }
-
-      .user-info {
-        display: none;
-      }
-    }
-
-    @media(max-width: 600px) {
-
-      .layout {
-        display: block;
-      }
-
-      .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        overflow-x: auto;
-        padding: 8px;
-      }
-
-      .nav-title {
-        display: none;
-      }
-
-      .nav-btn {
-        min-width: max-content;
-        margin: 0 3px;
-      }
-
-      .main {
-        padding: 14px;
-      }
-
-      .login-card {
-        padding: 24px;
-      }
-    }
-
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIE Block Generator · Full Settings</title>
+
+    <!-- html2pdf for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+    </script>
+
+    <style>
+        /* ── Reset & Base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f0f4f8;
+            color: #1a202c;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        .app {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #1a365d, #2b6cb0);
+            color: #fff;
+            padding: 22px 28px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(26, 54, 93, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .header h1 small {
+            font-weight: 400;
+            font-size: 14px;
+            opacity: 0.8;
+            display: block;
+            margin-top: 2px;
+        }
+        .header .sub {
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 6px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 24px;
+            border: none;
+            background: none;
+            font-weight: 600;
+            font-size: 15px;
+            color: #718096;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover {
+            color: #2b6cb0;
+        }
+        .tab-btn.active {
+            color: #2b6cb0;
+            border-bottom-color: #2b6cb0;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px 26px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 22px;
+            border: 1px solid #e9edf4;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .card-title .badge {
+            background: #e2e8f0;
+            color: #2d3748;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 2px 14px;
+            border-radius: 40px;
+        }
+        .card-title .badge-blue {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+        .card-title .badge-green {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        /* ── Settings Grid ── */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .settings-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 16px 18px;
+            border: 1px solid #edf2f7;
+        }
+        .settings-box .box-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .settings-box .box-title .count {
+            font-weight: 400;
+            font-size: 13px;
+            color: #718096;
+        }
+        .settings-box .item-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+            min-height: 32px;
+        }
+        .settings-box .item-tag {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 6px;
+            padding: 3px 12px;
+            font-size: 13px;
+            color: #2b6cb0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .settings-box .item-tag .del {
+            cursor: pointer;
+            color: #e53e3e;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 1;
+        }
+        .settings-box .item-tag .del:hover {
+            color: #c53030;
+        }
+        .settings-box .add-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .settings-box .add-row input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .settings-box .add-row input:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.12);
+        }
+        .settings-box .add-row .btn-sm {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            background: #2b6cb0;
+            color: #fff;
+            transition: all 0.2s;
+        }
+        .settings-box .add-row .btn-sm:hover {
+            background: #1a4f7a;
+        }
+        .settings-box .add-row .btn-sm-danger {
+            background: #e53e3e;
+        }
+        .settings-box .add-row .btn-sm-danger:hover {
+            background: #c53030;
+        }
+        .settings-box .preset-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .settings-box .preset-btns .preset {
+            padding: 3px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            font-size: 12px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .settings-box .preset-btns .preset:hover {
+            border-color: #2b6cb0;
+            background: #ebf8ff;
+        }
+
+        /* ── Form Layout ── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px 20px;
+            background: #f7fafc;
+            padding: 16px 18px;
+            border-radius: 12px;
+            border: 1px solid #edf2f7;
+            margin-bottom: 14px;
+        }
+        .form-grid .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .form-grid .field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .form-grid .field input,
+        .form-grid .field select {
+            padding: 8px 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #fff;
+            transition: border-color 0.2s;
+            outline: none;
+            color: #1a202c;
+            width: 100%;
+        }
+        .form-grid .field input:focus,
+        .form-grid .field select:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.12);
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+        .btn-primary {
+            background: #2b6cb0;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1a4f7a;
+        }
+        .btn-success {
+            background: #38a169;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #2f855a;
+        }
+        .btn-warning {
+            background: #d69e2e;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #b7791f;
+        }
+        .btn-danger {
+            background: #e53e3e;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            transform: none;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        /* ── Stats ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 10px 0 16px;
+        }
+        .stat-item {
+            background: #f7fafc;
+            padding: 12px 14px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #edf2f7;
+        }
+        .stat-item .num {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2b6cb0;
+        }
+        .stat-item .label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 2px;
+        }
+
+        /* ── Block List Output ── */
+        .block-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .block-card {
+            background: #fafcff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .block-card:hover {
+            border-color: #bee3f8;
+            background: #f7faff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        .block-card .room-header {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2b6cb0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 6px;
+        }
+        .block-card .room-header .sub {
+            font-weight: 400;
+            font-size: 13px;
+            color: #718096;
+        }
+        .block-card .detail-row {
+            font-size: 14px;
+            color: #2d3748;
+            margin: 4px 0;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .block-card .detail-row .label {
+            font-weight: 500;
+            color: #4a5568;
+            min-width: 70px;
+        }
+        .block-card .roll-range {
+            background: #ebf8ff;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #2b6cb0;
+            font-size: 14px;
+        }
+        .block-card .session-time {
+            background: #fefcbf;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #744210;
+            font-size: 13px;
+        }
+        .block-card .batch-tag {
+            position: absolute;
+            top: -8px;
+            right: 12px;
+            background: #2b6cb0;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        /* ── Session legend ── */
+        .session-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            background: #f7fafc;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid #edf2f7;
+            margin-bottom: 12px;
+        }
+        .session-legend .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .session-legend .item .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid #cbd5e0;
+        }
+
+        /* ── Time Table Grid ── */
+        .tt-wrapper {
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+        .tt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 700px;
+        }
+        .tt-table th,
+        .tt-table td {
+            border: 1.5px solid #cbd5e0;
+            padding: 8px 10px;
+            text-align: center;
+            vertical-align: middle;
+            min-width: 120px;
+        }
+        .tt-table th {
+            background: #f7fafc;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        .tt-table .session-label {
+            font-weight: 600;
+            color: #2b6cb0;
+            background: #ebf8ff;
+            min-width: 100px;
+        }
+        .tt-table .day-header {
+            background: #edf2f7;
+            font-weight: 600;
+        }
+        .tt-table .tt-cell {
+            padding: 4px 6px;
+            min-width: 140px;
+        }
+        .tt-table .tt-cell input {
+            width: 100%;
+            padding: 5px 6px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fff;
+        }
+        .tt-table .tt-cell input:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.12);
+        }
+        .tt-table .tt-cell .code-input {
+            font-weight: 600;
+            color: #2b6cb0;
+            width: 45%;
+            display: inline-block;
+        }
+        .tt-table .tt-cell .name-input {
+            width: 45%;
+            display: inline-block;
+            font-size: 12px;
+        }
+        .tt-table .tt-cell .cell-inner {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tt-table .tt-cell .cell-inner input {
+            flex: 1;
+            min-width: 50px;
+        }
+        .tt-table .tt-cell .cell-inner .sep {
+            color: #a0aec0;
+            font-weight: 300;
+        }
+
+        /* ── PDF hidden ── */
+        #pdfContent {
+            display: none;
+        }
+
+        .text-muted {
+            color: #a0aec0;
+            font-style: italic;
+        }
+        .text-sm {
+            font-size: 13px;
+            color: #718096;
+        }
+        .text-danger {
+            color: #e53e3e;
+        }
+        .text-success {
+            color: #38a169;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-12 {
+            margin-top: 12px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .border-top {
+            border-top: 1px solid #edf2f7;
+            padding-top: 14px;
+            margin-top: 14px;
+        }
+        .empty-state {
+            padding: 30px 10px;
+            text-align: center;
+            color: #a0aec0;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .fw-700 {
+            font-weight: 700;
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px 20px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .card {
+                padding: 16px 14px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .block-grid {
+                grid-template-columns: 1fr;
+            }
+            .session-legend {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .tabs {
+                flex-wrap: wrap;
+            }
+            .tab-btn {
+                flex: 1 0 auto;
+                text-align: center;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .tt-table {
+                font-size: 12px;
+                min-width: 500px;
+            }
+            .tt-table th,
+            .tt-table td {
+                padding: 5px 6px;
+                min-width: 80px;
+            }
+            .tt-table .tt-cell {
+                min-width: 100px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- =========================================================
-     TOAST
-     ========================================================= -->
+    <div class="app">
 
-<div id="toastContainer"></div>
+        <!-- ─── HEADER ─── -->
+        <header class="header">
+            <div>
+                <h1>
+                    📋 CIE Block Generator
+                    <small>Summer Semester College · Bagalkot</small>
+                </h1>
+            </div>
+            <div class="sub">
+                <span>📅 AY 2025-2026 &nbsp;|&nbsp; CIE‑II</span>
+            </div>
+        </header>
 
+        <!-- ─── TABS ─── -->
+        <div class="tabs">
+            <button class="tab-btn" data-tab="tabSettings">⚙️ Settings</button>
+            <button class="tab-btn" data-tab="tabGenerate">🚀 Generate</button>
+            <button class="tab-btn" data-tab="tabDashboard">📊 Dashboard</button>
+            <button class="tab-btn active" data-tab="tabTimetable">📅 Time Table</button>
+        </div>
 
-<!-- =========================================================
-     LOGIN PAGE
-     ========================================================= -->
+        <!-- ─── TAB 1: SETTINGS ─── -->
+        <div id="tabSettings" class="tab-pane">
+            <div class="card">
+                <div class="card-title">
+                    ⚙️ Settings
+                    <span class="badge">Rooms · Branches · Semesters · Divisions</span>
+                </div>
+                <div class="settings-grid">
+                    <!-- Rooms -->
+                    <div class="settings-box">
+                        <div class="box-title">
+                            🏠 Rooms
+                            <span class="count" id="roomCount">0</span>
+                        </div>
+                        <div class="item-list" id="roomList"></div>
+                        <div class="add-row">
+                            <input type="number" id="roomInput" placeholder="e.g. 101" min="1" />
+                            <button class="btn-sm" id="addRoomBtn">Add</button>
+                            <button class="btn-sm btn-sm-danger" id="resetRoomsBtn">Reset</button>
+                        </div>
+                        <div class="preset-btns">
+                            <span class="preset" data-rooms="101-120,201-225">Default (101-120, 201-225)</span>
+                        </div>
+                    </div>
 
-<div class="login-page" id="loginPage">
+                    <!-- Branches -->
+                    <div class="settings-box">
+                        <div class="box-title">
+                            🏛 Branches
+                            <span class="count" id="branchCount">0</span>
+                        </div>
+                        <div class="item-list" id="branchList"></div>
+                        <div class="add-row">
+                            <input type="text" id="branchInput" placeholder="e.g. CSE" />
+                            <button class="btn-sm" id="addBranchBtn">Add</button>
+                            <button class="btn-sm btn-sm-danger" id="resetBranchesBtn">Reset</button>
+                        </div>
+                        <div class="preset-btns">
+                            <span class="preset" data-branches="CSE,ISE,ECE,EEE,ME,CE,AI&ML,DS,IT,ECM">10 Default</span>
+                        </div>
+                    </div>
 
-  <div class="login-card">
+                    <!-- Semesters -->
+                    <div class="settings-box">
+                        <div class="box-title">
+                            📚 Semesters
+                            <span class="count" id="semesterCount">0</span>
+                        </div>
+                        <div class="item-list" id="semesterList"></div>
+                        <div class="add-row">
+                            <input type="number" id="semesterInput" placeholder="e.g. 3" min="1" max="8" />
+                            <button class="btn-sm" id="addSemesterBtn">Add</button>
+                            <button class="btn-sm btn-sm-danger" id="resetSemestersBtn">Reset</button>
+                        </div>
+                        <div class="preset-btns">
+                            <span class="preset" data-semesters="1,2,3,4,5,6,7,8">1-8</span>
+                        </div>
+                    </div>
 
-    <div class="brand-login">
+                    <!-- Divisions -->
+                    <div class="settings-box">
+                        <div class="box-title">
+                            📋 Divisions
+                            <span class="count" id="divisionCount">0</span>
+                        </div>
+                        <div class="item-list" id="divisionList"></div>
+                        <div class="add-row">
+                            <input type="text" id="divisionInput" placeholder="e.g. A" maxlength="2" />
+                            <button class="btn-sm" id="addDivisionBtn">Add</button>
+                            <button class="btn-sm btn-sm-danger" id="resetDivisionsBtn">Reset</button>
+                        </div>
+                        <div class="preset-btns">
+                            <span class="preset" data-divisions="A,B,C,D,E,F,G,H,I,J,K,L,M,N,O">A-O</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 text-sm text-success" id="settingsStatus"></div>
+            </div>
+        </div>
 
-      <div class="brand-icon">
-        📋
-      </div>
+        <!-- ─── TAB 2: GENERATE ─── -->
+        <div id="tabGenerate" class="tab-pane">
+            <div class="card">
+                <div class="card-title">
+                    🚀 Generate Blocks
+                    <span class="badge badge-blue">Select options &amp; generate</span>
+                </div>
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Branch</label>
+                        <select id="genBranch"></select>
+                    </div>
+                    <div class="field">
+                        <label>Semester</label>
+                        <select id="genSemester"></select>
+                    </div>
+                    <div class="field">
+                        <label>Division</label>
+                        <select id="genDivision"></select>
+                    </div>
+                    <div class="field">
+                        <label>Subject Code</label>
+                        <input type="text" id="genSubjectCode" value="21CS41" />
+                    </div>
+                    <div class="field">
+                        <label>Subject Name</label>
+                        <input type="text" id="genSubjectName" value="Data Structures" />
+                    </div>
+                    <div class="field">
+                        <label>Block Size</label>
+                        <input type="number" id="genBlockSize" value="30" min="1" />
+                    </div>
+                    <div class="field">
+                        <label>Total Strength</label>
+                        <input type="number" id="genStrength" value="90" min="1" />
+                    </div>
+                    <div class="field">
+                        <label>Session</label>
+                        <select id="genSession">
+                            <option value="S1">S1: 8:00 – 9:30 AM</option>
+                            <option value="S2" selected>S2: 10:00 – 11:30 AM</option>
+                            <option value="S3">S3: 12:00 – 1:30 PM</option>
+                            <option value="S4">S4: 2:00 – 3:30 PM</option>
+                            <option value="S5">S5: 4:00 – 5:30 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="generateBtn">⚡ Generate Blocks</button>
+                    <button class="btn btn-success" id="addBatchBtn">➕ Add Another Batch</button>
+                    <button class="btn btn-danger" id="resetBtn">🔄 Reset All</button>
+                </div>
+                <div id="genError" class="text-sm text-danger mt-8 hidden"></div>
+                <div id="genSuccess" class="text-sm text-success mt-8 hidden"></div>
+            </div>
+        </div>
 
-      <h1>CIE Examination Management</h1>
+        <!-- ─── TAB 3: DASHBOARD ─── -->
+        <div id="tabDashboard" class="tab-pane">
+            <div class="card hidden" id="outputCard">
+                <div class="card-title">
+                    📊 Dashboard
+                    <span class="badge badge-blue" id="blockCountBadge">0 Blocks</span>
+                    <span class="badge badge-blue" id="studentCountBadge">0 Students</span>
+                    <span class="badge badge-blue" id="roomCountBadge">0 Rooms Used</span>
+                    <span class="badge badge-green" id="batchCountBadge">Batch 1</span>
+                </div>
 
-      <p>
-        Continuous Internal Evaluation System
-      </p>
+                <!-- Session Legend -->
+                <div class="session-legend" id="sessionLegend">
+                    <div class="item"><span class="dot" style="background:#fefcbf;"></span> S1: 8:00 – 9:30 AM</div>
+                    <div class="item"><span class="dot" style="background:#d6eaf8;"></span> S2: 10:00 – 11:30 AM</div>
+                    <div class="item"><span class="dot" style="background:#d5f5e3;"></span> S3: 12:00 – 1:30 PM</div>
+                    <div class="item"><span class="dot" style="background:#fadbd8;"></span> S4: 2:00 – 3:30 PM</div>
+                    <div class="item"><span class="dot" style="background:#ebdef0;"></span> S5: 4:00 – 5:30 PM</div>
+                </div>
 
+                <!-- Stats -->
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-item"><div class="num" id="statRooms">0</div><div class="label">Rooms Allocated</div></div>
+                    <div class="stat-item"><div class="num" id="statBlocks">0</div><div class="label">Total Blocks</div></div>
+                    <div class="stat-item"><div class="num" id="statStudents">0</div><div class="label">Total Students</div></div>
+                    <div class="stat-item"><div class="num" id="statPerRoom">0</div><div class="label">Students / Room</div></div>
+                    <div class="stat-item"><div class="num" id="statBatches">1</div><div class="label">Batches Added</div></div>
+                </div>
+
+                <!-- Block List -->
+                <div id="blockOutput" class="mt-8"></div>
+
+                <div class="mt-12">
+                    <button class="btn btn-warning" id="downloadPdfBtn" disabled>📄 Download PDF</button>
+                </div>
+            </div>
+            <div id="noBlocksMsg" class="text-center text-muted" style="padding:40px 0;">
+                <p style="font-size:18px;">No blocks generated yet.</p>
+                <p style="font-size:14px;">Go to the <strong>Generate</strong> tab to create your first block list.</p>
+            </div>
+        </div>
+
+        <!-- ─── TAB 4: TIME TABLE ─── -->
+        <div id="tabTimetable" class="tab-pane active">
+            <div class="card">
+                <div class="card-title">
+                    📅 Time Table Generator
+                    <span class="badge badge-blue">Branch · Semester · Date</span>
+                </div>
+
+                <!-- Time Table Controls -->
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Branch</label>
+                        <select id="ttBranch"></select>
+                    </div>
+                    <div class="field">
+                        <label>Semester</label>
+                        <select id="ttSemester"></select>
+                    </div>
+                    <div class="field">
+                        <label>Start Date</label>
+                        <input type="date" id="ttStartDate" />
+                    </div>
+                    <div class="field">
+                        <label>Number of Days</label>
+                        <select id="ttDays">
+                            <option value="1">1 Day</option>
+                            <option value="2" selected>2 Days</option>
+                            <option value="3">3 Days</option>
+                            <option value="4">4 Days</option>
+                            <option value="5">5 Days</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Sessions</label>
+                        <select id="ttSessions">
+                            <option value="2">2 Sessions</option>
+                            <option value="3" selected>3 Sessions</option>
+                            <option value="4">4 Sessions</option>
+                            <option value="5">5 Sessions</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="ttGenerateBtn">📋 Generate Time Table</button>
+                    <button class="btn btn-warning" id="ttDownloadPdfBtn" disabled>📄 Download PDF</button>
+                    <button class="btn btn-danger" id="ttClearBtn">🗑️ Clear All</button>
+                </div>
+                <div id="ttStatus" class="text-sm text-success mt-8 hidden"></div>
+            </div>
+
+            <!-- Time Table Grid -->
+            <div class="card" id="ttOutputCard">
+                <div class="card-title">
+                    📅 Time Table
+                    <span class="badge badge-green" id="ttHeading">Branch: -- · Sem: -- · Date: --</span>
+                </div>
+                <div class="tt-wrapper" id="ttGridWrapper">
+                    <table class="tt-table" id="ttTable">
+                        <thead id="ttHead"></thead>
+                        <tbody id="ttBody"></tbody>
+                    </table>
+                </div>
+                <div id="ttEmptyMsg" class="text-center text-muted" style="padding:30px 0;">
+                    <p>Click "Generate Time Table" to create the grid.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── PDF HIDDEN CONTENT ─── -->
+        <div id="pdfContent"></div>
+        <div id="ttPdfContent" style="display:none;"></div>
+
+        <!-- ─── FOOTER ─── -->
+        <div style="text-align:center; margin-top:16px; font-size:12px; color:#a0aec0; border-top:1px solid #edf2f7; padding-top:14px;">
+            All processing is local · No data uploaded · Data stays in your browser
+        </div>
     </div>
 
-
-    <!-- LOGIN FORM -->
-
-    <div id="loginSection">
-
-      <div class="form-group">
-
-        <label>Official Email</label>
-
-        <input
-          type="email"
-          id="loginEmail"
-          placeholder="Enter official email">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="Enter password">
-
-      </div>
-
-
-      <button
-        class="btn btn-primary btn-block"
-        onclick="loginUserFromPage()">
-
-        LOGIN
-
-      </button>
-
-
-      <div
-        class="login-message"
-        id="loginMessage">
-      </div>
-
-
-      <div class="login-footer">
-
-        New user?
-
-        <button
-          class="link-button"
-          onclick="showSignup()">
-
-          Create Account
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- SIGNUP FORM -->
-
-    <div
-      id="signupSection"
-      class="hidden">
-
-      <h3 style="margin-top:0;">
-        Create Account
-      </h3>
-
-      <p
-        style="color:#6b7280;font-size:13px;margin-bottom:20px;">
-
-        Registration requires Admin approval.
-
-      </p>
-
-
-      <div class="form-group">
-
-        <label>Full Name *</label>
-
-        <input
-          id="signupName"
-          type="text"
-          placeholder="Full name">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Official Email *</label>
-
-        <input
-          id="signupEmail"
-          type="email"
-          placeholder="College email">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Mobile Number</label>
-
-        <input
-          id="signupMobile"
-          type="text"
-          placeholder="Mobile number">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Designation *</label>
-
-        <select id="signupDesignation">
-
-          <option value="">
-            Select Designation
-          </option>
-
-          <option>Professor</option>
-
-          <option>Associate Professor</option>
-
-          <option>Assistant Professor</option>
-
-          <option>HOD</option>
-
-          <option>Office Staff</option>
-
-        </select>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Department / Branch *</label>
-
-        <select id="signupDepartment">
-
-          <option value="">
-            Select Department
-          </option>
-
-          <option>CSE</option>
-          <option>ISE</option>
-          <option>ECE</option>
-          <option>EEE</option>
-          <option>ME</option>
-          <option>CIVIL</option>
-          <option>AIML</option>
-          <option>DS</option>
-          <option>CHEMICAL</option>
-          <option>AERONAUTICAL</option>
-          <option>BIOTECH</option>
-          <option>MATHEMATICS</option>
-          <option>OTHER</option>
-
-        </select>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Requested Role *</label>
-
-        <select id="signupRole">
-
-          <option value="FACULTY">
-            Faculty
-          </option>
-
-          <option value="HOD">
-            HOD
-          </option>
-
-          <option value="OFFICE_STAFF_1">
-            Office Staff 1
-          </option>
-
-          <option value="OFFICE_STAFF_2">
-            Office Staff 2
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Employee ID</label>
-
-        <input
-          id="signupEmployeeId"
-          type="text"
-          placeholder="Employee ID">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Password *</label>
-
-        <input
-          id="signupPassword"
-          type="password"
-          placeholder="Minimum 6 characters">
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>Confirm Password *</label>
-
-        <input
-          id="signupConfirmPassword"
-          type="password"
-          placeholder="Confirm password">
-
-      </div>
-
-
-      <button
-        class="btn btn-primary btn-block"
-        onclick="signupUserFromPage()">
-
-        CREATE ACCOUNT
-
-      </button>
-
-
-      <div
-        class="login-message"
-        id="signupMessage">
-      </div>
-
-
-      <div class="login-footer">
-
-        Already registered?
-
-        <button
-          class="link-button"
-          onclick="showLogin()">
-
-          Login
-
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================================================
-     APPLICATION
-     ========================================================= -->
-
-<div id="app">
-
-  <header class="topbar">
-
-    <div class="brand">
-
-      📋 CIE Examination Management
-
-    </div>
-
-
-    <div class="user-area">
-
-      <div class="user-info">
-
-        <div
-          class="user-name"
-          id="userName">
-          User
-        </div>
-
-        <div
-          class="user-role"
-          id="userRole">
-          Role
-        </div>
-
-      </div>
-
-
-      <button
-        class="logout"
-        onclick="logout()">
-
-        Logout
-
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <div class="layout">
-
-    <aside
-      class="sidebar"
-      id="sidebar">
-    </aside>
-
-
-    <main
-      class="main"
-      id="mainContent">
-    </main>
-
-  </div>
-
-</div>
-
-
-<!-- =========================================================
-     MODAL
-     ========================================================= -->
-
-<div
-  class="modal"
-  id="modal">
-
-  <div class="modal-box">
-
-    <div class="modal-header">
-
-      <h3 id="modalTitle">
-        Form
-      </h3>
-
-      <button
-        class="close"
-        onclick="closeModal()">
-
-        ×
-
-      </button>
-
-    </div>
-
-    <div id="modalBody"></div>
-
-  </div>
-
-</div>
-
-
-<script>
-
-/* ============================================================
-   GLOBAL STATE
-   ============================================================ */
-
-let currentUser = null;
-let currentPage = "dashboard";
-
-
-/* ============================================================
-   TOAST
-   ============================================================ */
-
-function toast(message, type = "info") {
-
-  const container =
-    document.getElementById("toastContainer");
-
-  const div =
-    document.createElement("div");
-
-  div.className =
-    "toast " + type;
-
-  div.textContent = message;
-
-  container.appendChild(div);
-
-  setTimeout(() => {
-
-    div.remove();
-
-  }, 3500);
-}
-
-
-/* ============================================================
-   LOGIN / SIGNUP SCREEN
-   ============================================================ */
-
-function showSignup() {
-
-  document
-    .getElementById("loginSection")
-    .classList.add("hidden");
-
-  document
-    .getElementById("signupSection")
-    .classList.remove("hidden");
-
-}
-
-
-function showLogin() {
-
-  document
-    .getElementById("signupSection")
-    .classList.add("hidden");
-
-  document
-    .getElementById("loginSection")
-    .classList.remove("hidden");
-
-}
-
-
-function loginUserFromPage() {
-
-  const email =
-    document
-      .getElementById("loginEmail")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("loginPassword")
-      .value;
-
-  const message =
-    document.getElementById("loginMessage");
-
-
-  if (!email || !password) {
-
-    message.textContent =
-      "Please enter email and password.";
-
-    return;
-
-  }
-
-
-  message.textContent =
-    "Checking login...";
-
-
-  google.script.run
-
-    .withSuccessHandler(function(user) {
-
-      if (!user || !user.success) {
-
-        message.textContent =
-          "Login failed.";
-
-        return;
-
-      }
-
-
-      currentUser = user;
-
-      message.textContent = "";
-
-      openApplication();
-
-    })
-
-    .withFailureHandler(function(error) {
-
-      message.textContent =
-        error.message ||
-        "Invalid login.";
-
-    })
-
-    .loginUser(
-      email,
-      password
-    );
-
-}
-
-
-/* ============================================================
-   SIGNUP
-   ============================================================ */
-
-function signupUserFromPage() {
-
-  const name =
-    document
-      .getElementById("signupName")
-      .value
-      .trim();
-
-  const email =
-    document
-      .getElementById("signupEmail")
-      .value
-      .trim();
-
-  const mobile =
-    document
-      .getElementById("signupMobile")
-      .value
-      .trim();
-
-  const designation =
-    document
-      .getElementById("signupDesignation")
-      .value;
-
-  const department =
-    document
-      .getElementById("signupDepartment")
-      .value;
-
-  const role =
-    document
-      .getElementById("signupRole")
-      .value;
-
-  const employeeId =
-    document
-      .getElementById("signupEmployeeId")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("signupPassword")
-      .value;
-
-  const confirmPassword =
-    document
-      .getElementById("signupConfirmPassword")
-      .value;
-
-  const message =
-    document.getElementById("signupMessage");
-
-
-  if (
-    !name ||
-    !email ||
-    !designation ||
-    !department ||
-    !password
-  ) {
-
-    message.textContent =
-      "Please fill all required fields.";
-
-    return;
-
-  }
-
-
-  if (password.length < 6) {
-
-    message.textContent =
-      "Password must contain at least 6 characters.";
-
-    return;
-
-  }
-
-
-  if (password !== confirmPassword) {
-
-    message.textContent =
-      "Passwords do not match.";
-
-    return;
-
-  }
-
-
-  const data = {
-
-    name: name,
-
-    email: email,
-
-    mobile: mobile,
-
-    designation: designation,
-
-    department: department,
-
-    role: role,
-
-    employeeId: employeeId,
-
-    password: password
-
-  };
-
-
-  message.textContent =
-    "Creating account...";
-
-
-  google.script.run
-
-    .withSuccessHandler(function(result) {
-
-      message.textContent =
-        result.message ||
-        "Registration successful.";
-
-      if (result.success) {
-
-        setTimeout(function() {
-
-          showLogin();
-
-        }, 1500);
-
-      }
-
-    })
-
-    .withFailureHandler(function(error) {
-
-      message.textContent =
-        error.message ||
-        "Registration failed.";
-
-    })
-
-    .signupUser(data);
-
-}
-
-
-/* ============================================================
-   OPEN APPLICATION
-   ============================================================ */
-
-function openApplication() {
-
-  document
-    .getElementById("loginPage")
-    .style.display = "none";
-
-  document
-    .getElementById("app")
-    .classList.add("active");
-
-
-  document
-    .getElementById("userName")
-    .textContent =
-      currentUser.name || currentUser.email;
-
-
-  document
-    .getElementById("userRole")
-    .textContent =
-      formatRole(currentUser.role);
-
-
-  buildSidebar();
-
-  showDashboard();
-
-}
-
-
-function formatRole(role) {
-
-  const map = {
-
-    "ADMIN":
-      "Administrator",
-
-    "HOD":
-      "Head of Department",
-
-    "FACULTY":
-      "Faculty",
-
-    "OFFICE_STAFF_1":
-      "Office Staff 1 — Allocation",
-
-    "OFFICE_STAFF_2":
-      "Office Staff 2 — Printing"
-
-  };
-
-  return map[role] || role;
-
-}
-
-
-/* ============================================================
-   LOGOUT
-   ============================================================ */
-
-function logout() {
-
-  currentUser = null;
-
-  document
-    .getElementById("app")
-    .classList.remove("active");
-
-  document
-    .getElementById("loginPage")
-    .style.display = "flex";
-
-  document
-    .getElementById("loginEmail")
-    .value = "";
-
-  document
-    .getElementById("loginPassword")
-    .value = "";
-
-  showLogin();
-
-  toast(
-    "You have been logged out.",
-    "success"
-  );
-
-}
-
-
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
-
-function buildSidebar() {
-
-  const sidebar =
-    document.getElementById("sidebar");
-
-  let html = "";
-
-
-  const role =
-    currentUser.role;
-
-
-  if (role === "ADMIN") {
-
-    html += navTitle("ADMINISTRATION");
-
-    html += nav(
-      "dashboard",
-      "🏠",
-      "Dashboard"
-    );
-
-    html += nav(
-      "academic",
-      "📅",
-      "Academic Setup"
-    );
-
-    html += nav(
-      "cie",
-      "📝",
-      "CIE Setup"
-    );
-
-    html += nav(
-      "users",
-      "👥",
-      "User Approval"
-    );
-
-    html += nav(
-      "monitor",
-      "📊",
-      "CIE Monitoring"
-    );
-
-    html += nav(
-      "reports",
-      "🖨",
-      "Reports & Printing"
-    );
-
-    html += nav(
-      "lock",
-      "🔒",
-      "Final Lock"
-    );
-
-  }
-
-
-  if (role === "HOD") {
-
-    html += navTitle("HOD");
-
-    html += nav(
-      "dashboard",
-      "🏠",
-      "Dashboard"
-    );
-
-    html += nav(
-      "faculty",
-      "👨‍🏫",
-      "Faculty Details"
-    );
-
-    html += nav(
-      "timetable",
-      "📅",
-      "CIE Timetable"
-    );
-
-    html += nav(
-      "subjects",
-      "📚",
-      "Department Subjects"
-    );
-
-    html += nav(
-      "papers",
-      "📄",
-      "Question Paper Status"
-    );
-
-    html += nav(
-      "reports",
-      "🖨",
-      "Department Reports"
-    );
-
-  }
-
-
-  if (role === "FACULTY") {
-
-    html += navTitle("FACULTY");
-
-    html += nav(
-      "dashboard",
-      "🏠",
-      "Dashboard"
-    );
-
-    html += nav(
-      "subjects",
-      "📚",
-      "My Subjects"
-    );
-
-    html += nav(
-      "papers",
-      "📄",
-      "Question Papers"
-    );
-
-    html += nav(
-      "duties",
-      "👨‍🏫",
-      "My CIE Duties"
-    );
-
-    html += nav(
-      "timetable",
-      "📅",
-      "CIE Timetable"
-    );
-
-  }
-
-
-  if (role === "OFFICE_STAFF_1") {
-
-    html += navTitle("EXAMINATION ALLOCATION");
-
-    html += nav(
-      "dashboard",
-      "🏠",
-      "Dashboard"
-    );
-
-    html += nav(
-      "subjects",
-      "📚",
-      "Subject & Strength"
-    );
-
-    html += nav(
-      "rooms",
-      "🏫",
-      "Room Allocation"
-    );
-
-    html += nav(
-      "duties",
-      "👨‍🏫",
-      "Duty Allocation"
-    );
-
-    html += nav(
-      "supervisor",
-      "👔",
-      "Senior Supervisor"
-    );
-
-    html += nav(
-      "squad",
-      "👥",
-      "Squad"
-    );
-
-    html += nav(
-      "conflicts",
-      "⚠️",
-      "Conflict Check"
-    );
-
-  }
-
-
-  if (role === "OFFICE_STAFF_2") {
-
-    html += navTitle("PRINT & VERIFICATION");
-
-    html += nav(
-      "dashboard",
-      "🏠",
-      "Dashboard"
-    );
-
-    html += nav(
-      "timetable",
-      "📅",
-      "Timetable Printing"
-    );
-
-    html += nav(
-      "pockets",
-      "📦",
-      "Pocket Verification"
-    );
-
-    html += nav(
-      "duties",
-      "👨‍🏫",
-      "Duty Lists"
-    );
-
-    html += nav(
-      "reports",
-      "🖨",
-      "All Reports"
-    );
-
-  }
-
-
-  sidebar.innerHTML = html;
-
-
-  sidebar
-    .querySelectorAll(".nav-btn")
-    .forEach(function(button) {
-
-      button.addEventListener(
-        "click",
-        function() {
-
-          const page =
-            button.dataset.page;
-
-          showPage(page);
-
-        }
-      );
-
-    });
-
-}
-
-
-function navTitle(text) {
-
-  return `
-    <div class="nav-title">
-      ${text}
-    </div>
-  `;
-
-}
-
-
-function nav(page, icon, text) {
-
-  return `
-    <button
-      class="nav-btn"
-      data-page="${page}">
-
-      ${icon} &nbsp; ${text}
-
-    </button>
-  `;
-
-}
-
-
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
-
-function showDashboard() {
-
-  showPage("dashboard");
-
-}
-
-
-function showPage(page) {
-
-  currentPage = page;
-
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(function(button) {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.page === page
-      );
-
-    });
-
-
-  const main =
-    document.getElementById("mainContent");
-
-
-  const role =
-    currentUser.role;
-
-
-  if (page === "dashboard") {
-
-    renderDashboard(main, role);
-
-    return;
-
-  }
-
-
-  if (role === "ADMIN") {
-
-    renderAdminPage(main, page);
-
-    return;
-
-  }
-
-
-  if (role === "HOD") {
-
-    renderHODPage(main, page);
-
-    return;
-
-  }
-
-
-  if (role === "FACULTY") {
-
-    renderFacultyPage(main, page);
-
-    return;
-
-  }
-
-
-  if (role === "OFFICE_STAFF_1") {
-
-    renderOffice1Page(main, page);
-
-    return;
-
-  }
-
-
-  if (role === "OFFICE_STAFF_2") {
-
-    renderOffice2Page(main, page);
-
-    return;
-
-  }
-
-}
-
-
-/* ============================================================
-   COMMON DASHBOARD
-   ============================================================ */
-
-function renderDashboard(main, role) {
-
-  let title =
-    formatRole(role);
-
-  let description =
-    "CIE Examination Management Dashboard";
-
-
-  main.innerHTML = `
-
-    <div class="page-header">
-
-      <h2>
-        Welcome, ${escapeHTML(currentUser.name || "")}
-      </h2>
-
-      <p>
-        ${title} · ${description}
-      </p>
-
-    </div>
-
-
-    <div class="cards">
-
-      <div class="stat-card">
-
-        <div class="stat-title">
-          Academic Year
-        </div>
-
-        <div class="stat-value">
-          2026-27
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-title">
-          Semester
-        </div>
-
-        <div class="stat-value">
-          ODD
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-title">
-          Current CIE
-        </div>
-
-        <div class="stat-value">
-          CIE-1
-        </div>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <div class="stat-title">
-          Department
-        </div>
-
-        <div class="stat-value"
-             style="font-size:20px;">
-
-          ${escapeHTML(
-            currentUser.department || "ALL"
-          )}
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    ${dashboardActions(role)}
-
-  `;
-
-}
-
-
-function dashboardActions(role) {
-
-  if (role === "ADMIN") {
-
-    return `
-
-      <div class="card">
-
-        <div class="card-title">
-          Administration
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "📅",
-            "Academic Setup",
-            "Create academic year, ODD/EVEN and semesters.",
-            "academic"
-          )}
-
-          ${actionCard(
-            "📝",
-            "CIE Setup",
-            "Create CIE-1, CIE-2 and CIE-3.",
-            "cie"
-          )}
-
-          ${actionCard(
-            "👥",
-            "User Approval",
-            "Approve faculty, HOD and office registrations.",
-            "users"
-          )}
-
-          ${actionCard(
-            "📊",
-            "CIE Monitoring",
-            "Monitor timetable, papers, duties and conflicts.",
-            "monitor"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (role === "HOD") {
-
-    return `
-
-      <div class="card">
-
-        <div class="card-title">
-          Department Work
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "👨‍🏫",
-            "Faculty Details",
-            "Add and edit faculty name, designation and experience.",
-            "faculty"
-          )}
-
-          ${actionCard(
-            "📅",
-            "CIE Timetable",
-            "Prepare semester-wise timetable.",
-            "timetable"
-          )}
-
-          ${actionCard(
-            "📚",
-            "Department Subjects",
-            "View subjects and registered strength.",
-            "subjects"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (role === "FACULTY") {
-
-    return `
-
-      <div class="card">
-
-        <div class="card-title">
-          Faculty Work
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "📚",
-            "My Subjects",
-            "Add subject name, code, class/section and strength.",
-            "subjects"
-          )}
-
-          ${actionCard(
-            "📄",
-            "Question Papers",
-            "Submit and track CIE question papers.",
-            "papers"
-          )}
-
-          ${actionCard(
-            "👨‍🏫",
-            "My Duties",
-            "View your examination duties.",
-            "duties"
-          )}
-
-          ${actionCard(
-            "📅",
-            "CIE Timetable",
-            "View examination timetable.",
-            "timetable"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (role === "OFFICE_STAFF_1") {
-
-    return `
-
-      <div class="card">
-
-        <div class="card-title">
-          Examination Allocation
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "📚",
-            "Subject & Strength",
-            "View day/time-wise subject strength.",
-            "subjects"
-          )}
-
-          ${actionCard(
-            "🏫",
-            "Room Allocation",
-            "Allocate students to examination rooms.",
-            "rooms"
-          )}
-
-          ${actionCard(
-            "👨‍🏫",
-            "Duty Allocation",
-            "Assign invigilators day and slot wise.",
-            "duties"
-          )}
-
-          ${actionCard(
-            "⚠️",
-            "Conflict Check",
-            "Find duplicate or conflicting duties.",
-            "conflicts"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  if (role === "OFFICE_STAFF_2") {
-
-    return `
-
-      <div class="card">
-
-        <div class="card-title">
-          Printing & Verification
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "📅",
-            "Timetable Printing",
-            "Print master, semester and department timetables.",
-            "timetable"
-          )}
-
-          ${actionCard(
-            "📦",
-            "Pocket Verification",
-            "Print day/time-wise question paper verification.",
-            "pockets"
-          )}
-
-          ${actionCard(
-            "👨‍🏫",
-            "Duty Lists",
-            "Print day-wise, room-wise and staff-wise duties.",
-            "duties"
-          )}
-
-          ${actionCard(
-            "🖨",
-            "All Reports",
-            "Print final examination reports.",
-            "reports"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-
-  return "";
-
-}
-
-
-function actionCard(icon, title, description, page) {
-
-  return `
-
-    <div
-      class="action-card"
-      onclick="showPage('${page}')">
-
-      <div class="action-icon">
-        ${icon}
-      </div>
-
-      <h3>
-        ${title}
-      </h3>
-
-      <p>
-        ${description}
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ============================================================
-   ADMIN
-   ============================================================ */
-
-function renderAdminPage(main, page) {
-
-  if (page === "academic") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📅 Academic Setup</h2>
-
-        <p>
-          Admin controls academic year, semester type and semesters.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Create Academic Structure
-        </div>
-
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Academic Year</label>
-
-            <input
-              id="academicYear"
-              placeholder="2026-27">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Semester Type</label>
-
-            <select id="semesterType">
-
-              <option value="ODD">
-                ODD
-              </option>
-
-              <option value="EVEN">
-                EVEN
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Semesters</label>
-
-            <input
-              id="semesterList"
-              placeholder="1,3,5,7">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('adminCreateAcademicYear')">
-
-          SAVE ACADEMIC SETUP
-
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Structure
-        </div>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>Academic Year</th>
-              <th>Type</th>
-              <th>Semesters</th>
-              <th>Status</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            <tr>
-
-              <td>2026-27</td>
-              <td>ODD</td>
-              <td>1, 3, 5, 7</td>
-
-              <td>
-                <span class="badge badge-active">
-                  Active
-                </span>
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "cie") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📝 CIE Setup</h2>
-
-        <p>
-          Create and control CIE examinations.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Academic Year</label>
-
-            <input
-              value="2026-27"
-              id="cieAcademicYear">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Semester Type</label>
-
-            <select id="cieType">
-
-              <option>ODD</option>
-              <option>EVEN</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>CIE</label>
-
-            <select id="cieNumber">
-
-              <option>CIE-1</option>
-              <option>CIE-2</option>
-              <option>CIE-3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Start Date</label>
-
-            <input
-              type="date"
-              id="cieStartDate">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Number of Days</label>
-
-            <input
-              type="number"
-              value="3"
-              id="cieDays">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('adminCreateCIE')">
-
-          CREATE CIE
-
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Standard CIE Slots
-        </div>
-
-        ${slotTable()}
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "users") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>👥 User Approval</h2>
-
-        <p>
-          Approve or reject new registrations.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="section-toolbar">
-
-          <div class="card-title"
-               style="margin:0;">
-
-            Pending Registrations
-
-          </div>
-
-          <button
-            class="btn btn-outline"
-            onclick="loadPendingUsers()">
-
-            Refresh
-
-          </button>
-
-        </div>
-
-
-        <div id="pendingUsersArea">
-
-          <p style="color:#6b7280;">
-            Click Refresh to load pending registrations.
-          </p>
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "monitor") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📊 CIE Monitoring</h2>
-
-        <p>
-          Overall status of CIE preparation.
-        </p>
-
-      </div>
-
-
-      <div class="cards">
-
-        ${monitorCard(
-          "Academic Setup",
-          "Ready"
-        )}
-
-        ${monitorCard(
-          "Timetable",
-          "Pending"
-        )}
-
-        ${monitorCard(
-          "Question Papers",
-          "Pending"
-        )}
-
-        ${monitorCard(
-          "Duty Allocation",
-          "Pending"
-        )}
-
-        ${monitorCard(
-          "Conflicts",
-          "Check Required"
-        )}
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "reports") {
-
-    renderPrintReports(main);
-
-    return;
-
-  }
-
-
-  if (page === "lock") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>🔒 Final Lock</h2>
-
-        <p>
-          Lock the CIE only after all preparation is complete.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <h3>
-          Final CIE Confirmation
-        </h3>
-
-        <p style="color:#6b7280;">
-
-          Once locked, examination data should not be
-          changed without Admin authorization.
-
-        </p>
-
-
-        <button
-          class="btn btn-danger"
-          onclick="confirmFinalLock()">
-
-          LOCK CIE
-
-        </button>
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-function monitorCard(title, status) {
-
-  return `
-
-    <div class="stat-card">
-
-      <div class="stat-title">
-        ${title}
-      </div>
-
-      <div
-        class="stat-value"
-        style="font-size:18px;">
-
-        ${status}
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ============================================================
-   HOD
-   ============================================================ */
-
-function renderHODPage(main, page) {
-
-  if (page === "faculty") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>👨‍🏫 Faculty Details</h2>
-
-        <p>
-          Add faculty information used for CIE duty allocation.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Add Faculty
-        </div>
-
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Faculty Name</label>
-
-            <input
-              id="facultyName"
-              placeholder="Full name">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Designation</label>
-
-            <select id="facultyDesignation">
-
-              <option>Professor</option>
-              <option>Associate Professor</option>
-              <option>Assistant Professor</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Experience</label>
-
-            <input
-              id="facultyExperience"
-              placeholder="e.g. 12 Years">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Employee ID</label>
-
-            <input
-              id="facultyEmployeeId">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('hodAddFaculty')">
-
-          SAVE FACULTY
-
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Faculty List
-        </div>
-
-        <p style="color:#6b7280;">
-
-          Faculty data will be loaded from the backend
-          after the HOD faculty function is connected.
-
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "timetable") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📅 CIE Timetable</h2>
-
-        <p>
-          Prepare department-wise semester timetable.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Academic Year</label>
-
-            <input value="2026-27"
-                   id="ttYear">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Semester</label>
-
-            <select id="ttSemester">
-
-              <option>1</option>
-              <option>3</option>
-              <option>5</option>
-              <option>7</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>CIE</label>
-
-            <select id="ttCIE">
-
-              <option>CIE-1</option>
-              <option>CIE-2</option>
-              <option>CIE-3</option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="addTimetableRow()">
-
-          + ADD TIMETABLE ENTRY
-
-        </button>
-
-      </div>
-
-
-      <div
-        class="card"
-        id="hodTimetableTable">
-
-        ${hodTimetableTable()}
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "subjects") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📚 Department Subjects</h2>
-
-        <p>
-          View subjects and registered strength.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <p style="color:#6b7280;">
-
-          Subject strength is entered by the concerned
-          faculty and will be displayed here.
-
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "papers") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📄 Question Paper Status</h2>
-
-        <p>
-          Monitor department question paper submission.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>Subject</th>
-              <th>Faculty</th>
-              <th>CIE</th>
-              <th>Status</th>
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            <tr>
-
-              <td>MAT101</td>
-              <td>Faculty Test</td>
-              <td>CIE-1</td>
-
-              <td>
-                <span class="badge badge-pending">
-                  Pending
-                </span>
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "reports") {
-
-    renderPrintReports(main);
-
-  }
-
-}
-
-
-/* ============================================================
-   FACULTY
-   ============================================================ */
-
-function renderFacultyPage(main, page) {
-
-  if (page === "subjects") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📚 My Subjects</h2>
-
-        <p>
-          Add the subjects handled by you.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Add Subject
-        </div>
-
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Academic Year</label>
-
-            <input
-              id="facultySubjectYear"
-              value="2026-27">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Semester</label>
-
-            <select id="facultySubjectSemester">
-
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>CIE</label>
-
-            <select id="facultySubjectCIE">
-
-              <option>CIE-1</option>
-              <option>CIE-2</option>
-              <option>CIE-3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Subject Name *</label>
-
-            <input
-              id="facultySubjectName"
-              placeholder="Engineering Mathematics-I">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Subject Code *</label>
-
-            <input
-              id="facultySubjectCode"
-              placeholder="MAT101">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Class / Section *</label>
-
-            <input
-              id="facultySubjectSection"
-              placeholder="CSE-A">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Strength *</label>
-
-            <input
-              type="number"
-              id="facultySubjectStrength"
-              placeholder="60">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('facultyAddSubject')">
-
-          SAVE SUBJECT
-
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          My Subject List
-        </div>
-
-        <p style="color:#6b7280;">
-
-          Your saved subjects will appear here.
-
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "papers") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📄 Question Papers</h2>
-
-        <p>
-          Submit CIE question papers to the collection process.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Subject Code</label>
-
-            <input id="paperSubjectCode">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>CIE</label>
-
-            <select id="paperCIE">
-
-              <option>CIE-1</option>
-              <option>CIE-2</option>
-              <option>CIE-3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Submission Status</label>
-
-            <select id="paperStatus">
-
-              <option>Submitted</option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('facultySubmitQuestionPaper')">
-
-          SUBMIT QUESTION PAPER
-
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "duties") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>👨‍🏫 My CIE Duties</h2>
-
-        <p>
-          Examination duties assigned to you.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <p style="color:#6b7280;">
-
-          Your day-wise and time-wise duties will appear here
-          after duty allocation.
-
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "timetable") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📅 CIE Timetable</h2>
-
-        <p>
-          View your department CIE timetable.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        ${slotTable()}
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-/* ============================================================
-   OFFICE STAFF 1
-   ============================================================ */
-
-function renderOffice1Page(main, page) {
-
-  if (page === "subjects") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📚 Subject & Strength</h2>
-
-        <p>
-          View examination subject and strength day/time wise.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Day</label>
-
-            <select id="allocationDay">
-
-              <option>Day 1</option>
-              <option>Day 2</option>
-              <option>Day 3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Time</label>
-
-            <select id="allocationTime">
-
-              <option>8:00 - 9:30</option>
-              <option>10:00 - 11:30</option>
-              <option>12:00 - 1:30</option>
-              <option>2:00 - 3:30</option>
-              <option>4:00 - 5:30</option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="loadAllocationData()">
-
-          LOAD SUBJECTS
-
-        </button>
-
-      </div>
-
-
-      <div
-        class="card"
-        id="allocationData">
-
-        <p style="color:#6b7280;">
-          Select Day and Time and click Load.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "rooms") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>🏫 Room Allocation</h2>
-
-        <p>
-          Allocate examination rooms based on subject strength.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Day</label>
-
-            <select id="roomDay">
-
-              <option>Day 1</option>
-              <option>Day 2</option>
-              <option>Day 3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Time Slot</label>
-
-            <select id="roomTime">
-
-              <option>8:00 - 9:30</option>
-              <option>10:00 - 11:30</option>
-              <option>12:00 - 1:30</option>
-              <option>2:00 - 3:30</option>
-              <option>4:00 - 5:30</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Subject Code</label>
-
-            <input id="roomSubjectCode">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Strength</label>
-
-            <input
-              type="number"
-              id="roomStrength">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Room Number</label>
-
-            <input
-              id="roomNumber"
-              placeholder="R101">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('allocateRoom')">
-
-          ALLOCATE ROOM
-
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "duties") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>👨‍🏫 Duty Allocation</h2>
-
-        <p>
-          Assign invigilators day and slot wise.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Day</label>
-
-            <select id="dutyDay">
-
-              <option>Day 1</option>
-              <option>Day 2</option>
-              <option>Day 3</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Time</label>
-
-            <select id="dutyTime">
-
-              <option>8:00 - 9:30</option>
-              <option>10:00 - 11:30</option>
-              <option>12:00 - 1:30</option>
-              <option>2:00 - 3:30</option>
-              <option>4:00 - 5:30</option>
-
-            </select>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Room</label>
-
-            <input id="dutyRoom">
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>Invigilator</label>
-
-            <input id="dutyInvigilator">
-
-          </div>
-
-        </div>
-
-
-        <button
-          class="btn btn-primary"
-          onclick="submitBackend('allocateDuty')">
-
-          ASSIGN INVIGILATOR
-
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Additional Duties
-        </div>
-
-        <div class="action-grid">
-
-          ${actionCard(
-            "👔",
-            "Senior Supervisor",
-            "Assign Dean/HOD/Professor senior supervisor.",
-            "supervisor"
-          )}
-
-          ${actionCard(
-            "👥",
-            "Squad",
-            "Assign squad members.",
-            "squad"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "supervisor") {
-
-    main.innerHTML = dutySpecialPage(
-      "👔 Senior Supervisor",
-      "Assign Dean/HOD/Professor senior supervisors.",
-      "allocateSeniorSupervisor"
-    );
-
-    return;
-
-  }
-
-
-  if (page === "squad") {
-
-    main.innerHTML = dutySpecialPage(
-      "👥 Squad",
-      "Assign squad for CIE examination.",
-      "allocateSquad"
-    );
-
-    return;
-
-  }
-
-
-  if (page === "conflicts") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>⚠️ Conflict Check</h2>
-
-        <p>
-          Check staff duty conflicts before final duty orders.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <button
-          class="btn btn-warning"
-          onclick="runConflictCheck()">
-
-          CHECK DUTY CONFLICTS
-
-        </button>
-
-
-        <div
-          id="conflictResult"
-          style="margin-top:20px;">
-
-        </div>
-
-      </div>
-
-    `;
-
-  }
-
-}
-
-
-function dutySpecialPage(
-  title,
-  description,
-  backendFunction
-) {
-
-  return `
-
-    <div class="page-header">
-
-      <h2>${title}</h2>
-
-      <p>${description}</p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label>Day</label>
-
-          <select id="specialDay">
-
-            <option>Day 1</option>
-            <option>Day 2</option>
-            <option>Day 3</option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Time</label>
-
-          <select id="specialTime">
-
-            <option>8:00 - 9:30</option>
-            <option>10:00 - 11:30</option>
-            <option>12:00 - 1:30</option>
-            <option>2:00 - 3:30</option>
-            <option>4:00 - 5:30</option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Staff Name</label>
-
-          <input
-            id="specialStaff">
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Designation</label>
-
-          <input
-            id="specialDesignation">
-
-        </div>
-
-      </div>
-
-
-      <button
-        class="btn btn-primary"
-        onclick="submitBackend('${backendFunction}')">
-
-        SAVE ASSIGNMENT
-
-      </button>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ============================================================
-   OFFICE STAFF 2
-   ============================================================ */
-
-function renderOffice2Page(main, page) {
-
-  if (page === "timetable") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📅 Timetable Printing</h2>
-
-        <p>
-          Print master, semester and department timetables.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="action-grid">
-
-          ${printCard(
-            "Master Timetable",
-            "Print complete CIE timetable.",
-            "printMasterTimetable"
-          )}
-
-          ${printCard(
-            "Semester-wise Timetable",
-            "Print semester-wise timetable.",
-            "printSemesterTimetable"
-          )}
-
-          ${printCard(
-            "Department-wise Timetable",
-            "Print department-wise timetable.",
-            "printDepartmentTimetable"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "pockets") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>📦 Pocket Verification</h2>
-
-        <p>
-          Print question paper pocket verification sheets
-          day and time wise.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="action-grid">
-
-          ${printCard(
-            "Day 1 Verification",
-            "Print Day 1 verification sheet.",
-            "generateCIEPocketVerificationPrintout"
-          )}
-
-          ${printCard(
-            "Day 2 Verification",
-            "Print Day 2 verification sheet.",
-            "generateCIEPocketVerificationPrintout"
-          )}
-
-          ${printCard(
-            "Day 3 Verification",
-            "Print Day 3 verification sheet.",
-            "generateCIEPocketVerificationPrintout"
-          )}
-
-        </div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="card-title">
-          Verification Procedure
-        </div>
-
-        <ol>
-
-          <li>
-            Select the day and time.
-          </li>
-
-          <li>
-            Check expected subject and strength.
-          </li>
-
-          <li>
-            Physically verify the question paper pocket.
-          </li>
-
-          <li>
-            Mark received / missing / wrong slot.
-          </li>
-
-          <li>
-            Submit verification report.
-          </li>
-
-        </ol>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "duties") {
-
-    main.innerHTML = `
-
-      <div class="page-header">
-
-        <h2>👨‍🏫 Duty Lists</h2>
-
-        <p>
-          Print day-wise and slot-wise duty lists.
-        </p>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="action-grid">
-
-          ${printCard(
-            "Day 1 Duty List",
-            "Print all Day 1 duties.",
-            "printDayWiseDutyList"
-          )}
-
-          ${printCard(
-            "Day 2 Duty List",
-            "Print all Day 2 duties.",
-            "printDayWiseDutyList"
-          )}
-
-          ${printCard(
-            "Day 3 Duty List",
-            "Print all Day 3 duties.",
-            "printDayWiseDutyList"
-          )}
-
-          ${printCard(
-            "Room-wise Duty",
-            "Print room-wise allocation.",
-            "printRoomWiseDuty"
-          )}
-
-          ${printCard(
-            "Staff-wise Duty",
-            "Print individual staff duties.",
-            "printStaffWiseDuty"
-          )}
-
-          ${printCard(
-            "Supervisor List",
-            "Print senior supervisor list.",
-            "printSupervisorList"
-          )}
-
-          ${printCard(
-            "Squad List",
-            "Print squad list.",
-            "printSquadList"
-          )}
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  if (page === "reports") {
-
-    renderPrintReports(main);
-
-  }
-
-}
-
-
-/* ============================================================
-   PRINT FUNCTIONS
-   ============================================================ */
-
-function printCard(
-  title,
-  description,
-  backendFunction
-) {
-
-  return `
-
-    <div class="action-card"
-         onclick="callPrintFunction('${backendFunction}')">
-
-      <div class="action-icon">
-        🖨️
-      </div>
-
-      <h3>
-        ${title}
-      </h3>
-
-      <p>
-        ${description}
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-function renderPrintReports(main) {
-
-  main.innerHTML = `
-
-    <div class="page-header">
-
-      <h2>🖨 Reports & Printing</h2>
-
-      <p>
-        Examination reports and final printouts.
-      </p>
-
-    </div>
-
-
-    <div class="card">
-
-      <div class="action-grid">
-
-        ${printCard(
-          "CIE Master Report",
-          "Complete CIE report.",
-          "printCIEReport"
-        )}
-
-        ${printCard(
-          "Subject Strength",
-          "Subject-wise registered strength.",
-          "printSubjectStrength"
-        )}
-
-        ${printCard(
-          "Final Duty Order",
-          "Final staff duty order.",
-          "printFinalDutyOrder"
-        )}
-
-        ${printCard(
-          "Faculty List",
-          "Faculty information.",
-          "printFacultyList"
-        )}
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-function callPrintFunction(functionName) {
-
-  toast(
-    "Preparing printout...",
-    "info"
-  );
-
-
-  if (
-    typeof google === "undefined" ||
-    !google.script ||
-    !google.script.run
-  ) {
-
-    window.print();
-
-    return;
-
-  }
-
-
-  const runner =
-    google.script.run
-
-      .withSuccessHandler(function(result) {
-
-        if (
-          typeof result === "string" &&
-          result.trim()
-        ) {
-
-          openPrintWindow(result);
-
-        } else {
-
-          window.print();
-
-        }
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        toast(
-          error.message ||
-          "Print function is not yet connected.",
-          "warning"
-        );
-
-      });
-
-
-  if (
-    typeof runner[functionName] === "function"
-  ) {
-
-    runner[functionName]();
-
-  } else {
-
-    toast(
-      "Backend print function not yet connected.",
-      "warning"
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   COMMON TABLES
-   ============================================================ */
-
-function slotTable() {
-
-  const slots = [
-
-    "8:00 - 9:30",
-    "10:00 - 11:30",
-    "12:00 - 1:30",
-    "2:00 - 3:30",
-    "4:00 - 5:30"
-
-  ];
-
-
-  let rows = "";
-
-  slots.forEach(function(slot) {
-
-    rows += `
-
-      <tr>
-
-        <td>Day 1</td>
-
-        <td>${slot}</td>
-
-        <td>1st / 3rd / 5th / 7th</td>
-
-      </tr>
-
-    `;
-
-  });
-
-
-  return `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Day</th>
-            <th>Time</th>
-            <th>Semester</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${rows}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-function hodTimetableTable() {
-
-  return `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Day</th>
-            <th>Time</th>
-            <th>Semester</th>
-            <th>Subject Code</th>
-            <th>Subject Name</th>
-            <th>Action</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody id="hodTTBody">
-
-          <tr>
-
-            <td>Day 1</td>
-            <td>8:00 - 9:30</td>
-            <td>1</td>
-            <td>MAT101</td>
-            <td>Mathematics-I</td>
-
-            <td>
-
-              <button
-                class="btn btn-outline"
-                onclick="editTimetable()">
-
-                Edit
-
-              </button>
-
-            </td>
-
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
-
-}
-
-
-/* ============================================================
-   TIMETABLE
-   ============================================================ */
-
-function addTimetableRow() {
-
-  openModal(
-    "Add CIE Timetable Entry",
-    `
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label>Day</label>
-
-          <select id="modalTTDay">
-
-            <option>Day 1</option>
-            <option>Day 2</option>
-            <option>Day 3</option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Time</label>
-
-          <select id="modalTTTime">
-
-            <option>8:00 - 9:30</option>
-            <option>10:00 - 11:30</option>
-            <option>12:00 - 1:30</option>
-            <option>2:00 - 3:30</option>
-            <option>4:00 - 5:30</option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Semester</label>
-
-          <input id="modalTTSemester">
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>Subject Code</label>
-
-          <input id="modalTTCode">
-
-        </div>
-
-
-        <div class="form-group full-width">
-
-          <label>Subject Name</label>
-
-          <input id="modalTTName">
-
-        </div>
-
-      </div>
-
-
-      <button
-        class="btn btn-primary"
-        onclick="saveTimetableEntry()">
-
-        SAVE
-
-      </button>
-
-    `
-  );
-
-}
-
-
-function saveTimetableEntry() {
-
-  const data = {
-
-    day:
-      document.getElementById(
-        "modalTTDay"
-      ).value,
-
-    time:
-      document.getElementById(
-        "modalTTTime"
-      ).value,
-
-    semester:
-      document.getElementById(
-        "modalTTSemester"
-      ).value,
-
-    subjectCode:
-      document.getElementById(
-        "modalTTCode"
-      ).value,
-
-    subjectName:
-      document.getElementById(
-        "modalTTName"
-      ).value
-
-  };
-
-
-  closeModal();
-
-
-  callBackend(
-    "hodSaveTimetable",
-    data
-  );
-
-}
-
-
-function editTimetable() {
-
-  toast(
-    "Timetable editing will be connected to HOD backend.",
-    "info"
-  );
-
-}
-
-
-/* ============================================================
-   OFFICE ALLOCATION
-   ============================================================ */
-
-function loadAllocationData() {
-
-  const day =
-    document.getElementById(
-      "allocationDay"
-    ).value;
-
-  const time =
-    document.getElementById(
-      "allocationTime"
-    ).value;
-
-
-  const area =
-    document.getElementById(
-      "allocationData"
-    );
-
-
-  area.innerHTML = `
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Day</th>
-            <th>Time</th>
-            <th>Semester</th>
-            <th>Department</th>
-            <th>Subject Code</th>
-            <th>Subject</th>
-            <th>Strength</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          <tr>
-
-            <td>${day}</td>
-            <td>${time}</td>
-            <td>1</td>
-            <td>CSE</td>
-            <td>MAT101</td>
-            <td>Mathematics-I</td>
-            <td>60</td>
-
-          </tr>
-
-          <tr>
-
-            <td>${day}</td>
-            <td>${time}</td>
-            <td>3</td>
-            <td>CSE</td>
-            <td>MAT301</td>
-            <td>Mathematics-III</td>
-            <td>55</td>
-
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-    <p style="color:#6b7280;margin-top:12px;">
-
-      Actual data will be loaded from Subject Registration /
-      Subject Strength backend.
-
-    </p>
-
-  `;
-
-}
-
-
-/* ============================================================
-   CONFLICT CHECK
-   ============================================================ */
-
-function runConflictCheck() {
-
-  const result =
-    document.getElementById(
-      "conflictResult"
-    );
-
-
-  result.innerHTML =
-    "<p>Checking conflicts...</p>";
-
-
-  if (
-    typeof google !== "undefined" &&
-    google.script &&
-    google.script.run
-  ) {
-
-    google.script.run
-
-      .withSuccessHandler(function(data) {
-
-        result.innerHTML = `
-
-          <div class="badge badge-active">
-
-            Conflict check completed.
-
-          </div>
-
-          <p style="margin-top:12px;">
-
-            Review the generated
-            <strong>CIE_Duty_Conflict_Report</strong>
-            sheet.
-
-          </p>
-
-        `;
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        result.innerHTML = `
-
-          <div class="badge badge-danger">
-
-            ${escapeHTML(
-              error.message ||
-              "Conflict check failed."
-            )}
-
-          </div>
-
-        `;
-
-      })
-
-      .generateCIEStaffDutyConflictReport();
-
-  }
-
-}
-
-
-/* ============================================================
-   ADMIN USER APPROVAL
-   ============================================================ */
-
-function loadPendingUsers() {
-
-  const area =
-    document.getElementById(
-      "pendingUsersArea"
-    );
-
-
-  area.innerHTML =
-    "<p>Loading...</p>";
-
-
-  if (
-    typeof google === "undefined" ||
-    !google.script ||
-    !google.script.run
-  ) {
-
-    area.innerHTML =
-      "<p>Apps Script backend unavailable.</p>";
-
-    return;
-
-  }
-
-
-  google.script.run
-
-    .withSuccessHandler(function(users) {
-
-      if (
-        !users ||
-        !users.length
-      ) {
-
-        area.innerHTML = `
-
-          <p style="color:#6b7280;">
-
-            No pending registrations.
-
-          </p>
-
-        `;
-
-        return;
-
-      }
-
-
-      let rows = "";
-
-
-      users.forEach(function(user) {
-
-        rows += `
-
-          <tr>
-
-            <td>
-              ${escapeHTML(user.name || "")}
-            </td>
-
-            <td>
-              ${escapeHTML(user.email || "")}
-            </td>
-
-            <td>
-              ${escapeHTML(user.role || "")}
-            </td>
-
-            <td>
-              ${escapeHTML(user.department || "")}
-            </td>
-
-            <td>
-
-              <button
-                class="btn btn-success"
-                onclick="approveUser('${escapeAttribute(user.userId || user.email)}')">
-
-                Approve
-
-              </button>
-
-              <button
-                class="btn btn-danger"
-                onclick="rejectUser('${escapeAttribute(user.userId || user.email)}')">
-
-                Reject
-
-              </button>
-
-            </td>
-
-          </tr>
-
-        `;
-
-      });
-
-
-      area.innerHTML = `
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Department</th>
-                <th>Action</th>
-
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              ${rows}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      `;
-
-    })
-
-    .withFailureHandler(function(error) {
-
-      area.innerHTML = `
-
-        <p style="color:#dc2626;">
-
-          ${escapeHTML(
-            error.message ||
-            "Unable to load users."
-          )}
-
-        </p>
-
-      `;
-
-    })
-
-    .getPendingUsers();
-
-}
-
-
-function approveUser(userId) {
-
-  if (!confirm(
-    "Approve this user?"
-  )) return;
-
-
-  google.script.run
-
-    .withSuccessHandler(function(result) {
-
-      toast(
-        result.message ||
-        "User approved.",
-        "success"
-      );
-
-      loadPendingUsers();
-
-    })
-
-    .withFailureHandler(function(error) {
-
-      toast(
-        error.message ||
-        "Approval failed.",
-        "error"
-      );
-
-    })
-
-    .approveUser(userId);
-
-}
-
-
-function rejectUser(userId) {
-
-  if (!confirm(
-    "Reject this user?"
-  )) return;
-
-
-  google.script.run
-
-    .withSuccessHandler(function(result) {
-
-      toast(
-        result.message ||
-        "User rejected.",
-        "success"
-      );
-
-      loadPendingUsers();
-
-    })
-
-    .withFailureHandler(function(error) {
-
-      toast(
-        error.message ||
-        "Rejection failed.",
-        "error"
-      );
-
-    })
-
-    .rejectUser(userId);
-
-}
-
-
-/* ============================================================
-   FINAL LOCK
-   ============================================================ */
-
-function confirmFinalLock() {
-
-  if (!confirm(
-    "Are you sure you want to lock this CIE? " +
-    "Further changes may be restricted."
-  )) {
-
-    return;
-
-  }
-
-
-  callBackend(
-    "adminFinalLockCIE",
-    {
-      academicYear: "2026-27",
-      cie: "CIE-1"
-    }
-  );
-
-}
-
-
-/* ============================================================
-   BACKEND CALL HELPER
-   ============================================================ */
-
-function submitBackend(functionName) {
-
-  const data = collectFormData();
-
-  callBackend(
-    functionName,
-    data
-  );
-
-}
-
-
-function callBackend(functionName, data) {
-
-  if (
-    typeof google === "undefined" ||
-    !google.script ||
-    !google.script.run
-  ) {
-
-    toast(
-      "Apps Script backend is not available.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  toast(
-    "Saving...",
-    "info"
-  );
-
-
-  const runner =
-    google.script.run
-
-      .withSuccessHandler(function(result) {
-
-        if (
-          result &&
-          result.message
-        ) {
-
-          toast(
-            result.message,
-            result.success === false
-              ? "warning"
-              : "success"
-          );
-
-        } else {
-
-          toast(
-            "Saved successfully.",
-            "success"
-          );
-
-        }
-
-      })
-
-      .withFailureHandler(function(error) {
-
-        toast(
-          error.message ||
-          "Backend function is not connected.",
-          "error"
-        );
-
-      });
-
-
-  if (
-    typeof runner[functionName] === "function"
-  ) {
-
-    runner[functionName](data);
-
-  } else {
-
-    toast(
-      functionName +
-      " is not yet added to Code.gs.",
-      "warning"
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   COLLECT FORM DATA
-   ============================================================ */
-
-function collectFormData() {
-
-  const data = {
-
-    userId:
-      currentUser
-        ? currentUser.userId
-        : "",
-
-    name:
-      currentUser
-        ? currentUser.name
-        : "",
-
-    email:
-      currentUser
-        ? currentUser.email
-        : "",
-
-    role:
-      currentUser
-        ? currentUser.role
-        : "",
-
-    department:
-      currentUser
-        ? currentUser.department
-        : "",
-
-    academicYear:
-      getValue("academicYear") ||
-      getValue("cieAcademicYear") ||
-      getValue("ttYear") ||
-      getValue("facultySubjectYear") ||
-      "2026-27",
-
-    semesterType:
-      getValue("semesterType") ||
-      getValue("cieType") ||
-      "ODD",
-
-    cie:
-      getValue("cieNumber") ||
-      getValue("ttCIE") ||
-      getValue("facultySubjectCIE") ||
-      "CIE-1",
-
-    semester:
-      getValue("ttSemester") ||
-      getValue("facultySubjectSemester") ||
-      "",
-
-    subjectName:
-      getValue("facultySubjectName"),
-
-    subjectCode:
-      getValue("facultySubjectCode"),
-
-    section:
-      getValue("facultySubjectSection"),
-
-    strength:
-      getValue("facultySubjectStrength"),
-
-    facultyName:
-      getValue("facultyName"),
-
-    designation:
-      getValue("facultyDesignation"),
-
-    experience:
-      getValue("facultyExperience"),
-
-    employeeId:
-      getValue("facultyEmployeeId"),
-
-    day:
-      getValue("dutyDay") ||
-      getValue("specialDay") ||
-      getValue("roomDay"),
-
-    time:
-      getValue("dutyTime") ||
-      getValue("specialTime") ||
-      getValue("roomTime"),
-
-    room:
-      getValue("dutyRoom") ||
-      getValue("roomNumber"),
-
-    invigilator:
-      getValue("dutyInvigilator"),
-
-    supervisor:
-      getValue("specialStaff"),
-
-    supervisorDesignation:
-      getValue("specialDesignation")
-
-  };
-
-
-  return data;
-
-}
-
-
-function getValue(id) {
-
-  const element =
-    document.getElementById(id);
-
-  return element
-    ? element.value.trim()
-    : "";
-
-}
-
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-
-function openModal(title, body) {
-
-  document
-    .getElementById("modalTitle")
-    .textContent = title;
-
-  document
-    .getElementById("modalBody")
-    .innerHTML = body;
-
-  document
-    .getElementById("modal")
-    .classList.add("open");
-
-}
-
-
-function closeModal() {
-
-  document
-    .getElementById("modal")
-    .classList.remove("open");
-
-}
-
-
-/* ============================================================
-   SECURITY / DISPLAY HELPERS
-   ============================================================ */
-
-function escapeHTML(value) {
-
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function escapeAttribute(value) {
-
-  return escapeHTML(value)
-    .replace(/`/g, "&#096;");
-
-}
-
-
-/* ============================================================
-   INIT
-   ============================================================ */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function() {
-
-    document
-      .getElementById("loginPage")
-      .style.display = "flex";
-
-    document
-      .getElementById("app")
-      .classList.remove("active");
-
-  }
-);
-
-</script>
+    <script>
+        (function() {
+            'use strict';
+
+            // ─── DOM refs ───
+            // Tabs
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanes = {
+                settings: document.getElementById('tabSettings'),
+                generate: document.getElementById('tabGenerate'),
+                dashboard: document.getElementById('tabDashboard'),
+                timetable: document.getElementById('tabTimetable')
+            };
+
+            // Settings
+            const roomList = document.getElementById('roomList');
+            const roomInput = document.getElementById('roomInput');
+            const addRoomBtn = document.getElementById('addRoomBtn');
+            const resetRoomsBtn = document.getElementById('resetRoomsBtn');
+            const roomCount = document.getElementById('roomCount');
+
+            const branchList = document.getElementById('branchList');
+            const branchInput = document.getElementById('branchInput');
+            const addBranchBtn = document.getElementById('addBranchBtn');
+            const resetBranchesBtn = document.getElementById('resetBranchesBtn');
+            const branchCount = document.getElementById('branchCount');
+
+            const semesterList = document.getElementById('semesterList');
+            const semesterInput = document.getElementById('semesterInput');
+            const addSemesterBtn = document.getElementById('addSemesterBtn');
+            const resetSemestersBtn = document.getElementById('resetSemestersBtn');
+            const semesterCount = document.getElementById('semesterCount');
+
+            const divisionList = document.getElementById('divisionList');
+            const divisionInput = document.getElementById('divisionInput');
+            const addDivisionBtn = document.getElementById('addDivisionBtn');
+            const resetDivisionsBtn = document.getElementById('resetDivisionsBtn');
+            const divisionCount = document.getElementById('divisionCount');
+
+            const settingsStatus = document.getElementById('settingsStatus');
+
+            // Generate
+            const genBranch = document.getElementById('genBranch');
+            const genSemester = document.getElementById('genSemester');
+            const genDivision = document.getElementById('genDivision');
+            const genSubjectCode = document.getElementById('genSubjectCode');
+            const genSubjectName = document.getElementById('genSubjectName');
+            const genBlockSize = document.getElementById('genBlockSize');
+            const genStrength = document.getElementById('genStrength');
+            const genSession = document.getElementById('genSession');
+            const generateBtn = document.getElementById('generateBtn');
+            const addBatchBtn = document.getElementById('addBatchBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const genError = document.getElementById('genError');
+            const genSuccess = document.getElementById('genSuccess');
+
+            // Dashboard
+            const outputCard = document.getElementById('outputCard');
+            const noBlocksMsg = document.getElementById('noBlocksMsg');
+            const blockOutput = document.getElementById('blockOutput');
+            const blockCountBadge = document.getElementById('blockCountBadge');
+            const studentCountBadge = document.getElementById('studentCountBadge');
+            const roomCountBadge = document.getElementById('roomCountBadge');
+            const batchCountBadge = document.getElementById('batchCountBadge');
+
+            const statRooms = document.getElementById('statRooms');
+            const statBlocks = document.getElementById('statBlocks');
+            const statStudents = document.getElementById('statStudents');
+            const statPerRoom = document.getElementById('statPerRoom');
+            const statBatches = document.getElementById('statBatches');
+
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+            const pdfContent = document.getElementById('pdfContent');
+
+            // Time Table
+            const ttBranch = document.getElementById('ttBranch');
+            const ttSemester = document.getElementById('ttSemester');
+            const ttStartDate = document.getElementById('ttStartDate');
+            const ttDays = document.getElementById('ttDays');
+            const ttSessions = document.getElementById('ttSessions');
+            const ttGenerateBtn = document.getElementById('ttGenerateBtn');
+            const ttDownloadPdfBtn = document.getElementById('ttDownloadPdfBtn');
+            const ttClearBtn = document.getElementById('ttClearBtn');
+            const ttStatus = document.getElementById('ttStatus');
+            const ttHeading = document.getElementById('ttHeading');
+            const ttHead = document.getElementById('ttHead');
+            const ttBody = document.getElementById('ttBody');
+            const ttEmptyMsg = document.getElementById('ttEmptyMsg');
+            const ttOutputCard = document.getElementById('ttOutputCard');
+            const ttPdfContent = document.getElementById('ttPdfContent');
+
+            // ─── State ───
+            let rooms = [];
+            let branches = [];
+            let semesters = [];
+            let divisions = [];
+
+            let allBlocks = [];
+            let usedRooms = new Set();
+            let batchCounter = 1;
+            let blockIdCounter = 0;
+            let currentRollStart = 1;
+
+            // Time Table state
+            let ttData = [];
+
+            // Session time mapping
+            const sessionTimes = {
+                'S1': '8:00 – 9:30 AM',
+                'S2': '10:00 – 11:30 AM',
+                'S3': '12:00 – 1:30 PM',
+                'S4': '2:00 – 3:30 PM',
+                'S5': '4:00 – 5:30 PM'
+            };
+            const sessionColors = {
+                'S1': '#fefcbf',
+                'S2': '#d6eaf8',
+                'S3': '#d5f5e3',
+                'S4': '#fadbd8',
+                'S5': '#ebdef0'
+            };
+            const sessionLabels = ['S1', 'S2', 'S3', 'S4', 'S5'];
+
+            // ─── Defaults ───
+            const DEFAULT_ROOMS = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+                120, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221,
+                222, 223, 224, 225
+            ];
+            const DEFAULT_BRANCHES = ['CSE', 'ISE', 'ECE', 'EEE', 'ME', 'CE', 'AI&ML', 'DS', 'IT', 'ECM'];
+            const DEFAULT_SEMESTERS = [1, 2, 3, 4, 5, 6, 7, 8];
+            const DEFAULT_DIVISIONS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
+
+            // ─── Helpers ───
+            function sanitize(str) { return String(str).trim(); }
+
+            function getSessionTime(sessionVal) { return sessionTimes[sessionVal] || sessionVal; }
+
+            function getSessionColor(sessionVal) { return sessionColors[sessionVal] || '#edf2f7'; }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '--';
+                const d = new Date(dateStr + 'T00:00:00');
+                return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            }
+
+            function addDays(dateStr, days) {
+                const d = new Date(dateStr + 'T00:00:00');
+                d.setDate(d.getDate() + days);
+                return d.toISOString().split('T')[0];
+            }
+
+            // ─── Settings: Rooms ───
+            function renderRooms() {
+                roomList.innerHTML = rooms.map(r =>
+                    `<span class="item-tag">${r} <span class="del" data-room="${r}">×</span></span>`
+                ).join('');
+                roomCount.textContent = rooms.length;
+                document.querySelectorAll('#roomList .del').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const val = parseInt(this.dataset.room);
+                        rooms = rooms.filter(r => r !== val);
+                        renderRooms();
+                        updateGenDropdowns();
+                        settingsStatus.textContent = 'Room removed.';
+                    });
+                });
+            }
+
+            function addRoom(val) {
+                val = parseInt(val);
+                if (!val || val < 1) { settingsStatus.textContent = '⚠️ Please enter a valid room number.'; return; }
+                if (rooms.includes(val)) { settingsStatus.textContent = '⚠️ Room already exists.'; return; }
+                rooms.push(val);
+                rooms.sort((a, b) => a - b);
+                renderRooms();
+                updateGenDropdowns();
+                settingsStatus.textContent = `✅ Room ${val} added.`;
+            }
+
+            function resetRooms() {
+                rooms = [...DEFAULT_ROOMS];
+                renderRooms();
+                updateGenDropdowns();
+                settingsStatus.textContent = '✅ Rooms reset to default.';
+            }
+
+            // ─── Settings: Branches ───
+            function renderBranches() {
+                branchList.innerHTML = branches.map(b =>
+                    `<span class="item-tag">${b} <span class="del" data-branch="${b}">×</span></span>`
+                ).join('');
+                branchCount.textContent = branches.length;
+                document.querySelectorAll('#branchList .del').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const val = this.dataset.branch;
+                        branches = branches.filter(b => b !== val);
+                        renderBranches();
+                        updateGenDropdowns();
+                        settingsStatus.textContent = 'Branch removed.';
+                    });
+                });
+            }
+
+            function addBranch(val) {
+                val = sanitize(val).toUpperCase();
+                if (!val) { settingsStatus.textContent = '⚠️ Please enter a branch name.'; return; }
+                if (branches.includes(val)) { settingsStatus.textContent = '⚠️ Branch already exists.'; return; }
+                branches.push(val);
+                branches.sort();
+                renderBranches();
+                updateGenDropdowns();
+                settingsStatus.textContent = `✅ Branch ${val} added.`;
+            }
+
+            function resetBranches() {
+                branches = [...DEFAULT_BRANCHES];
+                renderBranches();
+                updateGenDropdowns();
+                settingsStatus.textContent = '✅ Branches reset to default.';
+            }
+
+            // ─── Settings: Semesters ───
+            function renderSemesters() {
+                semesterList.innerHTML = semesters.map(s =>
+                    `<span class="item-tag">${s} <span class="del" data-semester="${s}">×</span></span>`
+                ).join('');
+                semesterCount.textContent = semesters.length;
+                document.querySelectorAll('#semesterList .del').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const val = parseInt(this.dataset.semester);
+                        semesters = semesters.filter(s => s !== val);
+                        renderSemesters();
+                        updateGenDropdowns();
+                        settingsStatus.textContent = 'Semester removed.';
+                    });
+                });
+            }
+
+            function addSemester(val) {
+                val = parseInt(val);
+                if (!val || val < 1 || val > 8) { settingsStatus.textContent = '⚠️ Please enter a semester (1-8).'; return; }
+                if (semesters.includes(val)) { settingsStatus.textContent = '⚠️ Semester already exists.'; return; }
+                semesters.push(val);
+                semesters.sort((a, b) => a - b);
+                renderSemesters();
+                updateGenDropdowns();
+                settingsStatus.textContent = `✅ Semester ${val} added.`;
+            }
+
+            function resetSemesters() {
+                semesters = [...DEFAULT_SEMESTERS];
+                renderSemesters();
+                updateGenDropdowns();
+                settingsStatus.textContent = '✅ Semesters reset to default.';
+            }
+
+            // ─── Settings: Divisions ───
+            function renderDivisions() {
+                divisionList.innerHTML = divisions.map(d =>
+                    `<span class="item-tag">${d} <span class="del" data-division="${d}">×</span></span>`
+                ).join('');
+                divisionCount.textContent = divisions.length;
+                document.querySelectorAll('#divisionList .del').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const val = this.dataset.division;
+                        divisions = divisions.filter(d => d !== val);
+                        renderDivisions();
+                        updateGenDropdowns();
+                        settingsStatus.textContent = 'Division removed.';
+                    });
+                });
+            }
+
+            function addDivision(val) {
+                val = sanitize(val).toUpperCase();
+                if (!val) { settingsStatus.textContent = '⚠️ Please enter a division.'; return; }
+                if (divisions.includes(val)) { settingsStatus.textContent = '⚠️ Division already exists.'; return; }
+                divisions.push(val);
+                divisions.sort();
+                renderDivisions();
+                updateGenDropdowns();
+                settingsStatus.textContent = `✅ Division ${val} added.`;
+            }
+
+            function resetDivisions() {
+                divisions = [...DEFAULT_DIVISIONS];
+                renderDivisions();
+                updateGenDropdowns();
+                settingsStatus.textContent = '✅ Divisions reset to default.';
+            }
+
+            // ─── Update Dropdowns ───
+            function updateGenDropdowns() {
+                // Branches
+                const currentBranch = genBranch.value;
+                genBranch.innerHTML = branches.map(b => `<option value="${b}">${b}</option>`).join('');
+                if (branches.includes(currentBranch)) genBranch.value = currentBranch;
+                // Semesters
+                const currentSemester = genSemester.value;
+                genSemester.innerHTML = semesters.map(s => `<option value="${s}">${s}</option>`).join('');
+                if (semesters.includes(parseInt(currentSemester))) genSemester.value = currentSemester;
+                // Divisions
+                const currentDivision = genDivision.value;
+                genDivision.innerHTML = divisions.map(d => `<option value="${d}">${d}</option>`).join('');
+                if (divisions.includes(currentDivision)) genDivision.value = currentDivision;
+
+                // TT dropdowns
+                const ttBranchVal = ttBranch.value;
+                ttBranch.innerHTML = branches.map(b => `<option value="${b}">${b}</option>`).join('');
+                if (branches.includes(ttBranchVal)) ttBranch.value = ttBranchVal;
+
+                const ttSemVal = ttSemester.value;
+                ttSemester.innerHTML = semesters.map(s => `<option value="${s}">${s}</option>`).join('');
+                if (semesters.includes(parseInt(ttSemVal))) ttSemester.value = ttSemVal;
+            }
+
+            // ─── Preset listeners ───
+            document.querySelectorAll('[data-rooms]').forEach(el => {
+                el.addEventListener('click', function() {
+                    const ranges = this.dataset.rooms.split(',').map(s => s.trim());
+                    let finalRooms = [];
+                    ranges.forEach(range => {
+                        if (range.includes('-')) {
+                            const parts = range.split('-').map(p => parseInt(p.trim()));
+                            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                                for (let i = Math.min(parts[0], parts[1]); i <= Math.max(parts[0], parts[
+                                    1]); i++) {
+                                    finalRooms.push(i);
+                                }
+                            }
+                        } else {
+                            const num = parseInt(range);
+                            if (!isNaN(num)) finalRooms.push(num);
+                        }
+                    });
+                    rooms = [...new Set(finalRooms)].sort((a, b) => a - b);
+                    renderRooms();
+                    updateGenDropdowns();
+                    settingsStatus.textContent = '✅ Rooms updated from preset.';
+                });
+            });
+
+            document.querySelectorAll('[data-branches]').forEach(el => {
+                el.addEventListener('click', function() {
+                    branches = this.dataset.branches.split(',').map(s => sanitize(s).toUpperCase()).filter(Boolean);
+                    renderBranches();
+                    updateGenDropdowns();
+                    settingsStatus.textContent = '✅ Branches updated from preset.';
+                });
+            });
+
+            document.querySelectorAll('[data-semesters]').forEach(el => {
+                el.addEventListener('click', function() {
+                    semesters = this.dataset.semesters.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n) &&
+                        n >= 1 && n <= 8);
+                    renderSemesters();
+                    updateGenDropdowns();
+                    settingsStatus.textContent = '✅ Semesters updated from preset.';
+                });
+            });
+
+            document.querySelectorAll('[data-divisions]').forEach(el => {
+                el.addEventListener('click', function() {
+                    divisions = this.dataset.divisions.split(',').map(s => sanitize(s).toUpperCase()).filter(
+                    Boolean);
+                    renderDivisions();
+                    updateGenDropdowns();
+                    settingsStatus.textContent = '✅ Divisions updated from preset.';
+                });
+            });
+
+            // ─── Event listeners for settings ───
+            addRoomBtn.addEventListener('click', () => {
+                const val = roomInput.value.trim();
+                addRoom(val);
+                roomInput.value = '';
+            });
+            roomInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addRoomBtn.click(); });
+            resetRoomsBtn.addEventListener('click', resetRooms);
+
+            addBranchBtn.addEventListener('click', () => {
+                addBranch(branchInput.value);
+                branchInput.value = '';
+            });
+            branchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addBranchBtn.click(); });
+            resetBranchesBtn.addEventListener('click', resetBranches);
+
+            addSemesterBtn.addEventListener('click', () => {
+                addSemester(semesterInput.value);
+                semesterInput.value = '';
+            });
+            semesterInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addSemesterBtn.click(); });
+            resetSemestersBtn.addEventListener('click', resetSemesters);
+
+            addDivisionBtn.addEventListener('click', () => {
+                addDivision(divisionInput.value);
+                divisionInput.value = '';
+            });
+            divisionInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addDivisionBtn.click(); });
+            resetDivisionsBtn.addEventListener('click', resetDivisions);
+
+            // ─── Tab switching ───
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    Object.keys(tabPanes).forEach(key => {
+                        tabPanes[key].classList.toggle('active', key === tab.replace('tab', '').toLowerCase());
+                    });
+                    if (tab === 'tabDashboard') {
+                        renderDashboard();
+                    }
+                    if (tab === 'tabTimetable') {
+                        updateGenDropdowns();
+                    }
+                });
+            });
+
+            // ─── Generate Logic ───
+            function getAvailableRooms() {
+                return rooms.filter(r => !usedRooms.has(r));
+            }
+
+            function getRandomRooms(count) {
+                const available = getAvailableRooms();
+                if (available.length < count) return null;
+                const shuffled = [...available];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                return shuffled.slice(0, count);
+            }
+
+            function generateBlocks(append = false) {
+                const strength = parseInt(genStrength.value);
+                const blockSize = parseInt(genBlockSize.value);
+                const branch = genBranch.value;
+                const semester = genSemester.value;
+                const division = genDivision.value;
+                const subjectCode = sanitize(genSubjectCode.value) || 'N/A';
+                const subjectName = sanitize(genSubjectName.value) || 'N/A';
+                const sessionVal = genSession.value;
+                const sessionTime = getSessionTime(sessionVal);
+
+                genError.classList.add('hidden');
+                genSuccess.classList.add('hidden');
+
+                if (!strength || strength < 1) {
+                    genError.textContent = '⚠️ Please enter a valid Total Strength.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+                if (!blockSize || blockSize < 1) {
+                    genError.textContent = '⚠️ Block size must be at least 1.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+                if (!branch) {
+                    genError.textContent = '⚠️ Please select a branch.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+                if (!semester) {
+                    genError.textContent = '⚠️ Please select a semester.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+                if (!division) {
+                    genError.textContent = '⚠️ Please select a division.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+
+                const numBlocks = Math.ceil(strength / blockSize);
+                const roomsNeeded = numBlocks;
+                const availableRooms = getAvailableRooms();
+
+                if (availableRooms.length < roomsNeeded) {
+                    genError.textContent =
+                        `⚠️ Not enough rooms available. Need ${roomsNeeded} rooms, only ${availableRooms.length} left.`;
+                    genError.classList.remove('hidden');
+                    return;
+                }
+
+                const selectedRooms = getRandomRooms(roomsNeeded);
+                if (!selectedRooms) {
+                    genError.textContent = '⚠️ Error allocating rooms. Please try again.';
+                    genError.classList.remove('hidden');
+                    return;
+                }
+
+                const newBlocks = [];
+                let rollStart = append ? currentRollStart : 1;
+
+                for (let i = 0; i < numBlocks; i++) {
+                    const room = selectedRooms[i];
+                    let endRoll = Math.min(rollStart + blockSize - 1, rollStart + strength - (i * blockSize) - 1);
+                    const students = endRoll - rollStart + 1;
+
+                    usedRooms.add(room);
+
+                    newBlocks.push({
+                        id: ++blockIdCounter,
+                        room: room,
+                        startRoll: rollStart,
+                        endRoll: endRoll,
+                        students: students,
+                        semester: semester,
+                        branch: branch,
+                        division: division,
+                        subjectCode: subjectCode,
+                        subjectName: subjectName,
+                        session: sessionVal,
+                        sessionTime: sessionTime,
+                        batch: batchCounter,
+                    });
+
+                    rollStart += blockSize;
+                }
+
+                if (append) {
+                    allBlocks = [...allBlocks, ...newBlocks];
+                    const lastBlock = newBlocks[newBlocks.length - 1];
+                    currentRollStart = lastBlock.endRoll + 1;
+                } else {
+                    allBlocks = newBlocks;
+                    usedRooms = new Set(selectedRooms);
+                    currentRollStart = allBlocks.length > 0 ? allBlocks[allBlocks.length - 1].endRoll + 1 : 1;
+                    batchCounter = 1;
+                    allBlocks.forEach(b => b.batch = 1);
+                }
+
+                if (append) batchCounter++;
+
+                genSuccess.textContent = `✅ ${append ? 'Added' : 'Generated'} ${newBlocks.length} block${newBlocks.length > 1 ? 's' : ''}.`;
+                genSuccess.classList.remove('hidden');
+
+                renderDashboard();
+                document.querySelector('[data-tab="tabDashboard"]').click();
+            }
+
+            // ─── Render Dashboard ───
+            function renderDashboard() {
+                if (!allBlocks || allBlocks.length === 0) {
+                    outputCard.classList.add('hidden');
+                    noBlocksMsg.classList.remove('hidden');
+                    return;
+                }
+                outputCard.classList.remove('hidden');
+                noBlocksMsg.classList.add('hidden');
+
+                const sorted = [...allBlocks].sort((a, b) => a.room - b.room);
+                const totalStudents = allBlocks.reduce((sum, b) => sum + b.students, 0);
+                const uniqueRooms = new Set(allBlocks.map(b => b.room)).size;
+                const totalBatches = new Set(allBlocks.map(b => b.batch)).size;
+
+                statRooms.textContent = uniqueRooms;
+                statBlocks.textContent = allBlocks.length;
+                statStudents.textContent = totalStudents;
+                statPerRoom.textContent = uniqueRooms > 0 ? Math.round(totalStudents / uniqueRooms) : 0;
+                statBatches.textContent = totalBatches;
+
+                blockCountBadge.textContent = allBlocks.length + ' Blocks';
+                studentCountBadge.textContent = totalStudents + ' Students';
+                roomCountBadge.textContent = uniqueRooms + ' Rooms Used';
+                batchCountBadge.textContent = totalBatches + ' Batch' + (totalBatches > 1 ? 'es' : '');
+
+                let html = `<div class="block-grid">`;
+                sorted.forEach(b => {
+                    const label = `${b.semester} · ${b.branch} · Div ${b.division}`;
+                    const color = getSessionColor(b.session);
+                    html += `
+                        <div class="block-card">
+                            <span class="batch-tag">Batch ${b.batch}</span>
+                            <div class="room-header">
+                                <span>🏠 Room ${b.room}</span>
+                                <span class="session-time" style="background:${color};">${b.session}: ${b.sessionTime}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Roll Range:</span>
+                                <span class="roll-range">${b.startRoll} – ${b.endRoll}</span>
+                                <span class="text-sm">(${b.students} students)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Subject:</span> ${b.subjectCode} – ${b.subjectName}
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Class:</span> ${label}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+                blockOutput.innerHTML = html;
+                downloadPdfBtn.disabled = false;
+            }
+
+            // ─── PDF Generation ───
+            function generatePDF() {
+                if (!allBlocks || allBlocks.length === 0) {
+                    alert('No blocks to export. Please generate blocks first.');
+                    return;
+                }
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                const totalStudents = allBlocks.reduce((sum, b) => sum + b.students, 0);
+                const sorted = [...allBlocks].sort((a, b) => a.room - b.room);
+                const totalBatches = new Set(allBlocks.map(b => b.batch)).size;
+
+                let pdfHtml = `
+                    <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 28px 30px; background:#fff; max-width:1100px; margin:0 auto;">
+                        <div style="text-align:center; border-bottom:3px solid #1a365d; padding-bottom:14px; margin-bottom:20px;">
+                            <h1 style="font-size:24px; font-weight:700; color:#1a365d;">BE: SUMMER SEMESTER COLLEGE, BAGALKOT</h1>
+                            <p style="font-size:15px; color:#2d3748; margin:4px 0 0; font-weight:500;">ACADEMIC YEAR 2025-2026 · CIE-II · BLOCK LIST</p>
+                            <p style="font-size:13px; color:#718096; margin:4px 0 0;">
+                                Generated: ${dateStr} · ${allBlocks.length} Blocks · Total Students: ${totalStudents} · ${totalBatches} Batch${totalBatches > 1 ? 'es' : ''}
+                            </p>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:14px; margin-top:14px;">
+                `;
+
+                sorted.forEach(b => {
+                    const label = `${b.semester} · ${b.branch} · Div ${b.division}`;
+                    const color = getSessionColor(b.session);
+                    pdfHtml += `
+                        <div style="border:1px solid #e2e8f0; border-radius:10px; padding:14px 16px; background:#fafcff; position:relative;">
+                            <div style="font-weight:700; font-size:16px; color:#2b6cb0; display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #e2e8f0; padding-bottom:6px; margin-bottom:6px;">
+                                <span>Room ${b.room}</span>
+                                <span style="font-weight:400; font-size:13px; background:${color}; padding:2px 10px; border-radius:12px;">${b.session}: ${b.sessionTime}</span>
+                            </div>
+                            <div style="margin:4px 0;">
+                                <span style="font-weight:500;">Roll Range:</span> 
+                                <span style="background:#ebf8ff; padding:2px 12px; border-radius:6px; font-weight:600; color:#2b6cb0;">${b.startRoll} – ${b.endRoll}</span>
+                                <span style="font-size:13px; color:#718096; margin-left:6px;">(${b.students} students)</span>
+                            </div>
+                            <div style="font-size:14px; color:#2d3748; margin:2px 0;">
+                                <span style="font-weight:500;">Subject:</span> ${b.subjectCode} – ${b.subjectName}
+                            </div>
+                            <div style="font-size:14px; color:#2d3748; margin:2px 0;">
+                                <span style="font-weight:500;">Class:</span> ${label}
+                            </div>
+                            <div style="font-size:12px; color:#a0aec0; margin-top:4px;">Batch ${b.batch}</div>
+                        </div>
+                    `;
+                });
+
+                pdfHtml += `
+                        </div>
+                        <div style="margin-top:22px; border-top:2px solid #e2e8f0; padding-top:12px; display:flex; justify-content:space-between; font-size:13px; color:#718096;">
+                            <span>HOD</span>
+                            <span>CIE-COORDINATOR</span>
+                            <span>Page 1 of 1</span>
+                        </div>
+                    </div>
+                `;
+
+                pdfContent.innerHTML = pdfHtml;
+                pdfContent.style.display = 'block';
+
+                const opt = {
+                    margin: [8, 8, 8, 8],
+                    filename: `CIE_BlockList_${dateStr.replace(/\//g, '-')}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                html2pdf().set(opt).from(pdfContent).save().then(() => {
+                    pdfContent.style.display = 'none';
+                }).catch(err => {
+                    alert('PDF error: ' + err.message);
+                    console.error(err);
+                    pdfContent.style.display = 'none';
+                });
+            }
+
+            // ─── Reset ───
+            function resetAll() {
+                allBlocks = [];
+                usedRooms = new Set();
+                batchCounter = 1;
+                blockIdCounter = 0;
+                currentRollStart = 1;
+                outputCard.classList.add('hidden');
+                noBlocksMsg.classList.remove('hidden');
+                downloadPdfBtn.disabled = true;
+                genError.classList.add('hidden');
+                genSuccess.classList.add('hidden');
+                blockOutput.innerHTML = '';
+                renderDashboard();
+            }
+
+            // ─── TIME TABLE ───
+            function generateTimeTable() {
+                const branch = ttBranch.value;
+                const semester = ttSemester.value;
+                const startDate = ttStartDate.value;
+                const numDays = parseInt(ttDays.value) || 2;
+                const numSessions = parseInt(ttSessions.value) || 3;
+
+                if (!branch) {
+                    ttStatus.textContent = '⚠️ Please select a branch.';
+                    ttStatus.className = 'text-sm text-danger mt-8';
+                    ttStatus.classList.remove('hidden');
+                    return;
+                }
+                if (!semester) {
+                    ttStatus.textContent = '⚠️ Please select a semester.';
+                    ttStatus.className = 'text-sm text-danger mt-8';
+                    ttStatus.classList.remove('hidden');
+                    return;
+                }
+                if (!startDate) {
+                    ttStatus.textContent = '⚠️ Please select a start date.';
+                    ttStatus.className = 'text-sm text-danger mt-8';
+                    ttStatus.classList.remove('hidden');
+                    return;
+                }
+
+                ttStatus.className = 'text-sm text-success mt-8';
+                ttStatus.textContent = `✅ Time table generated for ${branch} - Sem ${semester} starting ${formatDate(startDate)}`;
+                ttStatus.classList.remove('hidden');
+
+                ttHeading.textContent = `Branch: ${branch} · Sem: ${semester} · Date: ${formatDate(startDate)}`;
+
+                // Get session labels (S1, S2, ...)
+                const sessionLabels_tt = [];
+                for (let i = 1; i <= numSessions; i++) {
+                    sessionLabels_tt.push(`S${i}`);
+                }
+
+                // --- HEADER: Sessions as columns (horizontal) ---
+                let theadHtml = `<tr><th class="session-label">Day / Session</th>`;
+                for (let s = 0; s < sessionLabels_tt.length; s++) {
+                    const session = sessionLabels_tt[s];
+                    const sessionTime = getSessionTime(session);
+                    theadHtml += `<th class="day-header">${session}<br><span style="font-weight:400;font-size:12px;">${sessionTime}</span></th>`;
+                }
+                theadHtml += `</tr>`;
+                ttHead.innerHTML = theadHtml;
+
+                // --- BODY: Days as rows (vertical) ---
+                let tbodyHtml = '';
+                for (let d = 0; d < numDays; d++) {
+                    const dateStr = addDays(startDate, d);
+                    const displayDate = formatDate(dateStr);
+                    tbodyHtml += `<tr><td class="session-label">Day ${d+1}<br><span style="font-weight:400;font-size:11px;color:#718096;">${displayDate}</span></td>`;
+                    for (let s = 0; s < sessionLabels_tt.length; s++) {
+                        const session = sessionLabels_tt[s];
+                        const cellId = `tt_${d}_${s}`;
+                        tbodyHtml += `
+                            <td class="tt-cell">
+                                <div class="cell-inner">
+                                    <input type="text" class="code-input" id="${cellId}_code" placeholder="Code" style="width:45%;min-width:50px;" />
+                                    <span class="sep">|</span>
+                                    <input type="text" class="name-input" id="${cellId}_name" placeholder="Subject" style="width:45%;min-width:50px;" />
+                                </div>
+                            </td>
+                        `;
+                    }
+                    tbodyHtml += `</tr>`;
+                }
+                ttBody.innerHTML = tbodyHtml;
+
+                ttEmptyMsg.style.display = 'none';
+                ttDownloadPdfBtn.disabled = false;
+            }
+
+            // ─── Time Table PDF ───
+            function generateTTPDF() {
+                const branch = ttBranch.value;
+                const semester = ttSemester.value;
+                const startDate = ttStartDate.value;
+                const numDays = parseInt(ttDays.value) || 2;
+                const numSessions = parseInt(ttSessions.value) || 3;
+
+                if (!branch || !semester || !startDate) {
+                    alert('Please generate the time table first.');
+                    return;
+                }
+
+                const sessionLabels_tt = [];
+                for (let i = 1; i <= numSessions; i++) {
+                    sessionLabels_tt.push(`S${i}`);
+                }
+
+                let tableData = [];
+                let hasData = false;
+                for (let d = 0; d < numDays; d++) {
+                    const row = { day: d + 1, sessions: [] };
+                    for (let s = 0; s < sessionLabels_tt.length; s++) {
+                        const session = sessionLabels_tt[s];
+                        const cellId = `tt_${d}_${s}`;
+                        const codeEl = document.getElementById(`${cellId}_code`);
+                        const nameEl = document.getElementById(`${cellId}_name`);
+                        const code = codeEl ? codeEl.value.trim() : '';
+                        const name = nameEl ? nameEl.value.trim() : '';
+                        if (code || name) hasData = true;
+                        row.sessions.push({ code, name });
+                    }
+                    tableData.push(row);
+                }
+
+                if (!hasData) {
+                    alert('No subject data entered. Please fill in at least one cell.');
+                    return;
+                }
+
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                let pdfHtml = `
+                    <div style="font-family: 'Segoe UI', Arial, sans-serif; padding: 28px 30px; background:#fff; max-width:1100px; margin:0 auto;">
+                        <div style="text-align:center; border-bottom:3px solid #1a365d; padding-bottom:14px; margin-bottom:20px;">
+                            <h1 style="font-size:24px; font-weight:700; color:#1a365d;">BE: SUMMER SEMESTER COLLEGE, BAGALKOT</h1>
+                            <p style="font-size:15px; color:#2d3748; margin:4px 0 0; font-weight:500;">ACADEMIC YEAR 2025-2026 · CIE-II · TIME TABLE</p>
+                            <p style="font-size:13px; color:#718096; margin:4px 0 0;">
+                                Branch: ${branch} · Semester: ${semester} · Start Date: ${formatDate(startDate)} · Generated: ${dateStr}
+                            </p>
+                        </div>
+                        <table style="width:100%; border-collapse:collapse; font-size:14px; margin-top:14px;">
+                            <thead>
+                                <tr style="background:#f7fafc;">
+                                    <th style="border:1.5px solid #cbd5e0; padding:10px 12px; text-align:center; font-weight:700;">Day / Session</th>
+                `;
+
+                for (let s = 0; s < sessionLabels_tt.length; s++) {
+                    const session = sessionLabels_tt[s];
+                    const sessionTime = getSessionTime(session);
+                    pdfHtml += `<th style="border:1.5px solid #cbd5e0; padding:10px 12px; text-align:center; font-weight:700;">${session}<br><span style="font-weight:400;font-size:11px;">${sessionTime}</span></th>`;
+                }
+
+                pdfHtml += `
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                for (let d = 0; d < tableData.length; d++) {
+                    const row = tableData[d];
+                    const dateStr2 = addDays(startDate, d);
+                    const displayDate = formatDate(dateStr2);
+                    pdfHtml += `
+                        <tr>
+                            <td style="border:1.5px solid #cbd5e0; padding:8px 12px; text-align:center; font-weight:600; background:#ebf8ff;">
+                                Day ${row.day}<br><span style="font-weight:400;font-size:11px;color:#718096;">${displayDate}</span>
+                            </td>
+                    `;
+                    for (let s = 0; s < row.sessions.length; s++) {
+                        const cell = row.sessions[s];
+                        const display = cell.code && cell.name ? `${cell.code} - ${cell.name}` :
+                            (cell.code || cell.name || '—');
+                        pdfHtml += `
+                            <td style="border:1.5px solid #cbd5e0; padding:8px 12px; text-align:center; vertical-align:middle; min-height:40px;">
+                                ${display}
+                            </td>
+                        `;
+                    }
+                    pdfHtml += `</tr>`;
+                }
+
+                pdfHtml += `
+                            </tbody>
+                        </table>
+                        <div style="margin-top:22px; border-top:2px solid #e2e8f0; padding-top:12px; display:flex; justify-content:space-between; font-size:13px; color:#718096;">
+                            <span>HOD</span>
+                            <span>CIE-COORDINATOR</span>
+                            <span>Page 1 of 1</span>
+                        </div>
+                    </div>
+                `;
+
+                ttPdfContent.innerHTML = pdfHtml;
+                ttPdfContent.style.display = 'block';
+
+                const opt = {
+                    margin: [8, 8, 8, 8],
+                    filename: `CIE_TimeTable_${branch}_Sem${semester}_${formatDate(startDate).replace(/\//g, '-')}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                html2pdf().set(opt).from(ttPdfContent).save().then(() => {
+                    ttPdfContent.style.display = 'none';
+                }).catch(err => {
+                    alert('PDF error: ' + err.message);
+                    console.error(err);
+                    ttPdfContent.style.display = 'none';
+                });
+            }
+
+            // ─── Clear Time Table ───
+            function clearTimeTable() {
+                ttHead.innerHTML = '';
+                ttBody.innerHTML = '';
+                ttEmptyMsg.style.display = 'block';
+                ttDownloadPdfBtn.disabled = true;
+                ttStatus.className = 'text-sm text-success mt-8 hidden';
+                ttHeading.textContent = 'Branch: -- · Sem: -- · Date: --';
+            }
+
+            // ─── Event listeners ───
+            generateBtn.addEventListener('click', function() {
+                usedRooms = new Set();
+                currentRollStart = 1;
+                batchCounter = 1;
+                allBlocks = [];
+                blockIdCounter = 0;
+                generateBlocks(false);
+            });
+
+            addBatchBtn.addEventListener('click', function() {
+                generateBlocks(true);
+            });
+
+            resetBtn.addEventListener('click', resetAll);
+            downloadPdfBtn.addEventListener('click', generatePDF);
+
+            // Time Table events
+            ttGenerateBtn.addEventListener('click', generateTimeTable);
+            ttDownloadPdfBtn.addEventListener('click', generateTTPDF);
+            ttClearBtn.addEventListener('click', clearTimeTable);
+
+            genStrength.addEventListener('keydown', (e) => { if (e.key === 'Enter') generateBtn.click(); });
+            genBlockSize.addEventListener('keydown', (e) => { if (e.key === 'Enter') generateBtn.click(); });
+
+            // Set default date
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            ttStartDate.value = `${yyyy}-${mm}-${dd}`;
+
+            // ─── Init ───
+            function init() {
+                rooms = [...DEFAULT_ROOMS];
+                branches = [...DEFAULT_BRANCHES];
+                semesters = [...DEFAULT_SEMESTERS];
+                divisions = [...DEFAULT_DIVISIONS];
+
+                renderRooms();
+                renderBranches();
+                renderSemesters();
+                renderDivisions();
+                updateGenDropdowns();
+
+                genBranch.value = 'CSE';
+                genSemester.value = '3';
+                genDivision.value = 'A';
+
+                noBlocksMsg.classList.remove('hidden');
+                outputCard.classList.add('hidden');
+
+                ttBranch.value = 'CSE';
+                ttSemester.value = '3';
+
+                settingsStatus.textContent = '✅ Settings loaded. Ready to generate!';
+
+                setTimeout(() => {
+                    generateTimeTable();
+                }, 300);
+            }
+
+            init();
+            console.log('CIE Block Generator ready.');
+        })();
+    </script>
 
 </body>
 </html>
